@@ -224,7 +224,7 @@ with main_content:
         answers = st.session_state.madlib_answers
         st.write(f"While the history of **{answers['noun_1']}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{answers['noun_2']}**, the themes of our **{answers['noun_3']}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{answers['noun_4']}**. Perhaps the predominant theme throughout is the competition for and allocation of **{answers['noun_resource']}** within **{answers['noun_society_plural']}** across the globe.")
         st.write(f"From Mesopotamia to ancient Mexico and Rome to ancient **{answers['proper_noun_2']}**, we find **{answers['plural_noun_3']}** that create a **{answers['adjective_1']}** **{answers['noun_5']}** that assigns greater value to their own **{answers['noun_6']}**, and greater resources to themselves and their **{answers['plural_noun_4']}**. This comes, of course, at the expense of the **{answers['plural_noun_5']}**, the **{answers['noun_7']}** who have **{answers['verb_1']}** in the service of others of **{answers['adjective_2']}** standing. From prehistory through the modern era, **{answers['noun_8']}** has existed in various forms and under various names. This includes the **{answers['noun_9']}** of medieval **{answers['proper_noun_3']}** to the chattel **{answers['noun_8']}** of the early United States, and it persists to this day as wage **{answers['noun_9']}** where huge swaths of **{answers['noun_10']}** are unable to reap the full benefit of their own **{answers['noun_11']}**.")
-        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
+        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{real_adjective_5}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -269,7 +269,6 @@ with main_content:
 
         # Removed custom frame div end
 
-# --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
         # --- Data Import and Initial Processing ---
         headers = {'Content-type': 'application/json'}
@@ -563,6 +562,7 @@ desired_order = [
                 *   Transportation and material moving occupations
             """)
 
+    # --- About Project Stage ---
     elif st.session_state.game_stage == 'about_project':
         # Removed custom frame div start
         st.header("About This Project")
