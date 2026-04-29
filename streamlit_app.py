@@ -9,6 +9,58 @@ import statsmodels.api as sm # Changed to statsmodels for regression
 # --- Global Streamlit Configuration ---
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
+# --- Define Real Story Variables Globally (for use in both reveal and visualizations stages) ---
+real_noun_1 = "humanity"
+real_noun_2 = "present"
+real_noun_3 = "past"
+real_noun_4 = "evidence"
+real_noun_resource = "resources"
+real_noun_society_plural = "societies"
+real_proper_noun_1 = "Mesopotamia"
+real_proper_noun_2 = "Japan"
+real_plural_noun_3 = "hierarchies"
+real_adjective_1 = "dominant"
+real_noun_5 = "class"
+real_noun_6 = "existence"
+real_plural_noun_4 = "cohorts"
+real_plural_noun_5 = "underclasses"
+real_noun_7 = "poor"
+real_verb_1 = "toiled"
+real_adjective_2 = "higher"
+real_noun_8 = "slavery"
+real_noun_9 = "serfdom"
+real_proper_noun_3 = "Europe"
+real_noun_10 = "humanity"
+real_noun_11 = "labor"
+
+real_adjective_3 = "extreme"
+real_noun_12 = "wealth"
+real_noun_13 = "status"
+real_noun_14 = "millennia"
+real_adverb_1 = "indeed"
+real_noun_15 = "empires"
+real_noun_16 = "empires"
+real_verb_2 = "fallen"
+real_adjective_4 = "invading"
+real_noun_17 = "forces"
+real_verb_3 = "hoard"
+real_noun_18 = "wealth"
+real_noun_19 = "land"
+real_noun_20 = "labor"
+real_noun_21 = "violence"
+real_noun_22 = "systems"
+real_noun_23 = "inequality"
+real_noun_24 = "slave"
+real_adjective_5 = "antebellum"
+real_noun_25 = "immigrants"
+real_proper_noun_4 = "ICE"
+real_noun_26 = "violence"
+real_noun_27 = "tool"
+real_verb_4 = "favored"
+real_noun_28 = "elites"
+real_noun_29 = "compliance"
+real_noun_30 = "poor"
+
 # --- Streamlit App ---
 # New global header (left-aligned) as requested
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
@@ -31,10 +83,16 @@ if 'game_stage' not in st.session_state:
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
-    # Add alternating red and white stripes like the US flag (78 stripes)
-    for i in range(57):
-        color = "red" if i % 2 == 0 else "#FFFFFF"
-        st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
+    if st.session_state.game_stage != 'visualizations': # Show stripes only in input/reveal stages
+        # Add alternating red and white stripes like the US flag (49 stripes)
+        for i in range(49): # Changed from 57 to 49
+            color = "red" if i % 2 == 0 else "#FFFFFF"
+            st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
+    elif st.session_state.game_stage == 'visualizations': # Show 'The Real Story' in left sidebar for visualizations
+        st.subheader("The Real Story:")
+        st.write(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.")
+        st.write(f"From **{real_proper_noun_1}** to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.")
+        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
 
 
 with main_content:
@@ -143,7 +201,7 @@ with main_content:
 
     # --- Mad Lib Reveal Stage ---
     elif st.session_state.game_stage == 'madlib_reveal':
-        st.markdown("<div style='border: 2px solid #f0f2f6; border-radius: 5px; padding: 20px; margin-bottom: 20px;'>", unsafe_allow_html=True) # Custom frame
+        # Removed custom frame div start
         st.subheader("Your Story:")
         answers = st.session_state.madlib_answers
         st.write(f"While the history of **{answers['noun_1']}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{answers['noun_2']}**, the themes of our **{answers['noun_3']}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{answers['noun_4']}**. Perhaps the predominant theme throughout is the competition for and allocation of **{answers['noun_resource']}** within **{answers['noun_society_plural']}** across the globe.")
@@ -151,57 +209,7 @@ with main_content:
         st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{answers['proper_noun_4']}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
 
         st.subheader("The Real Story:")
-        real_noun_1 = "humanity"
-        real_noun_2 = "present"
-        real_noun_3 = "past"
-        real_noun_4 = "evidence" # New real noun value
-        real_noun_resource = "resources"
-        real_noun_society_plural = "societies"
-        real_proper_noun_1 = "Mesopotamia"
-        real_proper_noun_2 = "Japan"
-        real_plural_noun_3 = "hierarchies"
-        real_adjective_1 = "dominant"
-        real_noun_5 = "class" # Was Noun 4
-        real_noun_6 = "existence" # Was Noun 5
-        real_plural_noun_4 = "cohorts"
-        real_plural_noun_5 = "underclasses"
-        real_noun_7 = "poor" # Was Noun 6
-        real_verb_1 = "toiled"
-        real_adjective_2 = "higher"
-        real_noun_8 = "slavery" # Was Noun 7
-        real_noun_9 = "serfdom" # Was Noun 8
-        real_proper_noun_3 = "Europe"
-        real_noun_10 = "humanity" # Was Noun 9
-        real_noun_11 = "labor" # Was Noun 10
-
-        real_adjective_3 = "extreme"
-        real_noun_12 = "wealth" # Was Noun 11
-        real_noun_13 = "status" # Was Noun 12
-        real_noun_14 = "millennia" # Was Noun 13
-        real_adverb_1 = "indeed" # New real adverb value
-        real_noun_15 = "empires" # Was Noun 14
-        real_noun_16 = "empires" # Was Noun 15
-        real_verb_2 = "fallen"
-        real_adjective_4 = "invading"
-        real_noun_17 = "forces" # Was Noun 16
-        real_verb_3 = "hoard"
-        real_noun_18 = "wealth" # Was Noun 17
-        real_noun_19 = "land" # Was Noun 18
-        real_noun_20 = "labor" # Was Noun 19
-        real_noun_21 = "violence" # Was Noun 20
-        real_noun_22 = "systems" # Was Noun 21
-        real_noun_23 = "inequality" # Was Noun 22
-        real_noun_24 = "slave" # Was Noun 23
-        real_adjective_5 = "antebellum"
-        real_noun_25 = "immigrants" # Was Noun 24
-        real_proper_noun_4 = "ICE"
-        real_noun_26 = "violence" # Was Noun 25
-        real_noun_27 = "tool" # Was Noun 26
-        real_verb_4 = "favored"
-        real_noun_28 = "elites" # Was Noun 27
-        real_noun_29 = "compliance" # Was Noun 28
-        real_noun_30 = "poor" # Was Noun 29
-
+        # The real story variables are now defined globally
         st.write(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.")
         st.write(f"From **{real_proper_noun_1}** to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.")
         st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
@@ -214,74 +222,15 @@ with main_content:
                 st.session_state.game_stage = 'visualizations'
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True) # Close custom frame
+        # Removed custom frame div end
 
 # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
-        st.markdown("<div style='border: 2px solid #f0f2f6; border-radius: 5px; padding: 20px; margin-bottom: 20px;'>", unsafe_allow_html=True) # Custom frame
-        # The global header now handles the title/subtitle, so no need for these here.
-        col_left_viz, col_right_viz = st.columns([0.2, 0.8]) # Narrow left, wider right
+        # Removed custom frame div start
+        # 'The Real Story' content has been moved to the left_sidebar for this stage.
+        viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
-        with col_left_viz:
-            # Define real story variables for this stage
-            real_noun_1 = "humanity"
-            real_noun_2 = "present"
-            real_noun_3 = "past"
-            real_noun_4 = "evidence" # New real noun value
-            real_noun_resource = "resources"
-            real_noun_society_plural = "societies"
-            real_proper_noun_1 = "Mesopotamia"
-            real_proper_noun_2 = "Japan"
-            real_plural_noun_3 = "hierarchies"
-            real_adjective_1 = "dominant"
-            real_noun_5 = "class" # Was Noun 4
-            real_noun_6 = "existence" # Was Noun 5
-            real_plural_noun_4 = "cohorts"
-            real_plural_noun_5 = "underclasses"
-            real_noun_7 = "poor" # Was Noun 6
-            real_verb_1 = "toiled"
-            real_adjective_2 = "higher"
-            real_noun_8 = "slavery" # Was Noun 7
-            real_noun_9 = "serfdom" # Was Noun 8
-            real_proper_noun_3 = "Europe"
-            real_noun_10 = "humanity" # Was Noun 9
-            real_noun_11 = "labor" # Was Noun 10
-
-            real_adjective_3 = "extreme"
-            real_noun_12 = "wealth" # Was Noun 11
-            real_noun_13 = "status" # Was Noun 12
-            real_noun_14 = "millennia" # Was Noun 13
-            real_adverb_1 = "indeed"
-            real_noun_15 = "empires" # Was Noun 14
-            real_noun_16 = "empires" # Was Noun 15
-            real_verb_2 = "fallen"
-            real_adjective_4 = "invading"
-            real_noun_17 = "forces" # Was Noun 16
-            real_verb_3 = "hoard"
-            real_noun_18 = "wealth" # Was Noun 17
-            real_noun_19 = "land" # Was Noun 18
-            real_noun_20 = "labor" # Was Noun 19
-            real_noun_21 = "violence" # Was Noun 20
-            real_noun_22 = "systems" # Was Noun 21
-            real_noun_23 = "inequality" # Was Noun 22
-            real_noun_24 = "slave" # Was Noun 23
-            real_adjective_5 = "antebellum"
-            real_noun_25 = "immigrants" # Was Noun 24
-            real_proper_noun_4 = "ICE"
-            real_noun_26 = "violence" # Was Noun 25
-            real_noun_27 = "tool" # Was Noun 26
-            real_verb_4 = "favored"
-            real_noun_28 = "elites" # Was Noun 27
-            real_noun_29 = "compliance" # Was Noun 28
-            real_noun_30 = "poor" # Was Noun 29
-
-            st.subheader("The Real Story:")
-            st.write(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.")
-            st.write(f"From **{real_proper_noun_1}** to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.")
-            st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
-
-
-        with col_right_viz:
+        with viz_col[0]:
             st.subheader("Visualizations of Important Data")
             st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
 
@@ -305,7 +254,7 @@ with main_content:
             arr = np.random.normal(1, 1, size=100) # Example data
             fig_plotly = px.histogram(x=arr, nbins=20, title="Random Variable Distribution")
             st.plotly_chart(fig_plotly)
-        st.markdown("</div>", unsafe_allow_html=True) # Close custom frame
+        # Removed custom frame div end
 
 # --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
