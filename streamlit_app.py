@@ -175,7 +175,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key)
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30}</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
@@ -254,20 +254,6 @@ with main_content:
             st.write("*[Placeholder for Asian regression model and results]*")
             st.markdown("#### Latino Regression Model")
             st.write("*[Placeholder for Latino regression model and results]*")
-
-            st.write("### Another Placeholder Chart")
-            # Note: For a real app, you'd load/process this data within the Streamlit app itself.
-            if 'df' in globals(): # Check if 'df' from previous cell exists (for demonstration)
-                st.write("Here's a look at the BLS data you fetched:")
-                st.dataframe(df.head())
-            else:
-                st.info("BLS data DataFrame 'df' not found. Please ensure previous data loading cells were run.")
-
-            # Example: histogram with Plotly
-            st.write("### Distribution of a Random Variable (Plotly)")
-            arr = np.random.normal(1, 1, size=100) # Example data
-            fig_plotly = px.histogram(x=arr, nbins=20, title="Random Variable Distribution")
-            st.plotly_chart(fig_plotly)
 
             # --- Occupation Analysis Section (Integrated) ---
             st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 20px 0; padding: 0;"></div>', unsafe_allow_html=True)
