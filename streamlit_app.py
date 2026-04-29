@@ -220,12 +220,11 @@ with main_content:
 
     # --- Mad Lib Reveal Stage ---
     elif st.session_state.game_stage == 'madlib_reveal':
-        # Removed custom frame div start
         st.subheader("Your Story:")
         answers = st.session_state.madlib_answers
         st.write(f"While the history of **{answers['noun_1']}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{answers['noun_2']}**, the themes of our **{answers['noun_3']}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{answers['noun_4']}**. Perhaps the predominant theme throughout is the competition for and allocation of **{answers['noun_resource']}** within **{answers['noun_society_plural']}** across the globe.")
         st.write(f"From Mesopotamia to ancient Mexico and Rome to ancient **{answers['proper_noun_2']}**, we find **{answers['plural_noun_3']}** that create a **{answers['adjective_1']}** **{answers['noun_5']}** that assigns greater value to their own **{answers['noun_6']}**, and greater resources to themselves and their **{answers['plural_noun_4']}**. This comes, of course, at the expense of the **{answers['plural_noun_5']}**, the **{answers['noun_7']}** who have **{answers['verb_1']}** in the service of others of **{answers['adjective_2']}** standing. From prehistory through the modern era, **{answers['noun_8']}** has existed in various forms and under various names. This includes the **{answers['noun_9']}** of medieval **{answers['proper_noun_3']}** to the chattel **{answers['noun_8']}** of the early United States, and it persists to this day as wage **{answers['noun_9']}** where huge swaths of **{answers['noun_10']}** are unable to reap the full benefit of their own **{answers['noun_11']}**.")
-        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
+        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{real_verb_3}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -391,6 +390,97 @@ with main_content:
             else:
                 st.warning("DataFrame 'df' not available for cleaning. Please ensure the data import ran successfully.")
 
+            # --- Visualization Functions ---
+            def plot_unemployment_by_sex(avg_unemployment_df, year):
+                sex_groups = ['Men', 'Women', 'White Men', 'White Women']
+                df_sex = avg_unemployment_df[avg_unemployment_df['series_name'].isin(sex_groups)].copy()
+                df_sex = df_sex.sort_values(by='value', ascending=False)
+
+                fig_sex = px.bar(
+                    df_sex,
+                    x='series_name',
+                    y='value',
+                    title=f'Average Unemployment Rate by Sex in {year}',
+                    labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
+                    color='series_name'
+                )
+                fig_sex.update_layout(
+                    xaxis_title='Demographic Group',
+                    yaxis_title='Average Unemployment Rate (Proportion)',
+                    showlegend=False
+                )
+                st.plotly_chart(fig_sex, use_container_width=True)
+
+            def plot_unemployment_by_race(avg_unemployment_df, year):
+                race_groups = ['Black or African American', 'Hispanic or Latino', 'Asian', 'White']
+                df_race = avg_unemployment_df[avg_unemployment_df['series_name'].isin(race_groups)].copy()
+                df_race = df_race.sort_values(by='value', ascending=False)
+
+                fig_race = px.bar(
+                    df_race,
+                    x='series_name',
+                    y='value',
+                    title=f'Average Unemployment Rate by Race in {year}',
+                    labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
+                    color='series_name'
+                )
+                fig_race.update_layout(
+                    xaxis_title='Demographic Group',
+                    yaxis_title='Average Unemployment Rate (Proportion)',
+                    showlegend=False
+                )
+                st.plotly_chart(fig_race, use_container_width=True)
+
+            def plot_white_women_comparisons(avg_unemployment_df, year):
+                white_women_avg = avg_unemployment_df[avg_unemployment_df['series_name'] == 'White Women'].iloc[0]
+
+                comparison_order = [
+                    'Asian',
+                    'White Men',
+                    'Men',
+                    'Women',
+                    'Hispanic or Latino',
+                    'Black or African American'
+                ]
+
+                other_demographics_ordered = avg_unemployment_df[
+                    avg_unemployment_df['series_name'] != 'White Women'
+                ].set_index('series_name').loc[comparison_order].reset_index()
+
+                for index, row in other_demographics_ordered.iterrows():
+                    comparison_group_name = row['series_name']
+
+                    comparison_df = pd.DataFrame({
+                        'series_name': ['White Women', comparison_group_name],
+                        'value': [white_women_avg['value'], row['value']]
+                    })
+
+                    fig = px.bar(
+                        comparison_df,
+                        x='series_name',
+                        y='value',
+                        title=f"Average Unemployment Rate: White Women vs. {comparison_group_name} in {year}",
+                        labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
+                        color='series_name',
+                        color_discrete_sequence=px.colors.qualitative.Plotly
+                    )
+
+                    fig.update_layout(
+                        xaxis_title='Demographic Group',
+                        yaxis_title='Average Unemployment Rate (Proportion)',
+                        showlegend=False
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+
+            # --- Display Visualizations ---
+            if not df.empty and 'avg_unemployment_latest_year' in locals():
+                st.subheader("Average Unemployment Rates")
+                plot_unemployment_by_sex(avg_unemployment_latest_year, latest_full_year)
+                plot_unemployment_by_race(avg_unemployment_latest_year, latest_full_year)
+                st.subheader("White Women Comparisons")
+                plot_white_women_comparisons(avg_unemployment_latest_year, latest_full_year)
+            else:
+                st.warning("Cannot generate visualizations, data not available.")
 
             # --- Occupation Analysis Section (Integrated) ---
             st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 20px 0; padding: 0;"></div>', unsafe_allow_html=True)
@@ -453,7 +543,6 @@ with main_content:
         st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing after collage
 
     elif st.session_state.game_stage == 'about_project':
-        # Removed custom frame div start
         st.header("About This Project")
         st.write("This project explores the interplay of historical socioeconomic structures and contemporary economic indicators, particularly focusing on unemployment across different demographics.")
         st.write("Through a 'Mad Liberal' narrative, it aims to engage users with historical contexts of resource allocation and inequality, transitioning into data-driven visualizations of current labor statistics from the US Bureau of Labor Statistics (BLS).")
