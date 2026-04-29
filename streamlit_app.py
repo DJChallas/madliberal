@@ -83,12 +83,12 @@ if 'game_stage' not in st.session_state:
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
-    if st.session_state.game_stage != 'visualizations': # Show stripes only in input/reveal stages
+    if st.session_state.game_stage != 'visualizations' and st.session_state.game_stage != 'occupation_analysis': # Show stripes only in input/reveal stages
         # Add alternating red and white stripes like the US flag (48 stripes)
         for i in range(48):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
-    elif st.session_state.game_stage == 'visualizations': # Show 'The Real Story' in left sidebar for visualizations
+    elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'occupation_analysis': # Show 'The Real Story' in left sidebar for visualizations and occupation analysis
         st.subheader("The Real Story:")
         st.write(f"While the history of {real_noun_1} stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the {real_noun_2}, the themes of our {real_noun_3} grow louder, a cacophony of evidence from writings, recordings, and oral traditions, {real_noun_4}. Perhaps the predominant theme throughout is the competition for and allocation of {real_noun_resource} within {real_noun_society_plural} across the globe.")
         st.write(f"From Mesopotamia to ancient Mexico and Rome to ancient {real_proper_noun_2}, we find {real_plural_noun_3} that create a {real_adjective_1} {real_noun_5} that assigns greater value to their own {real_noun_6}, and greater resources to themselves and their {real_plural_noun_4}. This comes, of course, at the expense of the {real_plural_noun_5}, the {real_noun_7} who have {real_verb_1} in the service of others of {real_adjective_2} standing. From prehistory through the modern era, {real_noun_8} has existed in various forms and under various names. This includes the {real_noun_9} of medieval {real_proper_noun_3} to the chattel {real_noun_8} of the early United States, and it persists to this day as wage {real_noun_9} where huge swaths of {real_noun_10} are unable to reap the full benefit of their own {real_noun_11}.")
@@ -268,7 +268,48 @@ with main_content:
             arr = np.random.normal(1, 1, size=100) # Example data
             fig_plotly = px.histogram(x=arr, nbins=20, title="Random Variable Distribution")
             st.plotly_chart(fig_plotly)
-        # Removed custom frame div end
+
+            # Button to proceed to the next section
+            st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
+            if st.button("Proceed to Occupation Analysis"):
+                st.session_state.game_stage = 'occupation_analysis'
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    # --- Occupation Analysis Stage ---
+    elif st.session_state.game_stage == 'occupation_analysis':
+        st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
+        st.subheader("Occupation by Gender and Race")
+        st.write("here are employment percentages for major industry divisons from across the US Economy focused on popular job types for each industry.")
+        st.markdown("""
+        *   Management, professional, and related occupations
+            *   Management, business, and financial operations occupations
+            *   Business and financial operations occupations
+            *   Professional and related occupations
+            *   Architecture and engineering occupations
+            *   Life, physical, and social science occupations
+            *   Community and social service occupations
+            *   Legal occupations
+            *   Education, training, and library occupations
+            *   Arts, design, entertainment, sports, and media occupations
+            *   Healthcare practitioners and technical occupations
+        *   Service occupations
+            *   Healthcare support occupations
+            *   Protective service occupations
+            *   Food preparation and serving related occupations
+            *   Building and grounds cleaning and maintenance occupations
+            *   Personal care and service occupations
+        *   Sales and office occupations
+            *   Sales and related occupations
+            *   Office and administrative support occupations
+        *   Natural resources, construction, and maintenance occupations
+            *   Farming, fishing, and forestry occupations
+            *   Construction and extraction occupations
+            *   Installation, maintenance, and repair occupations
+        *   Production, transportation, and material moving occupations
+            *   Production occupations
+            *   Transportation and material moving occupations
+        """)
 
 # --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
