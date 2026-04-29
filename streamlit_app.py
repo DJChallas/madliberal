@@ -84,11 +84,11 @@ left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes only in input/reveal stages
-        # Add alternating red and white stripes like the US flag (48 stripes)
-        for i in range(48):
+        # Add alternating red and white stripes like the US flag (47 stripes)
+        for i in range(47):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
-    elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'about_project': # Show 'The Real Story' and navigation in left sidebar for these stages
+    elif st.session_state.game_stage == 'visualizations': # Show 'The Real Story' and navigation in left sidebar for visualizations stage
         st.subheader("The Real Story:")
         st.write(f"While the history of {real_noun_1} stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the {real_noun_2}, the themes of our {real_noun_3} grow louder, a cacophony of evidence from writings, recordings, and oral traditions, {real_noun_4}. Perhaps the predominant theme throughout is the competition for and allocation of {real_noun_resource} within {real_noun_society_plural} across the globe.")
         st.write(f"From Mesopotamia to ancient Mexico and Rome to ancient {real_proper_noun_2}, we find {real_plural_noun_3} that create a {real_adjective_1} {real_noun_5} that assigns greater value to their own {real_noun_6}, and greater resources to themselves and their {real_plural_noun_4}. This comes, of course, at the expense of the {real_plural_noun_5}, the {real_noun_7} who have {real_verb_1} in the service of others of {real_adjective_2} standing. From prehistory through the modern era, {real_noun_8} has existed in various forms and under various names. This includes the {real_noun_9} of medieval {real_proper_noun_3} to the chattel {real_noun_8} of the early United States, and it persists to this day as wage {real_noun_9} where huge swaths of {real_noun_10} are unable to reap the full benefit of their own {real_noun_11}.")
@@ -96,14 +96,14 @@ with left_sidebar:
 
         st.markdown("---") # Separator
 
-        if st.session_state.game_stage == 'visualizations':
-            col1_btn, col2_btn, col3_btn = st.columns([1,2,1]) # Added columns for centering
-            with col2_btn:
-                if st.button("About this Project", key="about_project_btn_sidebar"):
-                    st.session_state.game_stage = 'about_project'
-                    st.rerun()
-        elif st.session_state.game_stage == 'about_project':
-            st.subheader("About this Project") # Indicate current page
+        if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
+            st.session_state.game_stage = 'about_project'
+            st.rerun()
+
+    elif st.session_state.game_stage == 'about_project': # Only show 'Back to Visualizations' button in left sidebar for this stage
+        if st.button("Back to Visualizations", key="back_to_viz_btn", use_container_width=True):
+            st.session_state.game_stage = 'visualizations'
+            st.rerun()
 
 
 with main_content:
@@ -223,7 +223,7 @@ with main_content:
         # The real story variables are now defined globally
         st.write(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.")
         st.write(f"From **{real_proper_noun_1}** to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.")
-        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
+        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{answers['noun_25']}** by **{answers['proper_noun_4']}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
 
 
         col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
@@ -301,7 +301,7 @@ with main_content:
             """)
 
     elif st.session_state.game_stage == 'about_project':
-        st.markdown("<div style='border: 2px solid #f0f2f6; border-radius: 5px; padding: 20px; margin-bottom: 20px;'>", unsafe_allow_html=True)
+        # Removed custom frame div start
         st.header("About This Project")
         st.write("This project explores the interplay of historical socioeconomic structures and contemporary economic indicators, particularly focusing on unemployment across different demographics.")
         st.write("Through a 'Mad Liberal' narrative, it aims to engage users with historical contexts of resource allocation and inequality, transitioning into data-driven visualizations of current labor statistics from the US Bureau of Labor Statistics (BLS).")
@@ -309,12 +309,7 @@ with main_content:
         st.write("The project was developed by Casey Hallas for UNO Econ 8320 in May 2026.")
 
         st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
-        _, center_col, _ = st.columns([1,2,1])
-        with center_col:
-            if st.button("Back to Visualizations", key="back_to_viz_btn"):
-                st.session_state.game_stage = 'visualizations'
-                st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+        # The 'Back to Visualizations' button has been moved to the left sidebar
 
 # --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
