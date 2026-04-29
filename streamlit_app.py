@@ -1,11 +1,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+# import subprocess # Removed as per previous instruction
+# import sys # Removed as per previous instruction
 import plotly.express as px # Added for regression visualization
 import statsmodels.api as sm # Changed to statsmodels for regression
-import requests
-import json
-from datetime import datetime
 
 # --- Global Streamlit Configuration ---
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
@@ -183,7 +182,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key)
 
             # Paragraph 2 - after Plural Noun 2
-            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5}</span>, the <span style='color:red;'>NOUN 7</span> who have <span style='color:red;'>VERB 1</span> in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9}</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 9</span> where huge swaths of <span style='color:red;'>NOUN 10</span> are unable to reap the full benefit of their own **{real_noun_11}**.", unsafe_allow_html=True)
+            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5}</span>, the <span style='color:red;'>NOUN 7</span> who have <span style='color:red;'>VERB 1</span> in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9}</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 9</span> where huge swaths of <span style='color:red;'>NOUN 10</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 11</span>.", unsafe_allow_html=True)
 
             # Input fields 6-20 (Proper Noun 2 through Noun 11)
             cols = st.columns(3)
@@ -193,7 +192,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key)
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24}</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26}</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30}</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26}</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30}</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
@@ -224,13 +223,13 @@ with main_content:
         answers = st.session_state.madlib_answers
         st.write(f"While the history of **{answers['noun_1']}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{answers['noun_2']}**, the themes of our **{answers['noun_3']}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{answers['noun_4']}**. Perhaps the predominant theme throughout is the competition for and allocation of **{answers['noun_resource']}** within **{answers['noun_society_plural']}** across the globe.")
         st.write(f"From Mesopotamia to ancient Mexico and Rome to ancient **{answers['proper_noun_2']}**, we find **{answers['plural_noun_3']}** that create a **{answers['adjective_1']}** **{answers['noun_5']}** that assigns greater value to their own **{answers['noun_6']}**, and greater resources to themselves and their **{answers['plural_noun_4']}**. This comes, of course, at the expense of the **{answers['plural_noun_5']}**, the **{answers['noun_7']}** who have **{answers['verb_1']}** in the service of others of **{answers['adjective_2']}** standing. From prehistory through the modern era, **{answers['noun_8']}** has existed in various forms and under various names. This includes the **{answers['noun_9']}** of medieval **{answers['proper_noun_3']}** to the chattel **{answers['noun_8']}** of the early United States, and it persists to this day as wage **{answers['noun_9']}** where huge swaths of **{answers['noun_10']}** are unable to reap the full benefit of their own **{answers['noun_11']}**.")
-        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{real_adjective_5}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
+        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
         st.write(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.")
         st.write(f"From **{real_proper_noun_1}** to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.")
-        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
+        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
 
         col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
         with col2_viz:
@@ -269,264 +268,44 @@ with main_content:
 
         # Removed custom frame div end
 
+# --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
-        # --- Data Import and Initial Processing ---
-        headers = {'Content-type': 'application/json'}
-
-        # Get current year for dynamic date range
-        current_year = datetime.now().year
-
-        # Updated payload for BLS API v2
-        data = json.dumps({
-            "seriesid": ['LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'],
-            "startyear": str(current_year - 4),
-            "endyear": str(current_year),
-            "registrationkey": "9dd192e92c9c4989985db57deede9647"
-        })
-        p = requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/', data=data, headers=headers)
-        json_data = json.loads(p.text)
-
-        all_series_data = []
-
-        # Function to convert period to month number for date conversion
-        def period_to_month(period_str):
-            if period_str.startswith('M'):
-                return int(period_str[1:])
-            elif period_str == 'Q01':
-                return 1 # January for Q1
-            elif period_str == 'Q02':
-                return 4 # April for Q2
-            elif period_str == 'Q03':
-                return 7 # July for Q3
-            elif period_str == 'Q04':
-                return 10 # October for Q4
-            return None # For any other unexpected period format
-
-        # Check for 'Results' key before proceeding
-        if 'Results' in json_data and 'series' in json_data['Results']:
-            for series in json_data['Results']['series']:
-                seriesId = series['seriesID']
-                for item in series['data']:
-                    year = item['year']
-                    period = item['period']
-                    value = item['value']
-                    footnotes_list = []
-                    for footnote in item['footnotes']:
-                        if footnote:
-                            footnotes_list.append(footnote['text'])
-                    footnotes = ','.join(footnotes_list)
-
-                    # Include both monthly (M01-M12) and quarterly (Q01-Q04) data
-                    if ('M01' <= period <= 'M12') or ('Q01' <= period <= 'Q04'):
-                        all_series_data.append({
-                            'series_id': seriesId,
-                            'year': year,
-                            'period': period,
-                            'value': value,
-                            'footnotes': footnotes
-                        })
-
-            # Create a pandas DataFrame from the collected data
-            df = pd.DataFrame(all_series_data)
-
-            # Apply the function to create a month column
-            df['month'] = df['period'].apply(period_to_month)
-
-            # Filter out rows where month could not be determined (shouldn't happen with the period filter above)
-            df = df.dropna(subset=['month'])
-
-            # Convert 'year', 'month' to a datetime object, assuming day 1 for simplicity
-            df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
-
-            # Drop the temporary 'month' column
-            df = df.drop(columns=['month'])
-
-            # display(df.head()) # Commented out for combined cell
-        elif 'message' in json_data:
-            print(f"API Error: {json_data['message']}")
-        else:
-            print("Unknown API response format or no data in 'Results'.")
-
-
-        # --- Data Cleaning (without regression-specific adjustments) ---
-
-        # Ensure 'value' is numeric and convert to proportion (0-1)
-        df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
-        df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
-
-        # Drop rows where 'value' is NaN after conversion
-        df_filtered = df.dropna(subset=['value']).copy() # Explicitly create a copy
-
-        # Define the mapping for series names
-        sn_map = {
-            'LNS14000006': 'Black or African American',
-            'LNS14000009': 'Hispanic or Latino',
-            'LNS14000003': 'White',
-            'LNS14032183': 'Asian',
-            'LNS14000002': 'Women',
-            'LNS14000001': 'Men',
-            'LNS14000005': 'White Women',
-            'LNS14000004': 'White Men'
-        }
-        series_name_mapping = sn_map # Alias for clarity
-
-        # Determine the latest full year available in the data
-        latest_full_year = df['year'].astype(int).max()
-        if latest_full_year == datetime.now().year:
-            latest_full_year -= 1 # Use the previous year if the current year is the max
-
-        # Filter the DataFrame for the selected year (used by subsequent cells)
-        df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
-
-        # Add descriptive series name to df_seasonal (used by subsequent cells)
-        df_seasonal['series_name'] = df_seasonal['series_id'].map(series_name_mapping)
-
-        # Calculate average unemployment rates for the latest full year across all series (used by subsequent cells)
-        avg_unemployment_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
-
-        # Add descriptive series name to avg_unemployment_latest_year (used by subsequent cells)
-        avg_unemployment_latest_year['series_name'] = avg_unemployment_latest_year['series_id'].map(series_name_mapping)
-
-        # Define the desired order (used by subsequent cells)
-desired_order = [
-    'Men',
-    'Women',
-    'White Men',
-    'White Women',
-    'Black or African American',
-    'Hispanic or Latino',
-    'Asian',
-    'White'
-]
-
-        # Convert 'series_name' to a categorical type with the desired order (used by subsequent cells)
-        avg_unemployment_latest_year['series_name'] = pd.Categorical(
-            avg_unemployment_latest_year['series_name'],
-            categories=desired_order,
-            ordered=True
-        )
-
-        # Sort the DataFrame by the new categorical column (used by subsequent cells)
-        avg_unemployment_latest_year = avg_unemployment_latest_year.sort_values('series_name')
-
-        # --- Generate Separate Bar Charts for Sex and Race ---
-
-        # 1. Chart for Sex
-        sex_groups = ['Men', 'Women', 'White Men', 'White Women'] # Included White Men and White Women
-        df_sex = avg_unemployment_latest_year[avg_unemployment_latest_year['series_name'].isin(sex_groups)].copy()
-        df_sex = df_sex.sort_values(by='value', ascending=False) # Sort greatest to least
-
-        fig_sex = px.bar(
-            df_sex,
-            x='series_name',
-            y='value',
-            title=f'Average Unemployment Rate by Sex {latest_full_year}',
-            labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'}, # Changed label
-            color='series_name'
-        )
-        fig_sex.update_layout(
-            xaxis_title='Demographic Group',
-            yaxis_title='Average Unemployment Rate (Proportion)',
-            showlegend=False
-        )
-        sex_chart = fig_sex
-
-        # 2. Chart for Race
-        race_groups = ['Black or African American', 'Hispanic or Latino', 'Asian', 'White']
-        df_race = avg_unemployment_latest_year[avg_unemployment_latest_year['series_name'].isin(race_groups)].copy()
-        df_race = df_race.sort_values(by='value', ascending=False) # Sort greatest to least
-
-        fig_race = px.bar(
-            df_race,
-            x='series_name',
-            y='value',
-            title=f'Average Unemployment Rate by Race in {latest_full_year}',
-            labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'}, # Changed label
-            color='series_name'
-        )
-        fig_race.update_layout(
-            xaxis_title='Demographic Group',
-            yaxis_title='Average Unemployment Rate (Proportion)',
-            showlegend=False
-        )
-        race_chart = fig_race
-
-        # --- White Women Comparison Charts ---
-        white_women_avg = avg_unemployment_latest_year[avg_unemployment_latest_year['series_name'] == 'White Women'].iloc[0]
-
-        # Define the specific order for comparisons
-        comparison_order = [
-            'Asian',
-            'White Men',
-            'Men',
-            'Women',
-            'Hispanic or Latino',
-            'Black or African American'
-        ]
-
-        # Filter out 'White Women' and sort other demographics according to the desired comparison order
-        other_demographics_ordered = avg_unemployment_latest_year[
-            avg_unemployment_latest_year['series_name'] != 'White Women'
-        ].set_index('series_name').loc[comparison_order].reset_index()
-
-        white_women_comparison_charts = []
-        for index, row in other_demographics_ordered.iterrows():
-            comparison_group_name = row['series_name']
-
-            # Create a temporary DataFrame for the current comparison
-            comparison_df = pd.DataFrame({
-                'series_name': ['White Women', comparison_group_name],
-                'value': [white_women_avg['value'], row['value']]
-            })
-
-            fig = px.bar(
-                comparison_df,
-                x='series_name',
-                y='value',
-                title=f"Average Unemployment Rate: White Women vs. {comparison_group_name} in {latest_full_year}",
-                labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
-                color='series_name', # Color bars by group
-                color_discrete_sequence=px.colors.qualitative.Plotly # Use a distinct color scheme
-            )
-
-            fig.update_layout(
-                xaxis_title='Demographic Group',
-                yaxis_title='Average Unemployment Rate (Proportion)',
-                showlegend=False
-            )
-            white_women_comparison_charts.append(fig)
-
-
         # Removed custom frame div start
         # 'The Real Story' content has been moved to the left_sidebar for this stage.
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
             st.subheader("Unemployment Statistics")
-            # st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
+            st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
 
-            # Display sex chart
-            # st.write("### Unemployment Rates for Race and Gender") # Removed header
-            st.plotly_chart(sex_chart, use_container_width=True)
+            st.write("### Unemployment Rates for Race and Gender")
+            chart_data = pd.DataFrame(
+                np.random.randn(50, 3),
+                columns=['a', 'b', 'c']
+            )
+            st.line_chart(chart_data) # Streamlit's line_chart uses Altair, which is fine to keep.
 
-            # Display race chart
-            st.plotly_chart(race_chart, use_container_width=True)
+            st.write("### Regression Models for Unemployment Probabilities")
 
-            # Remove Regression Models section
-            # st.write("### Regression Models for Unemployment Probabilities") # Removed header
+            # Display actual regression summaries for each series
+            series_name_mapping = {
+                'LNS14000006': 'Black or African American',
+                'LNS14000009': 'Hispanic or Latino',
+                'LNS14000003': 'White',
+                'LNS14032183': 'Asian',
+                'LNS14000002': 'Women',
+                'LNS14000001': 'Men',
+                'LNS14000005': 'White Women',
+                'LNS14000004': 'White Men'
+            }
 
-            # Remove individual regression summaries
-            # for series_id in series_name_mapping.keys():
-            #     series_name = series_name_mapping[series_id]
-            #     if series_id in regression_results_summary:
-            #         st.text(regression_results_summary[series_id])
-            #     else:
-            #         st.write(f"*[No regression results available for {series_name}]*")
-
-            st.subheader("White Women") # New header as requested
-
-            for chart in white_women_comparison_charts:
-                st.plotly_chart(chart, use_container_width=True)
+            for series_id in series_name_mapping.keys():
+                series_name = series_name_mapping[series_id]
+                st.markdown(f"#### {series_name} Regression Model")
+                if series_id in regression_results_summary:
+                    st.text(regression_results_summary[series_id])
+                else:
+                    st.write(f"*[No regression results available for {series_name}]*")
 
             # --- Occupation Analysis Section (Integrated) ---
             st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 20px 0; padding: 0;"></div>', unsafe_allow_html=True)
@@ -562,7 +341,6 @@ desired_order = [
                 *   Transportation and material moving occupations
             """)
 
-    # --- About Project Stage ---
     elif st.session_state.game_stage == 'about_project':
         # Removed custom frame div start
         st.header("About This Project")
@@ -576,3 +354,4 @@ desired_order = [
 
 # --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
+
