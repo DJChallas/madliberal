@@ -36,24 +36,27 @@ with left_sidebar:
         color = "red" if i % 2 == 0 else "#FFFFFF"
         st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
-    # ASCII Nuclear Explosion below the stripes
+    # New ASCII art below the stripes
     st.markdown(r"""
 ```
-          _ ._  _ , _ ._
-        (_' (  (  _)_`
-       / ) \\ ) (  _   _(`
-      (_ (_ ) ( _  ( ` )  _)
-     ( __ (_    (_ . _) )
-      _ .  _ _`)   `_ ( `
-     (_' (_ (_ .  _ ` ) )
-    ( (  _ `   (_  )_  )_
-   (  _) `_` (   (  _` ._ )
-   (_(_ .  _ _ ` ) ( _ ` ` `(
-    ( _  (  _  _(` `) `) _` )
-     (_ _ (_ . ` ` ` )  `_)
-       ` )   `))
-      .  _) `  ) . )
-     (_  _)_(`  ( _` . _`
+#***+++========---------------------:::-----===--
+******+++====++*@@@@@@@+----:-::::::::::---------
+#****+++++*#@@@@@@@@@@@@%----::::.......::::::---
+##****++#@@@@@@@@@@@@@@@@@=---::::...........:::-:
+####***+#@@@@@@@@@@@@@@@@@@+----:::::.......:::::
+%#######*%@@@@@@@@@@@@@@@@@##------::::::::::::::
+%%%%####**@@@@@@@@@@@@@@@@@@@+====--------------:
+%%#####*****#@@@@@@@@@@@@%@#=====-------------:::
+###****++++++==*@@@@@@@@:.....::::::::::::::::::.
+%%###**++===----%@@@@@@=........:::::::::::::....
+@%%###**++===-----*@@*::::::::::::----------::::.
+*++====------===+*#@@@+=-------==---------:::... 
+=--::::...:::::::+@@@@=------------::::::::..... 
+:..             -@@@@@@=.::..............::::::::
+-::::::-#@*###%@@@@@@@@@@@@@@@@@@%*=---=-=======-
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ```
     """, unsafe_allow_html=True)
 
@@ -224,7 +227,7 @@ with main_content:
 
         st.write(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.")
         st.write(f"From **{real_proper_noun_1}** to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.")
-        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.")
+        st.write(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{answers['proper_noun_4']}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
 
 
         col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
