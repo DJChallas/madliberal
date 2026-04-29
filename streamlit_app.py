@@ -35,19 +35,25 @@ with left_sidebar:
     for i in range(78):
         color = "red" if i % 2 == 0 else "#FFFFFF"
         st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
-    
-    # ASCII Liberty Bell below the stripes
+
+    # ASCII Nuclear Explosion below the stripes
     st.markdown(r"""
 ```
-     ____
-    /    \
-   |------|
-   |  ()  |
-   |------|
-   |      |
-   |______|
-   /  | |  \
-  /___|_|___\
+          _ ._  _ , _ ._
+        (_' (  (  _)_`
+       / ) \\ ) (  _   _(`
+      (_ (_ ) ( _  ( ` )  _)
+     ( __ (_    (_ . _) )
+      _ .  _ _`)   `_ ( `
+     (_' (_ (_ .  _ ` ) )
+    ( (  _ `   (_  )_  )_
+   (  _) `_` (   (  _` ._ )
+   (_(_ .  _ _ ` ) ( _ ` ` `(
+    ( _  (  _  _(` `) `) _` )
+     (_ _ (_ . ` ` ` )  `_)
+       ` )   `))
+      .  _) `  ) . )
+     (_  _)_(`  ( _` . _`
 ```
     """, unsafe_allow_html=True)
 
