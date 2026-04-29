@@ -36,19 +36,18 @@ with left_sidebar:
         color = "red" if i % 2 == 0 else "#FFFFFF"
         st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
     
-    # ASCII Eagle below the stripes (flying eagle)
+    # ASCII Liberty Bell below the stripes
     st.markdown(r"""
 ```
-          __    _
-         /\ \  /\\
-        _\_\ \/ /_/
-       /\_\ \ \/ /\ \
-      <  _  `\  '  _  >
-       \`\ \   \   /\`/
-        \ `\ \  |  / /'
-         `\  \ \|/ /  /'
-           `. `\\|// .'
-             `-. _ .-' 
+     ____
+    /    \
+   |------|
+   |  ()  |
+   |------|
+   |      |
+   |______|
+   /  | |  \
+  /___|_|___\
 ```
     """, unsafe_allow_html=True)
 
