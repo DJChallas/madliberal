@@ -106,7 +106,7 @@ with left_sidebar:
         st.markdown(f"While the history of **{real_noun_1}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{real_noun_2}**, the themes of our **{real_noun_3}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{real_noun_4}**. Perhaps the predominant theme throughout is the competition for and allocation of **{real_noun_resource}** within **{real_noun_society_plural}** across the globe.", unsafe_allow_html=True)
         st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient **{real_proper_noun_2}**, we find **{real_plural_noun_3}** that create a **{real_adjective_1}** **{real_noun_5}** that assigns greater value to their own **{real_noun_6}**, and greater resources to themselves and their **{real_plural_noun_4}**. This comes, of course, at the expense of the **{real_plural_noun_5}**, the **{real_noun_7}** who have **{real_verb_1}** in the service of others of **{real_adjective_2}** standing. From prehistory through the modern era, **{real_noun_8}** has existed in various forms and under various names. This includes the **{real_noun_9}** of medieval **{real_proper_noun_3}** to the chattel **{real_noun_8}** of the early United States, and it persists to this day as wage **{real_noun_9}** where huge swaths of **{real_noun_10}** are unable to reap the full benefit of their own **{real_noun_11}**.", unsafe_allow_html=True)
         st.markdown(f"While this **{real_adjective_3}** stratification of **{real_noun_12}** and **{real_noun_13}** has persisted across **{real_noun_14}** and, **{real_adverb_1}**, across the globe, it is not naturally self sustaining. Indeed, **{real_noun_15}** have risen and **{real_noun_16}** have **{real_verb_2}** as **{real_adjective_4}** **{real_noun_17}** have reached across the globe seeking to **{real_verb_3}** the **{real_noun_18}** of the **{real_noun_19}** and **{real_noun_20}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{real_adjective_5}** America to the targeting of **{real_noun_25}** by **{real_proper_noun_4}** today. Even on the individual level, **{real_noun_26}** has been a **{real_noun_27}** of the **{real_verb_4}** **{real_noun_28}** to compel the **{real_noun_29}** of the **{real_noun_30}**.", unsafe_allow_html=True)
-        st.markdown("---") # Separator
+        st.markdown("-") # Separator
         if st.button("Back to Visualizations", key="back_to_viz_btn", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
@@ -192,7 +192,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key)
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26}</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30}</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24}</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26}</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30}</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
@@ -223,7 +223,7 @@ with main_content:
         answers = st.session_state.madlib_answers
         st.write(f"While the history of **{answers['noun_1']}** stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the **{answers['noun_2']}**, the themes of our **{answers['noun_3']}** grow louder, a cacophony of evidence from writings, recordings, and oral traditions, **{answers['noun_4']}**. Perhaps the predominant theme throughout is the competition for and allocation of **{answers['noun_resource']}** within **{answers['noun_society_plural']}** across the globe.")
         st.write(f"From Mesopotamia to ancient Mexico and Rome to ancient **{answers['proper_noun_2']}**, we find **{answers['plural_noun_3']}** that create a **{answers['adjective_1']}** **{answers['noun_5']}** that assigns greater value to their own **{answers['noun_6']}**, and greater resources to themselves and their **{answers['plural_noun_4']}**. This comes, of course, at the expense of the **{answers['plural_noun_5']}**, the **{answers['noun_7']}** who have **{answers['verb_1']}** in the service of others of **{answers['adjective_2']}** standing. From prehistory through the modern era, **{answers['noun_8']}** has existed in various forms and under various names. This includes the **{answers['noun_9']}** of medieval **{answers['proper_noun_3']}** to the chattel **{answers['noun_8']}** of the early United States, and it persists to this day as wage **{answers['noun_9']}** where huge swaths of **{answers['noun_10']}** are unable to reap the full benefit of their own **{answers['noun_11']}**.")
-        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{real_noun_21}** has always been necessary to maintain **{real_noun_22}** of **{real_noun_23}**, from the **{real_noun_24}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{answers['proper_noun_4']}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
+        st.write(f"While this **{answers['adjective_3']}** stratification of **{answers['noun_12']}** and **{answers['noun_13']}** has persisted across **{answers['noun_14']}** and, **{answers['adverb_1']}**, across the globe, it is not naturally self sustaining. Indeed, **{answers['noun_15']}** have risen and **{answers['noun_16']}** have **{answers['verb_2']}** as **{answers['adjective_4']}** **{answers['noun_17']}** have reached across the globe seeking to **{answers['verb_3']}** the **{answers['noun_18']}** of the **{answers['noun_19']}** and **{answers['noun_20']}**. At the local level, **{answers['noun_21']}** has always been necessary to maintain **{answers['noun_22']}** of **{answers['noun_23']}**, from the **{answers['noun_24']}** patrols of **{answers['adjective_5']}** America to the targeting of **{answers['noun_25']}** by **{real_proper_noun_4}** today. Even on the individual level, **{answers['noun_26']}** has been a **{answers['noun_27']}** of the **{answers['verb_4']}** **{answers['noun_28']}** to compel the **{answers['noun_29']}** of the **{answers['noun_30']}**.")
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -276,28 +276,31 @@ with main_content:
 
         with viz_col[0]:
             st.subheader("Unemployment Statistics")
-            st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
+            # st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
 
-            st.write("### Unemployment Rates for Race and Gender")
-            chart_data = pd.DataFrame(
-                np.random.randn(50, 3),
-                columns=['a', 'b', 'c']
-            )
-            st.line_chart(chart_data) # Streamlit's line_chart uses Altair, which is fine to keep.
+            # Display sex chart
+            # st.write("### Unemployment Rates for Race and Gender") # Removed header
+            st.plotly_chart(sex_chart, use_container_width=True)
 
-            st.write("### Regression Models for Unemployment Probabilities")
-            st.markdown("#### Male Regression Model")
-            st.write("*[Placeholder for Male regression model and results]*")
-            st.markdown("#### Female Regression Model")
-            st.write("*[Placeholder for Female regression model and results]*")
-            st.markdown("#### White Regression Model")
-            st.write("*[Placeholder for White regression model and results]*")
-            st.markdown("#### Black Regression Model")
-            st.write("*[Placeholder for Black regression model and results]*")
-            st.markdown("#### Asian Regression Model")
-            st.write("*[Placeholder for Asian regression model and results]*")
-            st.markdown("#### Latino Regression Model")
-            st.write("*[Placeholder for Latino regression model and results]*")
+            # Display race chart
+            st.plotly_chart(race_chart, use_container_width=True)
+
+            # Remove Regression Models section
+            # st.write("### Regression Models for Unemployment Probabilities") # Removed header
+
+            # Remove individual regression summaries
+            # for series_id in series_name_mapping.keys():
+            #     series_name = series_name_mapping[series_id]
+            #     st.markdown(f"#### {series_name} Regression Model")
+            #     if series_id in regression_results_summary:
+            #         st.text(regression_results_summary[series_id])
+            #     else:
+            #         st.write(f"*[No regression results available for {series_name}]*")
+
+            st.subheader("White Women") # New header as requested
+
+            for chart in white_women_comparison_charts:
+                st.plotly_chart(chart, use_container_width=True)
 
             # --- Occupation Analysis Section (Integrated) ---
             st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 20px 0; padding: 0;"></div>', unsafe_allow_html=True)
