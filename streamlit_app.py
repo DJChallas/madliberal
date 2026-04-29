@@ -194,7 +194,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key)
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16}</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23}</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by **{real_proper_noun_4}** today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16}</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23}</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by **{real_proper_noun_4}** today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30}</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
@@ -443,10 +443,10 @@ with main_content:
                         'value': [white_women_avg['value'], row['value']]
                     })
 
-                    # Define specific colors based on user request
+                    # Define specific colors: Blue for 'White Women' and Red for the comparison group
                     color_map = {
-                        'White Women': px.colors.qualitative.Plotly[0], # Blue (assuming default first color)
-                        comparison_group_name: px.colors.qualitative.Plotly[1] # Red (assuming default second color)
+                        'White Women': px.colors.qualitative.Plotly[0], # Blue
+                        comparison_group_name: px.colors.qualitative.Plotly[3] # Red (index 3 is red in Plotly's default palette)
                     }
 
                     fig = px.bar(
