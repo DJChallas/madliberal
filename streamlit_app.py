@@ -271,7 +271,7 @@ with main_content:
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
-            st.subheader("Unemployment Statistics")
+            # Removed st.subheader("Unemployment Statistics") as per user request
 
             # Data Import and Initial Processing (extracted from 4ba3fbe6)
             headers = {'Content-type': 'application/json'}
@@ -327,8 +327,8 @@ with main_content:
                 df = df.dropna(subset=['month'])
                 df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
                 df = df.drop(columns=['month'])
-                st.markdown("**Raw data DataFrame head:**")
-                st.dataframe(df.head())
+                # st.markdown("**Raw data DataFrame head:**") # Commented out as per user request
+                # st.dataframe(df.head()) # Commented out as per user request
             elif 'message' in json_data:
                 st.error(f"API Error: {json_data['message']}")
             else:
@@ -381,12 +381,12 @@ with main_content:
                 )
                 avg_unemployment_latest_year = avg_unemployment_latest_year.sort_values('series_name')
 
-                st.markdown("**Filtered data (df_filtered) head:**")
-                st.dataframe(df_filtered.head())
-                st.markdown("**Seasonal data (df_seasonal) head for latest full year:**")
-                st.dataframe(df_seasonal.head())
-                st.markdown("**Average unemployment rates for latest full year:**")
-                st.dataframe(avg_unemployment_latest_year)
+                # st.markdown("**Filtered data (df_filtered) head:**") # Commented out as per user request
+                # st.dataframe(df_filtered.head()) # Commented out as per user request
+                # st.markdown("**Seasonal data (df_seasonal) head for latest full year:**") # Commented out as per user request
+                # st.dataframe(df_seasonal.head()) # Commented out as per user request
+                # st.markdown("**Average unemployment rates for latest full year:**") # Commented out as per user request
+                # st.dataframe(avg_unemployment_latest_year) # Commented out as per user request
             else:
                 st.warning("DataFrame 'df' not available for cleaning. Please ensure the data import ran successfully.")
 
@@ -475,6 +475,7 @@ with main_content:
             # --- Display Visualizations ---
             if not df.empty and 'avg_unemployment_latest_year' in locals():
                 st.subheader("Average Unemployment Rates")
+                st.markdown("text text text text text") # Added placeholder text as per user request
                 plot_unemployment_by_sex(avg_unemployment_latest_year, latest_full_year)
                 plot_unemployment_by_race(avg_unemployment_latest_year, latest_full_year)
                 st.subheader("White Women Comparisons")
