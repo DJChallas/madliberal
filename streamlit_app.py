@@ -85,7 +85,7 @@ left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 with left_sidebar:
     if st.session_state.game_stage != 'visualizations': # Show stripes only in input/reveal stages
         # Add alternating red and white stripes like the US flag (49 stripes)
-        for i in range(49): # Changed from 57 to 49
+        for i in range(48): # Changed from 57 to 49
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
     elif st.session_state.game_stage == 'visualizations': # Show 'The Real Story' in left sidebar for visualizations
