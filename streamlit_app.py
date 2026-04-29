@@ -278,35 +278,6 @@ with main_content:
             st.subheader("Unemployment Statistics")
             st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
 
-            st.write("### Unemployment Rates for Race and Gender")
-            chart_data = pd.DataFrame(
-                np.random.randn(50, 3),
-                columns=['a', 'b', 'c']
-            )
-            st.line_chart(chart_data) # Streamlit's line_chart uses Altair, which is fine to keep.
-
-            st.write("### Regression Models for Unemployment Probabilities")
-
-            # Display actual regression summaries for each series
-            series_name_mapping = {
-                'LNS14000006': 'Black or African American',
-                'LNS14000009': 'Hispanic or Latino',
-                'LNS14000003': 'White',
-                'LNS14032183': 'Asian',
-                'LNS14000002': 'Women',
-                'LNS14000001': 'Men',
-                'LNS14000005': 'White Women',
-                'LNS14000004': 'White Men'
-            }
-
-            for series_id in series_name_mapping.keys():
-                series_name = series_name_mapping[series_id]
-                st.markdown(f"#### {series_name} Regression Model")
-                if series_id in regression_results_summary:
-                    st.text(regression_results_summary[series_id])
-                else:
-                    st.write(f"*[No regression results available for {series_name}]*")
-
             # --- Occupation Analysis Section (Integrated) ---
             st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 20px 0; padding: 0;"></div>', unsafe_allow_html=True)
             st.subheader("Occupation by Gender and Race")
