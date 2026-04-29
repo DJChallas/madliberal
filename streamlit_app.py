@@ -32,7 +32,7 @@ left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
     # Add alternating red and white stripes like the US flag (78 stripes)
-    for i in range(57):
+    for i in range(50):
         color = "red" if i % 2 == 0 else "#FFFFFF"
         st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
