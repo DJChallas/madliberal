@@ -271,8 +271,6 @@ with main_content:
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
-            # Removed st.subheader("Unemployment Statistics") as per user request
-
             # Data Import and Initial Processing (extracted from 4ba3fbe6)
             headers = {'Content-type': 'application/json'}
             current_year = datetime.now().year
@@ -327,16 +325,12 @@ with main_content:
                 df = df.dropna(subset=['month'])
                 df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
                 df = df.drop(columns=['month'])
-                # st.markdown("**Raw data DataFrame head:**") # Commented out as per user request
-                # st.dataframe(df.head()) # Commented out as per user request
             elif 'message' in json_data:
                 st.error(f"API Error: {json_data['message']}")
             else:
                 st.warning("Unknown API response format or no data in 'Results'.")
 
             # Data Cleaning (extracted from 312be3e4)
-            st.markdown("<br>") # Add a line break for spacing
-            st.markdown("**Data Cleaning and Preparation:**")
             if not df.empty:
                 df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
@@ -381,12 +375,6 @@ with main_content:
                 )
                 avg_unemployment_latest_year = avg_unemployment_latest_year.sort_values('series_name')
 
-                # st.markdown("**Filtered data (df_filtered) head:**") # Commented out as per user request
-                # st.dataframe(df_filtered.head()) # Commented out as per user request
-                # st.markdown("**Seasonal data (df_seasonal) head for latest full year:**") # Commented out as per user request
-                # st.dataframe(df_seasonal.head()) # Commented out as per user request
-                # st.markdown("**Average unemployment rates for latest full year:**") # Commented out as per user request
-                # st.dataframe(avg_unemployment_latest_year) # Commented out as per user request
             else:
                 st.warning("DataFrame 'df' not available for cleaning. Please ensure the data import ran successfully.")
 
@@ -455,6 +443,12 @@ with main_content:
                         'value': [white_women_avg['value'], row['value']]
                     })
 
+                    # Define specific colors based on user request
+                    color_map = {
+                        'White Women': px.colors.qualitative.Plotly[0], # Blue (assuming default first color)
+                        comparison_group_name: px.colors.qualitative.Plotly[1] # Red (assuming default second color)
+                    }
+
                     fig = px.bar(
                         comparison_df,
                         x='series_name',
@@ -462,7 +456,7 @@ with main_content:
                         title=f"Average Unemployment Rate: White Women vs. {comparison_group_name} in {year}",
                         labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
                         color='series_name',
-                        color_discrete_sequence=px.colors.qualitative.Plotly
+                        color_discrete_map=color_map # Use the defined color map
                     )
 
                     fig.update_layout(
