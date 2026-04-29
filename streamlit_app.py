@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-# import subprocess # Removed as per previous instruction
-# import sys # Removed as per previous instruction
-import plotly.express as px # Added for regression visualization
-import statsmodels.api as sm # Changed to statsmodels for regression
-import random # Added for collage functionality
+import plotly.express as px
+import statsmodels.api as sm
+import random
+import requests
+import json
+from datetime import datetime
 
 # --- Global Streamlit Configuration ---
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
@@ -193,7 +194,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key)
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16}</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23}</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16}</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23}</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by **{real_proper_noun_4}** today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
@@ -266,17 +267,130 @@ with main_content:
         st.markdown(collage_html, unsafe_allow_html=True)
         st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing after collage
 
-        # Removed custom frame div end
-
-# --- Visualizations Stage ---
+    # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
-        # Removed custom frame div start
-        # 'The Real Story' content has been moved to the left_sidebar for this stage.
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
             st.subheader("Unemployment Statistics")
-            st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
+
+            # Data Import and Initial Processing (extracted from 4ba3fbe6)
+            headers = {'Content-type': 'application/json'}
+            current_year = datetime.now().year
+            data = json.dumps({
+                "seriesid": ['LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'],
+                "startyear": str(current_year - 4),
+                "endyear": str(current_year),
+                "registrationkey": "9dd192e92c9c4989985db57deede9647"
+            })
+            p = requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/', data=data, headers=headers)
+            json_data = json.loads(p.text)
+
+            all_series_data = []
+
+            def period_to_month(period_str):
+                if period_str.startswith('M'):
+                    return int(period_str[1:])
+                elif period_str == 'Q01':
+                    return 1
+                elif period_str == 'Q02':
+                    return 4
+                elif period_str == 'Q03':
+                    return 7
+                elif period_str == 'Q04':
+                    return 10
+                return None
+
+            df = pd.DataFrame() # Initialize df outside if/else for broader scope
+            if 'Results' in json_data and 'series' in json_data['Results']:
+                for series in json_data['Results']['series']:
+                    seriesId = series['seriesID']
+                    for item in series['data']:
+                        year = item['year']
+                        period = item['period']
+                        value = item['value']
+                        footnotes_list = []
+                        for footnote in item['footnotes']:
+                            if footnote:
+                                footnotes_list.append(footnote['text'])
+                        footnotes = ','.join(footnotes_list)
+
+                        if ('M01' <= period <= 'M12') or ('Q01' <= period <= 'Q04'):
+                            all_series_data.append({
+                                'series_id': seriesId,
+                                'year': year,
+                                'period': period,
+                                'value': value,
+                                'footnotes': footnotes
+                            })
+                df = pd.DataFrame(all_series_data)
+                df['month'] = df['period'].apply(period_to_month)
+                df = df.dropna(subset=['month'])
+                df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
+                df = df.drop(columns=['month'])
+                st.markdown("**Raw data DataFrame head:**")
+                st.dataframe(df.head())
+            elif 'message' in json_data:
+                st.error(f"API Error: {json_data['message']}")
+            else:
+                st.warning("Unknown API response format or no data in 'Results'.")
+
+            # Data Cleaning (extracted from 312be3e4)
+            st.markdown("<br>") # Add a line break for spacing
+            st.markdown("**Data Cleaning and Preparation:**")
+            if not df.empty:
+                df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
+                df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
+                df_filtered = df.dropna(subset=['value']).copy()
+
+                sn_map = {
+                    'LNS14000006': 'Black or African American',
+                    'LNS14000009': 'Hispanic or Latino',
+                    'LNS14000003': 'White',
+                    'LNS14032183': 'Asian',
+                    'LNS14000002': 'Women',
+                    'LNS14000001': 'Men',
+                    'LNS14000005': 'White Women',
+                    'LNS14000004': 'White Men'
+                }
+                series_name_mapping = sn_map
+
+                latest_full_year = df['year'].astype(int).max()
+                if latest_full_year == datetime.now().year:
+                    latest_full_year -= 1
+
+                df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
+                df_seasonal['series_name'] = df_seasonal['series_id'].map(series_name_mapping)
+
+                avg_unemployment_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
+                avg_unemployment_latest_year['series_name'] = avg_unemployment_latest_year['series_id'].map(series_name_mapping)
+
+                desired_order = [
+                    'Men',
+                    'Women',
+                    'White Men',
+                    'White Women',
+                    'Black or African American',
+                    'Hispanic or Latino',
+                    'Asian',
+                    'White'
+                ]
+                avg_unemployment_latest_year['series_name'] = pd.Categorical(
+                    avg_unemployment_latest_year['series_name'],
+                    categories=desired_order,
+                    ordered=True
+                )
+                avg_unemployment_latest_year = avg_unemployment_latest_year.sort_values('series_name')
+
+                st.markdown("**Filtered data (df_filtered) head:**")
+                st.dataframe(df_filtered.head())
+                st.markdown("**Seasonal data (df_seasonal) head for latest full year:**")
+                st.dataframe(df_seasonal.head())
+                st.markdown("**Average unemployment rates for latest full year:**")
+                st.dataframe(avg_unemployment_latest_year)
+            else:
+                st.warning("DataFrame 'df' not available for cleaning. Please ensure the data import ran successfully.")
+
 
             # --- Occupation Analysis Section (Integrated) ---
             st.markdown(f'<div style="height: 20px; background-color: red; width: 100%; margin: 20px 0; padding: 0;"></div>', unsafe_allow_html=True)
