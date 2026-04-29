@@ -231,15 +231,29 @@ with main_content:
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
-            st.subheader("Visualizations of Important Data")
+            st.subheader("Unemployment Statistics")
             st.write("Here you would integrate your actual data visualizations, potentially related to the BLS data we loaded earlier, or other relevant datasets.")
 
-            st.write("### Sample Data Visualization (Random Data)")
+            st.write("### Unemployment Rates for Race and Gender")
             chart_data = pd.DataFrame(
                 np.random.randn(50, 3),
                 columns=['a', 'b', 'c']
             )
             st.line_chart(chart_data) # Streamlit's line_chart uses Altair, which is fine to keep.
+
+            st.write("### Regression Models for Unemployment Probabilities")
+            st.markdown("#### Male Regression Model")
+            st.write("*[Placeholder for Male regression model and results]*")
+            st.markdown("#### Female Regression Model")
+            st.write("*[Placeholder for Female regression model and results]*")
+            st.markdown("#### White Regression Model")
+            st.write("*[Placeholder for White regression model and results]*")
+            st.markdown("#### Black Regression Model")
+            st.write("*[Placeholder for Black regression model and results]*")
+            st.markdown("#### Asian Regression Model")
+            st.write("*[Placeholder for Asian regression model and results]*")
+            st.markdown("#### Latino Regression Model")
+            st.write("*[Placeholder for Latino regression model and results]*")
 
             st.write("### Another Placeholder Chart")
             # Note: For a real app, you'd load/process this data within the Streamlit app itself.
