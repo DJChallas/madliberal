@@ -97,9 +97,11 @@ with left_sidebar:
         st.markdown("---") # Separator
 
         if st.session_state.game_stage == 'visualizations':
-            if st.button("About this Project", key="about_project_btn_sidebar"):
-                st.session_state.game_stage = 'about_project'
-                st.rerun()
+            col1_btn, col2_btn, col3_btn = st.columns([1,2,1]) # Added columns for centering
+            with col2_btn:
+                if st.button("About this Project", key="about_project_btn_sidebar"):
+                    st.session_state.game_stage = 'about_project'
+                    st.rerun()
         elif st.session_state.game_stage == 'about_project':
             st.subheader("About this Project") # Indicate current page
 
