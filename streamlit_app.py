@@ -31,7 +31,7 @@ if 'game_stage' not in st.session_state:
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
-    if st.session_state.game_stage == 'madlib_input':
+    if st.session_state.game_stage in ['madlib_input', 'madlib_reveal']:
         # Add alternating red and white stripes like the US flag (50 stripes)
         for i in range(50):
             color = "red" if i % 2 == 0 else "#FFFFFF"
