@@ -405,6 +405,9 @@ with main_content:
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
                 df_filtered = df.dropna(subset=['value']).copy()
 
+                # Store df_filtered in session state for display on 'About This Project' page
+                st.session_state.df_cleaned_for_display = df_filtered.copy()
+
                 sn_map = {
                     'LNS14000006': 'Black or African American',
                     'LNS14000009': 'Hispanic or Latino',
@@ -601,6 +604,13 @@ Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts
 """)
 
         st.markdown("-" * 3)
+
+        # Display cleaned data if available
+        if 'df_cleaned_for_display' in st.session_state and not st.session_state.df_cleaned_for_display.empty:
+            st.subheader("Cleaned Data Preview (first 5 rows):")
+            st.dataframe(st.session_state.df_cleaned_for_display.head())
+        else:
+            st.info("Cleaned data will appear here after visiting the 'Unemployment Visualizations' section.")
 
 
 # --- Footer ---
