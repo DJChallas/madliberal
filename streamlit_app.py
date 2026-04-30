@@ -64,7 +64,6 @@ real_noun_29 = "compliance"
 real_noun_30 = "poor"
 
 # --- Streamlit App ---
-# New global header (left-aligned) as requested
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
 with col_title_global:
     st.markdown("<div style='background-color:red; padding: 2px; border-radius: 10px;'><h1 style='color:white; text-align:center; margin: 0; padding: 0;'>Mad Liberal</h1></div>", unsafe_allow_html=True)
@@ -86,7 +85,7 @@ left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes only in input/reveal stages
-        # Add alternating red and white stripes like the US flag (47 stripes)
+        # Add alternating red and white stripes
         for i in range(47):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
@@ -97,10 +96,8 @@ with left_sidebar:
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From Mesopotamia to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
-        st.markdown("---") # Separator
+        st.markdown("---")
 
-        # Removed 'Complete Mad Lib' button as per user request
-        # if st.button("Complete Mad Lib", key="complete_madlib_btn_sidebar", use_container_width=True):
         #     st.session_state.game_stage = 'madlib_input'
         #     st.rerun()
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
@@ -113,17 +110,16 @@ with left_sidebar:
             st.session_state.game_stage = 'about_project'
             st.rerun()
 
-    elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar for this stage
-        # Generate and display the collage
+    elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
             real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
             real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_10, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_noun_16, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_19, real_noun_20, real_noun_21, real_noun_22, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
+            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
+            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
+            real_noun_30
         ]
         random.seed(42)
         random.shuffle(all_real_words)
@@ -138,10 +134,8 @@ with left_sidebar:
             collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
         st.markdown(collage_html, unsafe_allow_html=True)
 
-        st.markdown("---") # Separator
+        st.markdown("-" * 3) # Separator
 
-        # Removed 'Complete Mad Lib' button as per user request
-        # if st.button("Complete Mad Lib", key="complete_madlib_btn_sidebar", use_container_width=True):
         #     st.session_state.game_stage = 'madlib_input'
         #     st.rerun()
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar_common", use_container_width=True):
@@ -162,53 +156,53 @@ with main_content:
                 ("Noun 1", "noun_1"),
                 ("Noun 2", "noun_2"),
                 ("Noun 3", "noun_3"),
-                ("Noun 4", "noun_4"), # Was Noun 1X
+                ("Noun 4", "noun_4"),
                 ("Plural Noun 1", "noun_resource"),
                 ("Plural Noun 2", "noun_society_plural"),
 
                 ("Proper Noun 2", "proper_noun_2"),
                 ("Plural Noun 3", "plural_noun_3"),
                 ("Adjective 1", "adjective_1"),
-                ("Noun 5", "noun_5"), # Was Noun 4
-                ("Noun 6", "noun_6"), # Was Noun 5
+                ("Noun 5", "noun_5"),
+                ("Noun 6", "noun_6"),
                 ("Plural Noun 4", "plural_noun_4"),
                 ("Plural Noun 5", "plural_noun_5"),
-                ("Noun 7", "noun_7"), # Was Noun 6
+                ("Noun 7", "noun_7"),
                 ("Verb 1", "verb_1"),
                 ("Adjective 2", "adjective_2"),
-                ("Noun 8", "noun_8"), # Was Noun 7
-                ("Noun 9", "noun_9"), # Was Noun 8
+                ("Noun 8", "noun_8"),
+                ("Noun 9", "noun_9"),
                 ("Proper Noun 3", "proper_noun_3"),
-                ("Noun 10", "noun_10"), # Was Noun 9
-                ("Noun 11", "noun_11"), # Was Noun 10
+                ("Noun 10", "noun_10"),
+                ("Noun 11", "noun_11"),
 
                 ("Adjective 3", "adjective_3"),
-                ("Noun 12", "noun_12"), # Was Noun 11
-                ("Noun 13", "noun_13"), # Was Noun 12
-                ("Noun 14", "noun_14"), # Was Noun 13
+                ("Noun 12", "noun_12"),
+                ("Noun 13", "noun_13"),
+                ("Noun 14", "noun_14"),
                 ("Adverb 1", "adverb_1"),
-                ("Noun 15", "noun_15"), # Was Noun 14
-                ("Noun 16", "noun_16"), # Was Noun 15
+                ("Noun 15", "noun_15"),
+                ("Noun 16", "noun_16"),
                 ("Verb 2", "verb_2"),
                 ("Adjective 4", "adjective_4"),
-                ("Noun 17", "noun_17"), # Was Noun 16
+                ("Noun 17", "noun_17"),
                 ("Verb 3", "verb_3"),
-                ("Noun 18", "noun_18"), # Was Noun 17
-                ("Noun 19", "noun_19"), # Was Noun 18
-                ("Noun 20", "noun_20"), # Was Noun 19
-                ("Noun 21", "noun_21"), # Was Noun 20
-                ("Noun 22", "noun_22"), # Was Noun 21
-                ("Noun 23", "noun_23"), # Was Noun 22
+                ("Noun 18", "noun_18"),
+                ("Noun 19", "noun_19"),
+                ("Noun 20", "noun_20"),
+                ("Noun 21", "noun_21"),
+                ("Noun 22", "noun_22"),
+                ("Noun 23", "noun_23"),
                 ("Adjective 5", "adjective_5"),
-                ("Noun 24", "noun_24"), # Was Noun 23
+                ("Noun 24", "noun_24"),
                 ("Proper Noun 4", "proper_noun_4"),
-                ("Noun 25", "noun_25"), # Was Noun 24
-                ("Noun 26", "noun_26"), # Was Noun 25
-                ("Noun 27", "noun_27"), # Was Noun 26
+                ("Noun 25", "noun_25"),
+                ("Noun 26", "noun_26"),
+                ("Noun 27", "noun_27"),
                 ("Verb 4", "verb_4"),
-                ("Noun 28", "noun_28"), # Was Noun 27
-                ("Noun 29", "noun_29"), # Was Noun 28
-                ("Noun 30", "noun_30"), # Was Noun 29
+                ("Noun 28", "noun_28"),
+                ("Noun 29", "noun_29"),
+                ("Noun 30", "noun_30"),
             ]
 
             input_values = {}
@@ -285,11 +279,11 @@ with main_content:
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
             real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
             real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_10, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_noun_16, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_19, real_noun_20, real_noun_21, real_noun_22, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
+            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
+            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
+            real_noun_30
         ]
         # Shuffle for a more collage-like effect and vary styles
         random.seed(42) # for reproducibility
@@ -370,7 +364,7 @@ with main_content:
             else:
                 st.warning("Unknown API response format or no data in 'Results'.")
 
-            # Data Cleaning (extracted from 312be3e4)
+            # Data Cleaning
             if not df.empty:
                 df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
@@ -489,7 +483,7 @@ with main_content:
                         y='value',
                         title=f"Average Unemployment Rate: White Women vs. {comparison_group_name} in {year}",
                         labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
-                        color='series_name' # Let Plotly assign colors dynamically
+                        color='series_name'
                     )
 
                     fig.update_layout(
@@ -515,18 +509,18 @@ with main_content:
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
             real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
             real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_10, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_noun_16, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_19, real_noun_20, real_noun_21, real_noun_22, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
+            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
+            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
+            real_noun_30
         ]
-        # Shuffle for a more collage-like effect and vary styles
-        random.seed(42) # for reproducibility
+        
+        random.seed(42)
         random.shuffle(all_real_words)
 
         collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666'] # Red, Blue, Dark Gray, Medium Gray
+        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
         font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
 
         for word in all_real_words:
@@ -549,18 +543,18 @@ with main_content:
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
             real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
             real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_10, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_noun_16, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_19, real_noun_20, real_noun_21, real_noun_22, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
+            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
+            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
+            real_noun_30
         ]
-        # Shuffle for a more collage-like effect and vary styles
-        random.seed(42) # for reproducibility
+        
+        random.seed(42)
         random.shuffle(all_real_words)
 
         collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666'] # Red, Blue, Dark Gray, Medium Gray
+        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
         font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
 
         for word in all_real_words:
@@ -579,25 +573,25 @@ with main_content:
         st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
 
 
-        st.markdown("---") # Separator
+        st.markdown("-" * 3) 
 
         st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing before collage
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
             real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
             real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_10, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_noun_16, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_19, real_noun_20, real_noun_21, real_noun_22, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
+            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
+            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
+            real_noun_30
         ]
-        # Shuffle for a more collage-like effect and vary styles
-        random.seed(42) # for reproducibility
+        
+        random.seed(42) 
         random.shuffle(all_real_words)
 
         collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666'] # Red, Blue, Dark Gray, Medium Gray
+        colors = ['#FF0000', '#0000FF', '#333333', '#666666'] 
         font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
 
         for word in all_real_words:
