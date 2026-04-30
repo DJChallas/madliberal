@@ -448,7 +448,7 @@ with main_content:
                 ]
 
                 other_demographics_ordered = avg_unemployment_df[
-                    avg_unemployment_df['series_name'] != 'White Women'
+                    avg_unemployment_latest_year['series_name'] != 'White Women'
                 ].set_index('series_name').loc[comparison_order].reset_index()
 
                 for index, row in other_demographics_ordered.iterrows():
@@ -493,6 +493,35 @@ with main_content:
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex and Race")
             st.write("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across some of the most popular occupations shown there. A regression analysis is provided from the data, however, it should not be considered to be representative of the entire US job market, only illustrative of the occupations and industries shown here. Where possible the main Industry is represented as well as the most popular occupations by statistics calculated by the BLS.")
+            st.markdown("""
+            *   Management, professional, and related occupations
+                *   Management, business, and financial operations occupations
+                *   Business and financial operations occupations
+                *   Professional and related occupations
+                *   Architecture and engineering occupations
+                *   Life, physical, and social science occupations
+                *   Community and social service occupations
+                *   Legal occupations
+                *   Education, training, and library occupations	
+                *   Arts, design, entertainment, sports, and media occupations
+                *   Healthcare practitioners and technical occupations
+            *   Service occupations
+                *   Healthcare support occupations
+                *   Protective service occupations
+                *   Food preparation and serving related occupations
+                *   Building and grounds cleaning and maintenance occupations
+                *   Personal care and service occupations
+            *   Sales and office occupations
+                *   Sales and related occupations
+                *   Office and administrative support occupations
+            *   Natural resources, construction, and maintenance occupations
+                *   Farming, fishing, and forestry occupations
+                *   Construction and extraction occupations
+                *   Installation, maintenance, and repair occupations
+            *   Production, transportation, and material moving occupations
+                *   Production occupations
+                *   Transportation and material moving occupations
+            """)
 
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
