@@ -449,7 +449,7 @@ with main_content:
                 ]
 
                 label_mapping = {
-                    'Asian': 'Asians, Men/Women',
+                    'Asian': 'Asian, Men/Women',
                     'White Men': 'White Men',
                     'Men': 'Men, All Races',
                     'Women': 'Women, All Races',
@@ -504,14 +504,49 @@ with main_content:
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex and Race")
             st.write("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across some of the most popular occupations shown there. A regression analysis is provided from the data, however, it should not be considered to be representative of the entire US job market, only illustrative of the occupations and industries shown here. Where possible the main Industry is represented as well as the most popular occupations by statistics calculated by the BLS.")
+            st.markdown("""
+                **Management, professional, and related occupations**
+                * Management, business, and financial operations occupations
+                * Business and financial operations occupations
+                * Professional and related occupations
+                * Architecture and engineering occupations
+                * Life, physical, and social science occupations
+                * Community and social service occupations
+                * Legal occupations
+                * Education, training, and library occupations
+                * Arts, design, entertainment, sports, and media occupations
+                * Healthcare practitioners and technical occupations
+                **Service occupations**
+                * Healthcare support occupations
+                * Protective service occupations
+                * Food preparation and serving related occupations
+                * Building and grounds cleaning and maintenance occupations
+                * Personal care and service occupations
+                **Sales and office occupations**
+                * Sales and related occupations
+                * Office and administrative support occupations
+                **Natural resources, construction, and maintenance occupations**
+                * Farming, fishing, and forestry occupations
+                * Construction and extraction occupations
+                * Installation, maintenance, and repair occupations
+                **Production, transportation, and material moving occupations**
+                * Production occupations
+                * Transportation and material moving occupations
+            """)
 
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
-        st.write("The first half of my adult life I dedicated to creating art. Primarily music and video, finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. ")
-        st.write("The work I created has become artifacts of the life I’m leaving behind.")
-        st.write("For me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting.")
-        st.write("What has become troubling to me as I’ve matured are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the bounds of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.")
-        st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
+        st.markdown("""
+The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality.
+
+The work I created has become artifacts of the life I’m leaving behind.
+
+For me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”
+
+What has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.
+
+Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004
+""")
 
         st.markdown("-" * 3)
 
