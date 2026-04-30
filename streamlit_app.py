@@ -216,7 +216,7 @@ with main_content:
             for i in range(6):
                 label, key = input_fields_all[i]
                 with cols[(i - 0) % 3]: # Adjusted for 0-based indexing
-                    input_values[key] = st.text_input(label, key=key)
+                    input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
 
             # Paragraph 2 - after Plural Noun 2
             st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have <span style='color:red;'>VERB 1</span> in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 9</span> where huge swaths of <span style='color:red;'>NOUN 10</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 11</span>.", unsafe_allow_html=True)
@@ -226,7 +226,7 @@ with main_content:
             for i in range(6, 21):
                 label, key = input_fields_all[i]
                 with cols[(i - 6) % 3]:
-                    input_values[key] = st.text_input(label, key=key)
+                    input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
 
             # Paragraph 3 - after Noun 11
             st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
@@ -236,7 +236,7 @@ with main_content:
             for i in range(21, len(input_fields_all)):
                 label, key = input_fields_all[i]
                 with cols[(i - 21) % 3]:
-                    input_values[key] = st.text_input(label, key=key)
+                    input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
 
             # Add some spacing after the input fields
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
@@ -571,9 +571,9 @@ with main_content:
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
         st.write("The first half of my adult life I dedicated to creating art. Primarily music and video, finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. ")
-        st.write("The work I created has become artifacts of the life I\u2019m leaving behind.")
+        st.write("The work I created has become artifacts of the life I’m leaving behind.")
         st.write("For me the pursuit of spirituality can be best understood as a search for truth. In that search is a quest to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measure processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered \"correct.\"")
-        st.write("What has become troubling to me as I\u2019ve matured are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the bounds of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.")
+        st.write("What has become troubling to me as I’ve matured are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the bounds of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.")
         st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
 
 
