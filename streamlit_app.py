@@ -96,7 +96,7 @@ with left_sidebar:
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From Mesopotamia to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
-        st.markdown("---")
+        st.markdown("-" * 3)
 
         #     st.session_state.game_stage = 'madlib_input'
         #     st.rerun()
@@ -113,13 +113,14 @@ with left_sidebar:
     elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
-            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
-            real_noun_30
+            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
+            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
+            real_noun_8, real_noun_9,
+            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+            real_noun_29, real_noun_30
         ]
         random.seed(42)
         random.shuffle(all_real_words)
@@ -274,16 +275,17 @@ with main_content:
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing before collage
+        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
-            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
-            real_noun_30
+            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
+            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
+            real_noun_8, real_noun_9,
+            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+            real_noun_29, real_noun_30
         ]
         # Shuffle for a more collage-like effect and vary styles
         random.seed(42) # for reproducibility
@@ -504,18 +506,19 @@ with main_content:
             else:
                 st.warning("Cannot generate visualizations, data not available.")
 
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing before collage
+        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
-            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
-            real_noun_30
+            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
+            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
+            real_noun_8, real_noun_9,
+            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+            real_noun_29, real_noun_30
         ]
-        
+
         random.seed(42)
         random.shuffle(all_real_words)
 
@@ -538,18 +541,19 @@ with main_content:
             st.subheader("Industry Visualizations about Sex and Race")
             st.write("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across some of the most popular occupations shown there. A regression analysis is provided from the data, however, it should not be considered to be representative of the entire US job market, only illustrative of the occupations and industries shown here. Where possible the main Industry is represented as well as the most popular occupations by statistics calculated by the BLS.")
 
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing before collage
+        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
-            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
-            real_noun_30
+            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
+            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
+            real_noun_8, real_noun_9,
+            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+            real_noun_29, real_noun_30
         ]
-        
+
         random.seed(42)
         random.shuffle(all_real_words)
 
@@ -573,25 +577,26 @@ with main_content:
         st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
 
 
-        st.markdown("-" * 3) 
+        st.markdown("-" * 3)
 
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing before collage
+        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
         all_real_words = [
             real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
-            real_proper_noun_3, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_adverb_1, real_noun_15, real_verb_2, real_adjective_4, real_noun_18, real_verb_3,
-            real_noun_19, real_noun_21, real_noun_23, real_noun_24,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_28,
-            real_noun_30
+            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
+            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
+            real_noun_8, real_noun_9,
+            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+            real_noun_29, real_noun_30
         ]
-        
-        random.seed(42) 
+
+        random.seed(42)
         random.shuffle(all_real_words)
 
         collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666'] 
+        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
         font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
 
         for word in all_real_words:
