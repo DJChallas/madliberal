@@ -231,17 +231,18 @@ with main_content:
                 "noun_resource": "donations", "noun_society_plural": "Onlyfans pages",
                 "proper_noun_2": "2010’s", "plural_noun_3": "nightclubs", "adjective_1": "super",
                 "noun_5": "discount", "noun_6": "Lady’s Night", "plural_noun_4": "sidepieces",
-                "plural_noun_5": "us", "noun_7": "divas", "verb_1": "guestlist",
-                "adjective_2": "cocktails", "noun_8": "vodka", "noun_9": "potatoes",
-                "proper_noun_3": "ghosting", "noun_10": "money", "noun_11": "us",
-                "adjective_3": "Onlyfans pages", "noun_12": "unacceptable", "noun_13": "mine",
-                "noun_14": "yours", "adverb_1": "Saturday", "noun_15": "unbelievably",
-                "noun_16": "comments", "verb_2": "thumbs downs", "adjective_4": "sparked",
-                "noun_17": "boring", "verb_3": "DM’s", "noun_18": "text", "noun_19": "cellular",
-                "noun_20": "bestie", "noun_21": "whatever", "noun_22": "money", "noun_23": "coverage",
-                "adjective_5": "lip gloss", "noun_24": "dude", "proper_noun_4": "Downtown",
-                "noun_25": "digits", "noun_26": "scrubs", "noun_27": "bank account", "verb_4": "symbol",
-                "noun_28": "desired", "noun_29": "husband", "noun_30": "stoppage"
+                "plural_noun_5": "attractive", "noun_7": "divas", "verb_1": "cried",
+                "adjective_2": "guestlist", "noun_8": "a cocktail", "noun_9": "vodka",
+                "proper_noun_3": "potatoes", "noun_10": "ghosting", "noun_11": "money",
+                "adjective_3": "unacceptable", "noun_12": "mine", "noun_13": "yours",
+                "noun_14": "Saturday", "adverb_1": "unbelievably", "noun_15": "comments",
+                "noun_16": "thumbs downs", "verb_2": "sparked", "adjective_4": "boring",
+                "noun_17": "DMs", "verb_3": "text", "noun_18": "cellular",
+                "noun_19": "bestie", "noun_20": "whatever", "noun_21": "money",
+                "noun_22": "coverage", "noun_23": "lip gloss", "adjective_5": "dude",
+                "noun_24": "Downtown", "proper_noun_4": "digits", "noun_25": "scrubs",
+                "noun_26": "bank account", "noun_27": "symbol", "verb_4": "desired",
+                "noun_28": "husband", "noun_29": "stoppage", "noun_30": "dating"
             }
 
             # Paragraph 1 - at the start
