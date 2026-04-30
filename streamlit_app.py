@@ -607,8 +607,15 @@ Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts
 
         # Display cleaned data if available
         if 'df_cleaned_for_display' in st.session_state and not st.session_state.df_cleaned_for_display.empty:
-            st.subheader("Cleaned Data Preview (first 5 rows):")
-            st.dataframe(st.session_state.df_cleaned_for_display.head())
+            st.subheader("Cleaned Data Preview:")
+            st.dataframe(st.session_state.df_cleaned_for_display)
+            csv = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="Download Full Cleaned Data",
+                data=csv,
+                file_name='cleaned_unemployment_data.csv',
+                mime='text/csv',
+            )
         else:
             st.info("Cleaned data will appear here after visiting the 'Unemployment Visualizations' section.")
 
