@@ -63,6 +63,35 @@ real_noun_28 = "elites"
 real_noun_29 = "compliance"
 real_noun_30 = "poor"
 
+# --- Global list for text collage (shortened version as per previous instructions) ---
+all_real_words = [
+    real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
+    real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
+    real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
+    real_noun_8, real_noun_9,
+    real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+    real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+    real_noun_18, real_noun_20, real_noun_22, real_noun_23,
+    real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+    real_noun_29, real_noun_30
+]
+
+# --- Function to display the text collage ---
+def display_text_collage():
+    random.seed(42) # for reproducibility
+    random.shuffle(all_real_words)
+    collage_html = ""
+    colors = ['#FF0000', '#0000FF', '#333333', '#666666'] # Red, Blue, Dark Gray, Medium Gray
+    font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
+    for word in all_real_words:
+        color = random.choice(colors)
+        font_size = random.choice(font_sizes)
+        collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Spacing before
+    st.markdown(collage_html, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Spacing after
+
+
 # --- Streamlit App ---
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
 with col_title_global:
@@ -84,11 +113,12 @@ if 'game_stage' not in st.session_state:
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
-    if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes only in input/reveal stages
+    if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
         # Add alternating red and white stripes
         for i in range(47):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
+        display_text_collage()
 
     elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'industry_visualizations': # Show 'The Real Story' and navigation in left sidebar for visualization stages
         st.subheader("The Real Story:")
@@ -98,8 +128,6 @@ with left_sidebar:
 
         st.markdown("-" * 3)
 
-        #     st.session_state.game_stage = 'madlib_input'
-        #     st.rerun()
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
@@ -109,36 +137,12 @@ with left_sidebar:
         if st.button("About this Project", key="about_project_btn_sidebar_common", use_container_width=True):
             st.session_state.game_stage = 'about_project'
             st.rerun()
+        display_text_collage()
 
     elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
-        all_real_words = [
-            real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
-            real_noun_8, real_noun_9,
-            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
-        ]
-        random.seed(42)
-        random.shuffle(all_real_words)
-
-        collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
-        font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
-
-        for word in all_real_words:
-            color = random.choice(colors)
-            font_size = random.choice(font_sizes)
-            collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
-        st.markdown(collage_html, unsafe_allow_html=True)
-
+        display_text_collage()
         st.markdown("-" * 3) # Separator
 
-        #     st.session_state.game_stage = 'madlib_input'
-        #     st.rerun()
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar_common", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
@@ -259,7 +263,7 @@ with main_content:
         answers = st.session_state.madlib_answers
         st.markdown(f"While the history of <b>{answers['noun_1']}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{answers['noun_2']}</b>, the themes of our <b>{answers['noun_3']}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{answers['noun_4']}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{answers['noun_resource']}</b> within <b>{answers['noun_society_plural']}</b> across the globe.", unsafe_allow_html=True)
         st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have <b>{answers['verb_1']}</b> in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_9']}</b> where huge swaths of <b>{answers['noun_10']}</b> are unable to reap the full benefit of their own <b>{answers['noun_11']}</b>.", unsafe_allow_html=True)
-        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_12']}</b> and <b>{answers['noun_13']}</b> has persisted across <b>{answers['noun_14']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_15']}</b> have risen and <b>{answers['noun_16']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_17']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_18']}</b> of the <b>{answers['noun_19']}</b> and <b>{answers['noun_20']}</b>. At the local level, <b>{answers['noun_21']}</b> has always been necessary to maintain <b>{answers['noun_22']}</b> of <b>{answers['noun_23']}</b>, from the <b>{answers['noun_24']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_25']}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{answers['noun_26']}</b> has been a <b>{answers['noun_27']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_28']}</b> to compel the <b>{answers['noun_29']}</b> of the <b>{answers['noun_30']}</b>.", unsafe_allow_html=True)
+        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_12']}</b> and <b>{answers['noun_13']}</b> has persisted across <b>{answers['noun_14']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_15']}</b> have risen and <b>{answers['noun_16']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_17']}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{answers['noun_18']}</b> of the <b>{answers['noun_19']}</b> and <b>{answers['noun_20']}</b>. At the local level, <b>{answers['noun_21']}</b> has always been necessary to maintain <b>{answers['noun_22']}</b> of <b>{answers['noun_23']}</b>, from the <b>{answers['noun_24']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_25']}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{answers['noun_26']}</b> has been a <b>{answers['noun_27']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_28']}</b> to compel the <b>{answers['noun_29']}</b> of the <b>{answers['noun_30']}</b>.", unsafe_allow_html=True)
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -274,33 +278,6 @@ with main_content:
                 st.session_state.game_stage = 'visualizations'
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
-        all_real_words = [
-            real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
-            real_noun_8, real_noun_9,
-            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
-        ]
-        # Shuffle for a more collage-like effect and vary styles
-        random.seed(42) # for reproducibility
-        random.shuffle(all_real_words)
-
-        collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666'] # Red, Blue, Dark Gray, Medium Gray
-        font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
-
-        for word in all_real_words:
-            color = random.choice(colors)
-            font_size = random.choice(font_sizes)
-            collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
-        st.markdown(collage_html, unsafe_allow_html=True)
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing after collage
 
     # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
@@ -368,7 +345,7 @@ with main_content:
 
             # Data Cleaning
             if not df.empty:
-                df['value'] = df['value'].astype(str).str.replace(r'\s+\(d+\)', '', regex=True)
+                df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
                 df_filtered = df.dropna(subset=['value']).copy()
 
@@ -506,33 +483,6 @@ with main_content:
             else:
                 st.warning("Cannot generate visualizations, data not available.")
 
-        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
-        all_real_words = [
-            real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
-            real_noun_8, real_noun_9,
-            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
-        ]
-
-        random.seed(42)
-        random.shuffle(all_real_words)
-
-        collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
-        font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
-
-        for word in all_real_words:
-            color = random.choice(colors)
-            font_size = random.choice(font_sizes)
-            collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
-        st.markdown(collage_html, unsafe_allow_html=True)
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing after collage
-
     # --- Industry Visualizations Stage ---
     elif st.session_state.game_stage == 'industry_visualizations':
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
@@ -540,33 +490,6 @@ with main_content:
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex and Race")
             st.write("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across some of the most popular occupations shown there. A regression analysis is provided from the data, however, it should not be considered to be representative of the entire US job market, only illustrative of the occupations and industries shown here. Where possible the main Industry is represented as well as the most popular occupations by statistics calculated by the BLS.")
-
-        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
-        all_real_words = [
-            real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
-            real_noun_8, real_noun_9,
-            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
-        ]
-
-        random.seed(42)
-        random.shuffle(all_real_words)
-
-        collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
-        font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
-
-        for word in all_real_words:
-            color = random.choice(colors)
-            font_size = random.choice(font_sizes)
-            collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
-        st.markdown(collage_html, unsafe_allow_html=True)
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing after collage
 
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
@@ -576,35 +499,7 @@ with main_content:
         st.write("What has become troubling to me as I’ve matured are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the bounds of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.")
         st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
 
-
         st.markdown("-" * 3)
-
-        st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Add spacing before collage
-        all_real_words = [
-            real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
-            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
-            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1,
-            real_noun_8, real_noun_9,
-            real_proper_noun_3, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
-            real_noun_15, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
-            real_noun_18, real_noun_20, real_noun_22, real_noun_23,
-            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
-            real_noun_29, real_noun_30
-        ]
-
-        random.seed(42)
-        random.shuffle(all_real_words)
-
-        collage_html = ""
-        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
-        font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
-
-        for word in all_real_words:
-            color = random.choice(colors)
-            font_size = random.choice(font_sizes)
-            collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
-        st.markdown(collage_html, unsafe_allow_html=True)
-        st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing after collage
 
 
 # --- Footer ---
