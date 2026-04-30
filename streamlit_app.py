@@ -447,15 +447,25 @@ with main_content:
                     'Black or African American'
                 ]
 
+                label_mapping = {
+                    'Asian': 'Asian',
+                    'White Men': 'Men, All Races', # Assuming 'White Men' also becomes 'Men, All Races'
+                    'Men': 'Men, All Races',
+                    'Women': 'Women, All Races',
+                    'Hispanic or Latino': 'Hispanic or Latino, Men/Women',
+                    'Black or African American': 'Black or African American, Men/Women'
+                }
+
                 other_demographics_ordered = avg_unemployment_df[
                     avg_unemployment_latest_year['series_name'] != 'White Women'
                 ].set_index('series_name').loc[comparison_order].reset_index()
 
                 for index, row in other_demographics_ordered.iterrows():
                     comparison_group_name = row['series_name']
+                    display_comparison_group_name = label_mapping.get(comparison_group_name, comparison_group_name)
 
                     comparison_df = pd.DataFrame({
-                        'series_name': ['White Women', comparison_group_name],
+                        'series_name': ['White Women', display_comparison_group_name],
                         'value': [white_women_avg['value'], row['value']]
                     })
 
@@ -463,7 +473,7 @@ with main_content:
                         comparison_df,
                         x='series_name',
                         y='value',
-                        title=f"Average Unemployment Rate: White Women vs. {comparison_group_name} in {year}",
+                        title=f"Average Unemployment Rate: White Women vs. {display_comparison_group_name} in {year}",
                         labels={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'},
                         color='series_name'
                     )
@@ -502,7 +512,7 @@ with main_content:
                 *   Life, physical, and social science occupations
                 *   Community and social service occupations
                 *   Legal occupations
-                *   Education, training, and library occupations	
+                *   Education, training, and library occupations
                 *   Arts, design, entertainment, sports, and media occupations
                 *   Healthcare practitioners and technical occupations
             *   Service occupations
