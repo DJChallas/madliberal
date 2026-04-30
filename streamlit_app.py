@@ -91,7 +91,7 @@ with left_sidebar:
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
-    elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'about_project' or st.session_state.game_stage == 'industry_visualizations': # Show 'The Real Story' and navigation in left sidebar for visualization stages
+    elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'industry_visualizations': # Show 'The Real Story' and navigation in left sidebar for visualization stages
         st.subheader("The Real Story:")
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>While the history of <b>{real_noun_1}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{real_noun_2}</b>, the themes of our <b>{real_noun_3}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{real_noun_4}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{real_noun_resource}</b> within <b>{real_noun_society_plural}</b> across the globe.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From Mesopotamia to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
@@ -113,6 +113,47 @@ with left_sidebar:
             st.session_state.game_stage = 'about_project'
             st.rerun()
 
+    elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar for this stage
+        st.subheader("Collage:")
+        # Generate and display the collage
+        all_real_words = [
+            real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
+            real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5, real_noun_6,
+            real_plural_noun_4, real_plural_noun_5, real_noun_7, real_verb_1, real_adjective_2, real_noun_8, real_noun_9,
+            real_proper_noun_3, real_noun_10, real_noun_11, real_adjective_3, real_noun_12, real_noun_13, real_noun_14,
+            real_adverb_1, real_noun_15, real_noun_16, real_verb_2, real_adjective_4, real_noun_17, real_verb_3,
+            real_noun_18, real_noun_19, real_noun_20, real_noun_21, real_noun_22, real_noun_23, real_noun_24,
+            real_adjective_5, real_noun_25, real_proper_noun_4, real_noun_26, real_noun_27, real_verb_4, real_noun_28,
+            real_noun_29, real_noun_30
+        ]
+        random.seed(42)
+        random.shuffle(all_real_words)
+
+        collage_html = ""
+        colors = ['#FF0000', '#0000FF', '#333333', '#666666']
+        font_sizes = ['1.0em', '1.2em', '1.4em', '1.6em', '1.8em']
+
+        for word in all_real_words:
+            color = random.choice(colors)
+            font_size = random.choice(font_sizes)
+            collage_html += f"<span style='color:{color}; font-size:{font_size}; margin: 0 5px; display: inline-block;'>{word}</span> "
+        st.markdown(collage_html, unsafe_allow_html=True)
+
+        st.markdown("--- # Separator")
+
+        # Removed 'Complete Mad Lib' button as per user request
+        # if st.button("Complete Mad Lib", key="complete_madlib_btn_sidebar", use_container_width=True):
+        #     st.session_state.game_stage = 'madlib_input'
+        #     st.rerun()
+        if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar_common", use_container_width=True):
+            st.session_state.game_stage = 'visualizations'
+            st.rerun()
+        if st.button("Industry Visualizations", key="industry_viz_btn_sidebar_common", use_container_width=True):
+            st.session_state.game_stage = 'industry_visualizations'
+            st.rerun()
+        if st.button("About this Project", key="about_project_btn_sidebar_about", use_container_width=True):
+            st.session_state.game_stage = 'about_project'
+            st.rerun()
 
 with main_content:
     # --- Mad Lib Input Stage ---
@@ -532,14 +573,9 @@ with main_content:
 
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
-        st.write("The first half of my adult life I dedicated to creating art. Primarily music and video, finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality.")
-        st.write("The work I created has become artifacts of the life I'm leaving behind.")
-        st.write("For me the pursuit of spirituality is best understood as a search for truth. In that search is a quest to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”")
-        st.write("What has become troubling to me as I matured are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the bounds of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.")
-        st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis for your companionship with shirts and hairstyling provided by Professor Dustin White.")
-        st.write("Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
+        st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
 
-        st.markdown("---") # Separator
+        st.markdown("--- # Separator")
 
         st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True) # Add spacing before collage
         all_real_words = [
