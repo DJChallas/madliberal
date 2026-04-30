@@ -76,6 +76,16 @@ all_real_words = [
     real_noun_29, real_noun_30
 ]
 
+# --- Narcissistic text for pre-populating Mad Lib fields ---
+narcissistic_text_list = [
+    "lipstick", "mallspace", "groupthink", "DM’s", "donations", "Onlyfans pages", "2010’s", "nightclubs",
+    "super", "discount", "Lady’s Night", "sidepieces", "us", "divas", "guestlist", "cocktails", "vodka",
+    "potatoes", "ghosting", "money", "us", "Onlyfans pages", "unacceptable", "mine", "yours", "Saturday",
+    "unbelievably", "comments", "thumbs downs", "sparked", "boring", "DM’s", "text", "cellular", "bestie",
+    "whatever", "money", "coverage", "lip gloss", "dude", "Downtown", "digits", "scrubs", "bank account",
+    "symbol", "desired", "husband", "stoppage", "dating"
+]
+
 # --- Function to display the text collage ---
 def display_text_collage():
     random.seed(42) # for reproducibility
@@ -215,6 +225,25 @@ with main_content:
 
             input_values = {}
 
+            # Map the narcissistic text list to the input fields
+            narcissistic_map = {
+                "noun_1": "lipstick", "noun_2": "mallspace", "noun_3": "groupthink", "noun_4": "DM’s",
+                "noun_resource": "donations", "noun_society_plural": "Onlyfans pages",
+                "proper_noun_2": "2010’s", "plural_noun_3": "nightclubs", "adjective_1": "super",
+                "noun_5": "discount", "noun_6": "Lady’s Night", "plural_noun_4": "sidepieces",
+                "plural_noun_5": "us", "noun_7": "divas", "verb_1": "guestlist",
+                "adjective_2": "cocktails", "noun_8": "vodka", "noun_9": "potatoes",
+                "proper_noun_3": "ghosting", "noun_10": "money", "noun_11": "us",
+                "adjective_3": "Onlyfans pages", "noun_12": "unacceptable", "noun_13": "mine",
+                "noun_14": "yours", "adverb_1": "Saturday", "noun_15": "unbelievably",
+                "noun_16": "comments", "verb_2": "thumbs downs", "adjective_4": "sparked",
+                "noun_17": "boring", "verb_3": "DM’s", "noun_18": "text", "noun_19": "cellular",
+                "noun_20": "bestie", "noun_21": "whatever", "noun_22": "money", "noun_23": "coverage",
+                "adjective_5": "lip gloss", "noun_24": "dude", "proper_noun_4": "Downtown",
+                "noun_25": "digits", "noun_26": "scrubs", "noun_27": "bank account", "verb_4": "symbol",
+                "noun_28": "desired", "noun_29": "husband", "noun_30": "stoppage"
+            }
+
             # Paragraph 1 - at the start
             st.markdown("While the history of <span style='color:red;'>NOUN 1</span> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <span style='color:red;'>NOUN 2</span>, the themes of our <span style='color:red;'>NOUN 3</span> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <span style='color:red;'>NOUN 4</span>. Perhaps the predominant theme throughout is the competition for and allocation of <span style='color:red;'>PLURAL NOUN 1</span> within <span style='color:red;'>PLURAL NOUN 2</span> across the globe.", unsafe_allow_html=True)
 
@@ -223,7 +252,7 @@ with main_content:
             for i in range(6):
                 label, key = input_fields_all[i]
                 with cols[(i - 0) % 3]: # Adjusted for 0-based indexing
-                    input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
+                    input_values[key] = st.text_input(label, key=key, value=narcissistic_map.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
             st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have <span style='color:red;'>VERB 1</span> in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 9</span> where huge swaths of <span style='color:red;'>NOUN 10</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 11</span>.", unsafe_allow_html=True)
@@ -233,17 +262,17 @@ with main_content:
             for i in range(6, 21):
                 label, key = input_fields_all[i]
                 with cols[(i - 6) % 3]:
-                    input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
+                    input_values[key] = st.text_input(label, key=key, value=narcissistic_map.get(key, ''))
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15}</span> have risen and <span style='color:red;'>NOUN 16}</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23}</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
             for i in range(21, len(input_fields_all)):
                 label, key = input_fields_all[i]
                 with cols[(i - 21) % 3]:
-                    input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
+                    input_values[key] = st.text_input(label, key=key, value=narcissistic_map.get(key, ''))
 
             # Add some spacing after the input fields
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
