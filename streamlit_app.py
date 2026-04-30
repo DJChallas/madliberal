@@ -368,7 +368,7 @@ with main_content:
 
             # Data Cleaning
             if not df.empty:
-                df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
+                df['value'] = df['value'].astype(str).str.replace(r'\s+\(d+\)', '', regex=True)
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
                 df_filtered = df.dropna(subset=['value']).copy()
 
@@ -571,7 +571,7 @@ with main_content:
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
         st.write("The first half of my adult life I dedicated to creating art. Primarily music and video, finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. ")
-        st.write("The work I created have become artifacts of the life I\u2019m leaving behind.")
+        st.write("The work I created has become artifacts of the life I\u2019m leaving behind.")
         st.write("For me the pursuit of spirituality can be best understood as a search for truth. In that search is a quest to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measure processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered \"correct.\"")
         st.write("What has become troubling to me as I\u2019ve matured are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the bounds of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.")
         st.write("Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, and LNS14000004")
