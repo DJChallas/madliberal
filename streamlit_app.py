@@ -214,6 +214,58 @@ with main_content:
                 ("Noun 31", "noun_31"),
             ]
 
+            # Define default values for the Mad Lib form
+            default_madlib_values = {
+                "noun_1": "girl",
+                "noun_2": "school",
+                "noun_3": "classes",
+                "noun_4": "homework",
+                "noun_resource": "friends",
+                "noun_society_plural": "students",
+                "proper_noun_2": "Paris",
+                "plural_noun_3": "cliques",
+                "adjective_1": "popular",
+                "noun_5": "group",
+                "noun_6": "reputation",
+                "plural_noun_4": "followers",
+                "plural_noun_5": "outcasts",
+                "noun_7": "nerds",
+                "adjective_2": "cool",
+                "noun_8": "gossip",
+                "noun_9": "rumors",
+                "proper_noun_3": "New York",
+                "noun_10": "girls",
+                "noun_11": "attention",
+                "noun_12": "looks",
+                "adjective_3": "intense",
+                "noun_13": "popularity",
+                "noun_14": "drama",
+                "noun_15": "friendships",
+                "adverb_1": "always",
+                "noun_16": "rivalries",
+                "noun_17": "secrets",
+                "verb_2": "broken",
+                "adjective_4": "mean",
+                "noun_18": "girls",
+                "verb_3": "spread",
+                "noun_19": "stories",
+                "noun_20": "boys",
+                "noun_21": "exclusion",
+                "noun_22": "social",
+                "noun_23": "hierarchy",
+                "noun_24": "queen",
+                "adjective_5": "high-school",
+                "noun_25": "newcomers",
+                "proper_noun_4": "The Plastics",
+                "noun_26": "bullying",
+                "noun_27": "weapon",
+                "noun_28": "leaders",
+                "verb_4": "manipulate",
+                "noun_29": "crowd",
+                "noun_30": "losers",
+                "noun_31": "scapegoats"
+            }
+
             input_values = {}
 
             # Paragraph 1 - at the start
@@ -224,17 +276,17 @@ with main_content:
             for i in range(6):
                 label, key = input_fields_all[i]
                 with cols[(i - 0) % 3]: # Adjusted for 0-based indexing
-                    input_values[key] = st.text_input(label, key=key, value='')
+                    input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
-            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have <b>toiled</b> in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 9</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 12</span>.", unsafe_allow_html=True)
+            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 9</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 12</span>.", unsafe_allow_html=True)
 
             # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
             for i in range(6, 21): # Adjusted range: 22 - 1 (for removed Verb 1) = 21
                 label, key = input_fields_all[i]
                 with cols[(i - 6) % 3]:
-                    input_values[key] = st.text_input(label, key=key, value='')
+                    input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 3 - after Noun 12
             st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 13</span> and <span style='color:red;'>NOUN 14</span> has persisted across <span style='color:red;'>NOUN 15</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 16</span> have risen and <span style='color:red;'>NOUN 17</span> have <span style='color:red;'>VERB 1</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 18</span> have reached across the globe seeking to <span style='color:red;'>VERB 2</span> the <span style='color:red;'>NOUN 19</span> of the <span style='color:red;'>NOUN 20</span> and <span style='color:red;'>NOUN 21</span>. At the local level, <span style='color:red;'>NOUN 22</span> has always been necessary to maintain <span style='color:red;'>NOUN 23</span> of <span style='color:red;'>NOUN 24</span>, from the <span style='color:red;'>NOUN 25</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 26</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 27</span> has been a <span style='color:red;'>NOUN 28</span> of the <span style='color:red;'>VERB 3</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 29</span> to compel the <span style='color:red;'>NOUN 30</span> of the <span style='color:red;'>NOUN 31</span>.", unsafe_allow_html=True)
@@ -244,7 +296,7 @@ with main_content:
             for i in range(21, len(input_fields_all)):
                 label, key = input_fields_all[i]
                 with cols[(i - 21) % 3]: # Adjusted for new 0-based indexing relative to this loop
-                    input_values[key] = st.text_input(label, key=key, value='')
+                    input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Add some spacing after the input fields
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
@@ -272,7 +324,7 @@ with main_content:
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
         st.markdown(f"While the history of <b>{real_noun_1}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{real_noun_2}</b>, the themes of our <b>{real_noun_3}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{real_noun_4}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{real_noun_resource}</b> within <b>{real_noun_society_plural}</b> across the globe.</div>", unsafe_allow_html=True)
-        st.markdown(f"From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
         col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
@@ -349,7 +401,7 @@ with main_content:
 
             # Data Cleaning
             if not df.empty:
-                df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
+                df['value'] = df['value'].astype(str).str.replace(r'\\s+\\\(\d+\\\\)', '', regex=True)
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
                 df_filtered = df.dropna(subset=['value']).copy()
 
