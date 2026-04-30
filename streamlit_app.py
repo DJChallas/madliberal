@@ -236,7 +236,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=globals()[f'real_{key}'])
 
             # Paragraph 3 - after Noun 11
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15</span> have risen and <span style='color:red;'>NOUN 16</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 12</span> and <span style='color:red;'>NOUN 13</span> has persisted across <span style='color:red;'>NOUN 14</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 15}</span> have risen and <span style='color:red;'>NOUN 16}</span> have <span style='color:red;'>VERB 2</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 17</span> have reached across the globe seeking to <span style='color:red;'>VERB 3</span> the <span style='color:red;'>NOUN 18}</span> of the <span style='color:red;'>NOUN 19</span> and <span style='color:red;'>NOUN 20</span>. At the local level, <span style='color:red;'>NOUN 21</span> has always been necessary to maintain <span style='color:red;'>NOUN 22</span> of <span style='color:red;'>NOUN 23}</span>, from the <span style='color:red;'>NOUN 24</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 25</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 26</span> has been a <span style='color:red;'>NOUN 27</span> of the <span style='color:red;'>VERB 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 28</span> to compel the <span style='color:red;'>NOUN 29</span> of the <span style='color:red;'>NOUN 30</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 30)
             cols = st.columns(3)
@@ -315,6 +315,8 @@ with main_content:
                 return None
 
             df = pd.DataFrame() # Initialize df outside if/else for broader scope
+            avg_unemployment_latest_year = pd.DataFrame() # Initialize here to ensure it always exists
+
             if 'Results' in json_data and 'series' in json_data['Results']:
                 for series in json_data['Results']['series']:
                     seriesId = series['seriesID']
@@ -352,47 +354,52 @@ with main_content:
                 df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100
                 df_filtered = df.dropna(subset=['value']).copy()
 
-                sn_map = {
-                    'LNS14000006': 'Black or African American',
-                    'LNS14000009': 'Hispanic or Latino',
-                    'LNS14000003': 'White',
-                    'LNS14032183': 'Asian',
-                    'LNS14000002': 'Women',
-                    'LNS14000001': 'Men',
-                    'LNS14000005': 'White Women',
-                    'LNS14000004': 'White Men'
-                }
-                series_name_mapping = sn_map
+                if not df_filtered.empty:
+                    sn_map = {
+                        'LNS14000006': 'Black or African American',
+                        'LNS14000009': 'Hispanic or Latino',
+                        'LNS14000003': 'White',
+                        'LNS14032183': 'Asian',
+                        'LNS14000002': 'Women',
+                        'LNS14000001': 'Men',
+                        'LNS14000005': 'White Women',
+                        'LNS14000004': 'White Men'
+                    }
+                    series_name_mapping = sn_map
 
-                latest_full_year = df['year'].astype(int).max()
-                if latest_full_year == datetime.now().year:
-                    latest_full_year -= 1
+                    latest_full_year = df['year'].astype(int).max()
+                    if latest_full_year == datetime.now().year:
+                        latest_full_year -= 1
 
-                df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
-                df_seasonal['series_name'] = df_seasonal['series_id'].map(series_name_mapping)
+                    df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
+                    df_seasonal['series_name'] = df_seasonal['series_id'].map(series_name_mapping)
 
-                avg_unemployment_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
-                avg_unemployment_latest_year['series_name'] = avg_unemployment_latest_year['series_id'].map(series_name_mapping)
+                    if not df_seasonal.empty:
+                        avg_unemployment_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
+                        avg_unemployment_latest_year['series_name'] = avg_unemployment_latest_year['series_id'].map(series_name_mapping)
 
-                desired_order = [
-                    'Men',
-                    'Women',
-                    'White Men',
-                    'White Women',
-                    'Black or African American',
-                    'Hispanic or Latino',
-                    'Asian',
-                    'White'
-                ]
-                avg_unemployment_latest_year['series_name'] = pd.Categorical(
-                    avg_unemployment_latest_year['series_name'],
-                    categories=desired_order,
-                    ordered=True
-                )
-                avg_unemployment_latest_year = avg_unemployment_latest_year.sort_values('series_name')
-
+                        desired_order = [
+                            'Men',
+                            'Women',
+                            'White Men',
+                            'White Women',
+                            'Black or African American',
+                            'Hispanic or Latino',
+                            'Asian',
+                            'White'
+                        ]
+                        avg_unemployment_latest_year['series_name'] = pd.Categorical(
+                            avg_unemployment_latest_year['series_name'],
+                            categories=desired_order,
+                            ordered=True
+                        )
+                        avg_unemployment_latest_year = avg_unemployment_latest_year.sort_values('series_name')
+                    else:
+                        st.warning(f"No seasonal data available for the latest full year ({latest_full_year}) after filtering.")
+                else:
+                    st.warning("DataFrame is empty after cleaning numerical values. Cannot proceed with analysis.")
             else:
-                st.warning("DataFrame 'df' not available for cleaning. Please ensure the data import ran successfully.")
+                st.warning("DataFrame 'df' not available after API call or month processing. Please check the API response.")
 
             # --- Visualization Functions ---
             def plot_unemployment_by_sex(avg_unemployment_df, year):
@@ -436,6 +443,10 @@ with main_content:
                 st.plotly_chart(fig_race, use_container_width=True)
 
             def plot_white_women_comparisons(avg_unemployment_df, year):
+                if avg_unemployment_df.empty or 'White Women' not in avg_unemployment_df['series_name'].values:
+                    st.warning("Not enough data to perform White Women comparisons.")
+                    return
+
                 white_women_avg = avg_unemployment_df[avg_unemployment_df['series_name'] == 'White Women'].iloc[0]
 
                 comparison_order = [
@@ -448,8 +459,8 @@ with main_content:
                 ]
 
                 label_mapping = {
-                    'Asian': 'Asian',
-                    'White Men': 'Men, All Races', # Assuming 'White Men' also becomes 'Men, All Races'
+                    'Asian': 'Asian, Men/Women',
+                    'White Men': 'White Men',
                     'Men': 'Men, All Races',
                     'Women': 'Women, All Races',
                     'Hispanic or Latino': 'Hispanic or Latino, Men/Women',
@@ -457,7 +468,7 @@ with main_content:
                 }
 
                 other_demographics_ordered = avg_unemployment_df[
-                    avg_unemployment_latest_year['series_name'] != 'White Women'
+                    avg_unemployment_df['series_name'] != 'White Women'
                 ].set_index('series_name').loc[comparison_order].reset_index()
 
                 for index, row in other_demographics_ordered.iterrows():
@@ -486,7 +497,8 @@ with main_content:
                     st.plotly_chart(fig, use_container_width=True)
 
             # --- Display Visualizations ---
-            if not df.empty and 'avg_unemployment_latest_year' in locals():
+            # Now avg_unemployment_latest_year is guaranteed to be a DataFrame (possibly empty)
+            if not avg_unemployment_latest_year.empty:
                 st.subheader("Average Unemployment Rates")
                 st.markdown("The current calculations for unemployment are generated by averaging the seasonal unemployment percentages for all of the listed categories for a period of one year starting from the most recent release by the US Bureau of Labor Statistics: Men, Women, White Men, White Women, Black or African American, Hispanic or Latino and Asian. The data used for Hispanic or Latino is from a subcategory for unemployment statistics independent of the White, Black and Asian datasets.")
                 plot_unemployment_by_sex(avg_unemployment_latest_year, latest_full_year)
@@ -494,7 +506,7 @@ with main_content:
                 st.subheader("Mad Liberal Comparisons")
                 plot_white_women_comparisons(avg_unemployment_latest_year, latest_full_year)
             else:
-                st.warning("Cannot generate visualizations, data not available.")
+                st.warning("Cannot generate visualizations, data for average unemployment rates is not available. Please check API response and data cleaning steps.")
 
     # --- Industry Visualizations Stage ---
     elif st.session_state.game_stage == 'industry_visualizations':
