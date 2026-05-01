@@ -376,6 +376,19 @@ if 'game_stage' not in st.session_state:
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
+    # Navigation buttons, always displayed at the top of the left sidebar
+    st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
+    if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
+        st.session_state.game_stage = 'visualizations'
+        st.rerun()
+    if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
+        st.session_state.game_stage = 'industry_visualizations'
+        st.rerun()
+    if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
+        st.session_state.game_stage = 'about_project'
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
         # Add alternating red and white stripes
         for i in range(47):
@@ -385,6 +398,14 @@ with left_sidebar:
         # Only display collage in madlib_input stage, not madlib_reveal
         if st.session_state.game_stage == 'madlib_input':
             display_text_collage()
+
+        # "Proceed to Visualizations" button for 'madlib_reveal' stage, now in left sidebar
+        if st.session_state.game_stage == 'madlib_reveal':
+            st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
+            if st.button("Proceed to Visualizations", key="proceed_from_left_sidebar"):
+                st.session_state.game_stage = 'visualizations'
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
     elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'industry_visualizations': # Show 'The Real Story' and navigation in left sidebar for visualization stages
         st.subheader("The Real Story:")
@@ -399,18 +420,8 @@ with left_sidebar:
         st.markdown("-" * 3) # Separator
 
 with right_sidebar:
-    # Navigation buttons, always displayed in the right sidebar
-    st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
-    if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
-        st.session_state.game_stage = 'visualizations'
-        st.rerun()
-    if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
-        st.session_state.game_stage = 'industry_visualizations'
-        st.rerun()
-    if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
-        st.session_state.game_stage = 'about_project'
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    # This column is now empty as navigation moved to left sidebar
+    pass
 
 with main_content:
     # --- Mad Lib Input Stage ---
@@ -583,13 +594,14 @@ with main_content:
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
-        col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
-        with col2_viz:
-            st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-            if st.button("Proceed to Visualizations"):
-                st.session_state.game_stage = 'visualizations'
-                st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
+        # Removed this button from main_content as it's now in the left sidebar
+        # col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
+        # with col2_viz:
+        #     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
+        #     if st.button("Proceed to Visualizations"):
+        #         st.session_state.game_stage = 'visualizations'
+        #         st.rerun()
+        #     st.markdown("</div>", unsafe_allow_html=True)
 
     # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
