@@ -400,7 +400,7 @@ with left_sidebar:
         if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
             st.session_state.game_stage = 'industry_visualizations'
             st.rerun()
-        if st.button("About this Project", key="about_project_btn_sidebar_common", use_container_width=True):
+        if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
             st.session_state.game_stage = 'about_project'
             st.rerun()
         display_text_collage()
@@ -542,7 +542,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
-            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 12</span>.", unsafe_allow_html=True)
+            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
 
             # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
@@ -601,7 +601,7 @@ with main_content:
     # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
         # Force scroll to the top of the main content area when entering this stage
-        st.markdown('<script>window.parent.document.querySelector("section.main").scrollTo(0, 0);</script>', unsafe_allow_html=True)
+        st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
 
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
@@ -629,13 +629,14 @@ with main_content:
     # --- Industry Visualizations Stage ---
     elif st.session_state.game_stage == 'industry_visualizations':
         # Force scroll to the top of the main content area when entering this stage
-        st.markdown('<script>window.parent.document.querySelector("section.main").scrollTo(0, 0);</script>', unsafe_allow_html=True)
+        st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
 
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex and Race")
-            st.write("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across some of the most popular occupations shown there. A regression analysis is provided from the data, however, it should not be considered to be representative of the entire US job market, only illustrative of the occupations and industries shown here. Where possible the main Industry is represented as well as the most popular occupations by statistics calculated by the BLS.")
+            st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
+            st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 5 categories.")
 
             # Load data if not already in session state (e.g., if user navigated directly)
             if 'labor_force_avg_df' not in st.session_state or 'latest_full_year' not in st.session_state:
@@ -653,7 +654,6 @@ with main_content:
                 st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
                 st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
-                st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
 
                 st.subheader("Management, professional and related occupations")
                 st.subheader("Service Occupations")
@@ -666,16 +666,10 @@ with main_content:
 
     elif st.session_state.game_stage == 'about_project':
         # Force scroll to the top of the main content area when entering this stage
-        st.markdown('<script>window.parent.document.querySelector("section.main").scrollTo(0, 0);</script>', unsafe_allow_html=True)
+        st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
         st.header("About This Project")
         st.markdown("""
-The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.
-
-For me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”
-
-What has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.
-
-Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, LNS14000004, LNS11000004, LNS11000005, LNS11032183, LNS11000001, LNS11000002, LNS11000003, LNS11000006, LNS11000009
+The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.\n\nFor me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”\n\nWhat has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.\n\nThank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, LNS14000004, LNS11000004, LNS11000005, LNS11032183, LNS11000001, LNS11000002, LNS11000003, LNS11000006, LNS11000009
 """)
 
         st.markdown("-" * 3)
