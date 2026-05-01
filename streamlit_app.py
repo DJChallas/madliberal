@@ -471,7 +471,7 @@ with main_content:
                 ("Noun 26", "noun_26"),
                 ("Noun 27", "noun_27"),
                 ("Noun 28", "noun_28"),
-                ("Verb 3", "verb_4"), 
+                ("Verb 3", "verb_4"),
                 ("Noun 29", "noun_29"),
                 ("Noun 30", "noun_30"),
                 ("Noun 31", "noun_31"),
@@ -523,7 +523,7 @@ with main_content:
                 "noun_26": "digits",
                 "noun_27": "a bank account",
                 "noun_28": "symbol",
-                "verb_4": "desired", 
+                "verb_4": "desired",
                 "noun_29": "bachelor",
                 "noun_30": "stoppage",
                 "noun_31": "hookups"
@@ -600,6 +600,9 @@ with main_content:
 
     # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
+        # Force scroll to the top of the main content area when entering this stage
+        st.markdown('<script>window.parent.document.querySelector("section.main").scrollTo(0, 0);</script>', unsafe_allow_html=True)
+
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
@@ -625,6 +628,9 @@ with main_content:
 
     # --- Industry Visualizations Stage ---
     elif st.session_state.game_stage == 'industry_visualizations':
+        # Force scroll to the top of the main content area when entering this stage
+        st.markdown('<script>window.parent.document.querySelector("section.main").scrollTo(0, 0);</script>', unsafe_allow_html=True)
+
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
@@ -647,17 +653,20 @@ with main_content:
                 st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
                 st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
+                st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
+
                 st.subheader("Management, professional and related occupations")
                 st.subheader("Service Occupations")
                 st.subheader("Sales and Office Occupations")
                 st.subheader("Natural resources, construction, and maintenance occupations")
                 st.subheader("Production, transportation, and material moving occupations")
 
-                st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
             else:
                 st.warning("Cannot generate labor force visualizations, data not available.")
 
     elif st.session_state.game_stage == 'about_project':
+        # Force scroll to the top of the main content area when entering this stage
+        st.markdown('<script>window.parent.document.querySelector("section.main").scrollTo(0, 0);</script>', unsafe_allow_html=True)
         st.header("About This Project")
         st.markdown("""
 The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.
