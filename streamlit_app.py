@@ -471,7 +471,7 @@ with main_content:
                 ("Noun 26", "noun_26"),
                 ("Noun 27", "noun_27"),
                 ("Noun 28", "noun_28"),
-                ("Verb 3", "verb_4"),
+                ("Verb 3", "verb_4"), 
                 ("Noun 29", "noun_29"),
                 ("Noun 30", "noun_30"),
                 ("Noun 31", "noun_31"),
@@ -523,7 +523,7 @@ with main_content:
                 "noun_26": "digits",
                 "noun_27": "a bank account",
                 "noun_28": "symbol",
-                "verb_4": "favored", # Added missing default value for Verb 3
+                "verb_4": "desired", 
                 "noun_29": "bachelor",
                 "noun_30": "stoppage",
                 "noun_31": "hookups"
@@ -591,8 +591,8 @@ with main_content:
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
         col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
-        with col3_viz:
-            st.markdown("<div style='display: flex; justify-content: flex-end;'>", unsafe_allow_html=True)
+        with col2_viz:
+            st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
             if st.button("Proceed to Visualizations"):
                 st.session_state.game_stage = 'visualizations'
                 st.rerun()
