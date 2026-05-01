@@ -189,6 +189,26 @@ def load_and_process_bls_data():
         avg_rates_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
         avg_rates_latest_year['series_name'] = avg_rates_latest_year['series_id'].map(series_name_mapping)
 
+        # Separate unemployment and labor force dataframes
+        unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
+        labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
+
+        # Calculate total labor force and proportions for labor_force_avg_df
+        if not labor_force_avg_df.empty:
+            # The 'value' column for labor force series represents values in thousands (not proportions)
+            # We need to filter for only 'Labor Force' series to sum them up correctly
+            labor_force_series_values = df_seasonal[df_seasonal['series_name'].str.contains('Labor Force')]['value']
+            # Multiply by 100 to get the original 'thousands' value, then sum
+            total_labor_force_overall = (labor_force_series_values * 100).sum() # Sum of values in thousands
+
+            # We also need to get the sum of the averaged labor force values (which are already divided by 100 for display consistency in df_filtered)
+            sum_avg_labor_force_values = labor_force_avg_df['value'].sum()
+
+            if sum_avg_labor_force_values > 0:
+                labor_force_avg_df['proportion'] = labor_force_avg_df['value'] / sum_avg_labor_force_values
+            else:
+                labor_force_avg_df['proportion'] = 0
+
         desired_order = [
             'Unemployment - Men',
             'Unemployment - Women',
@@ -207,18 +227,23 @@ def load_and_process_bls_data():
             'Labor Force - Asian',
             'Labor Force - White'
         ]
-        avg_rates_latest_year['series_name'] = pd.Categorical(
-            avg_rates_latest_year['series_name'],
-            categories=desired_order,
+        unemployment_avg_df['series_name'] = pd.Categorical(
+            unemployment_avg_df['series_name'],
+            categories=desired_order, # Only apply to unemployment df for consistency as labor_force_avg_df is separate
             ordered=True
         )
-        avg_rates_latest_year = avg_rates_latest_year.sort_values('series_name')
+        unemployment_avg_df = unemployment_avg_df.sort_values('series_name')
 
-        unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
-        labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
+        # Re-apply categorical order for labor_force_avg_df as well
+        labor_force_avg_df['series_name'] = pd.Categorical(
+            labor_force_avg_df['series_name'],
+            categories=desired_order, # Use the same overall desired order
+            ordered=True
+        )
+        labor_force_avg_df = labor_force_avg_df.sort_values('series_name')
 
         return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df
-    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame()
+    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
@@ -226,25 +251,38 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     df_sex = avg_df[avg_df['series_name'].isin(sex_groups)].copy()
     df_sex = df_sex.sort_values(by='value', ascending=False)
 
+    y_column = 'value'
     y_axis_label = ''
+    tick_format = None
+    text_auto_format = False
+
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
     elif chart_type_prefix == 'Labor Force':
-        y_axis_label = 'Average Labor Force (Thousands)'
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Total Labor Force'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     fig = px.bar(
         df_sex,
         x='series_name',
-        y='value',
+        y=y_column,
         title=f'Average {chart_type_prefix} by Sex in {year}',
-        labels={'series_name': 'Demographic Group', 'value': y_axis_label},
-        color='series_name'
+        labels={'series_name': 'Demographic Group', y_column: y_axis_label},
+        color='series_name',
+        text_auto=text_auto_format if text_auto_format else False
     )
     fig.update_layout(
         xaxis_title='Demographic Group',
         yaxis_title=y_axis_label,
         showlegend=False
     )
+    if tick_format:
+        fig.update_yaxes(tickformat=tick_format)
+
     return fig
 
 def plot_rates_by_race(avg_df, year, chart_type_prefix):
@@ -252,25 +290,38 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
     df_race = avg_df[avg_df['series_name'].isin(race_groups)].copy()
     df_race = df_race.sort_values(by='value', ascending=False)
 
+    y_column = 'value'
     y_axis_label = ''
+    tick_format = None
+    text_auto_format = False
+
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
     elif chart_type_prefix == 'Labor Force':
-        y_axis_label = 'Average Labor Force (Thousands)'
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Total Labor Force'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     fig = px.bar(
         df_race,
         x='series_name',
-        y='value',
+        y=y_column,
         title=f'Average {chart_type_prefix} by Race in {year}',
-        labels={'series_name': 'Demographic Group', 'value': y_axis_label},
-        color='series_name'
+        labels={'series_name': 'Demographic Group', y_column: y_axis_label},
+        color='series_name',
+        text_auto=text_auto_format if text_auto_format else False
     )
     fig.update_layout(
         xaxis_title='Demographic Group',
         yaxis_title=y_axis_label,
         showlegend=False
     )
+    if tick_format:
+        fig.update_yaxes(tickformat=tick_format)
+
     return fig
 
 def plot_rate_comparisons(avg_df, year, chart_type_prefix):
@@ -323,18 +374,27 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         comparison_group_name = row['series_name']
         display_comparison_group_name = label_mapping.get(comparison_group_name, comparison_group_name)
 
+        y_column = 'value'
         y_axis_label = ''
+        tick_format = None
+        text_auto_format = False
+
         if chart_type_prefix == 'Unemployment':
             y_axis_label = 'Average Unemployment Rate (Proportion)'
             # Update title for unemployment comparisons
             chart_title = f"Average Unemployment: White Women vs. {display_comparison_group_name} in {year}"
+            tick_format = '.1%'
+            text_auto_format = '.1%'
         elif chart_type_prefix == 'Labor Force':
-            y_axis_label = 'Average Labor Force (Thousands)'
+            y_column = 'proportion'
+            y_axis_label = 'Proportion of Total Labor Force'
             chart_title = f"Average {chart_type_prefix}: White Women vs. {display_comparison_group_name} in {year}"
+            tick_format = '.1%'
+            text_auto_format = '.1%'
 
         comparison_df = pd.DataFrame({
             'series_name': [white_women_avg_series_name, display_comparison_group_name],
-            'value': [white_women_avg['value'], row['value']]
+            'value': [white_women_avg[y_column], row[y_column]]
         })
 
         fig = px.bar(
@@ -343,7 +403,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             y='value',
             title=chart_title,
             labels={'series_name': 'Demographic Group', 'value': y_axis_label},
-            color='series_name'
+            color='series_name',
+            text_auto=text_auto_format if text_auto_format else False
         )
 
         fig.update_layout(
@@ -351,6 +412,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             yaxis_title=y_axis_label,
             showlegend=False
         )
+        if tick_format:
+            fig.update_yaxes(tickformat=tick_format)
         charts.append(fig)
     return charts
 
@@ -539,7 +602,7 @@ with main_content:
             cols = st.columns(3)
             for i in range(6):
                 label, key = input_fields_all[i]
-                with cols[(i - 0) % 3]: # Adjusted for 0-based indexing
+                with cols[(i - 0) % 3]:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
@@ -547,7 +610,7 @@ with main_content:
 
             # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
-            for i in range(6, 21): # Adjusted range: 22 - 1 (for removed Verb 1) = 21
+            for i in range(6, 21):
                 label, key = input_fields_all[i]
                 with cols[(i - 6) % 3]:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
@@ -559,7 +622,7 @@ with main_content:
             cols = st.columns(3)
             for i in range(21, len(input_fields_all)):
                 label, key = input_fields_all[i]
-                with cols[(i - 21) % 3]: # Adjusted for new 0-based indexing relative to this loop
+                with cols[(i - 21) % 3]:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Add some spacing after the input fields
@@ -712,8 +775,8 @@ The first half of my adult life I dedicated to creating art. Primarily music and
 
         if 'labor_force_avg_df' in st.session_state and not st.session_state.labor_force_avg_df.empty:
             st.subheader("Average Labor Force Data (Latest Full Year):")
-            display_df_labor_force = st.session_state.labor_force_avg_df[['series_name', 'value']].rename(columns={'series_name': 'Demographic Group', 'value': 'Average Labor Force (Thousands)'})
-            st.dataframe(display_df_labor_force)
+            display_df_labor_force = st.session_state.labor_force_avg_df[['series_name', 'value', 'proportion']].rename(columns={'series_name': 'Demographic Group', 'value': 'Average Labor Force (Thousands)', 'proportion': 'Proportion'})
+            st.dataframe(display_df_labor_force.style.format({'Proportion': '{:.2%}'}))
 
             col_dl_lf_left, col_dl_lf_right = st.columns([0.7, 0.3])
             with col_dl_lf_right:
