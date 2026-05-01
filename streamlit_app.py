@@ -376,19 +376,27 @@ if 'game_stage' not in st.session_state:
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
-    # Navigation buttons, always displayed at the top of the left sidebar
-    st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
-    if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
-        st.session_state.game_stage = 'visualizations'
-        st.rerun()
-    if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
-        st.session_state.game_stage = 'industry_visualizations'
-        st.rerun()
-    if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
-        st.session_state.game_stage = 'about_project'
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    # "Proceed to Visualizations" button, only for 'madlib_reveal' stage, at the very top of the left sidebar
+    if st.session_state.game_stage == 'madlib_reveal':
+        if st.button("Proceed to Visualizations", key="proceed_from_left_sidebar", use_container_width=True):
+            st.session_state.game_stage = 'visualizations'
+            st.rerun()
 
+    # Regular navigation buttons, only displayed when NOT in madlib input/reveal stages
+    if st.session_state.game_stage not in ['madlib_input', 'madlib_reveal']:
+        st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
+        if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
+            st.session_state.game_stage = 'visualizations'
+            st.rerun()
+        if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
+            st.session_state.game_stage = 'industry_visualizations'
+            st.rerun()
+        if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
+            st.session_state.game_stage = 'about_project'
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # Content that appears during madlib_input or madlib_reveal (stripes and collage)
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
         # Add alternating red and white stripes
         for i in range(47):
@@ -399,13 +407,6 @@ with left_sidebar:
         if st.session_state.game_stage == 'madlib_input':
             display_text_collage()
 
-        # "Proceed to Visualizations" button for 'madlib_reveal' stage, now in left sidebar
-        if st.session_state.game_stage == 'madlib_reveal':
-            st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-            if st.button("Proceed to Visualizations", key="proceed_from_left_sidebar"):
-                st.session_state.game_stage = 'visualizations'
-                st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
 
     elif st.session_state.game_stage == 'visualizations' or st.session_state.game_stage == 'industry_visualizations': # Show 'The Real Story' and navigation in left sidebar for visualization stages
         st.subheader("The Real Story:")
@@ -546,7 +547,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
-            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
+            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <b>{answers['noun_12']}</b> are unable to reap the full benefit of their own <b>{answers['noun_11']}</b>.", unsafe_allow_html=True)
 
             # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
@@ -659,27 +660,27 @@ with main_content:
                 st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
                 st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
-                st.markdown("--- #######")
+                st.markdown("--- ")
                 st.subheader("Management, professional and related occupations")
                 st.markdown("Chief Executives")
                 st.markdown("Computer and Mathematical occupations")
                 st.markdown("Registered Nurses")
 
-                st.markdown("--- #######")
+                st.markdown("--- ")
                 st.subheader("Service Occupations")
                 st.markdown("Food preparation and serving related occupations")
                 st.markdown("Janitors and building cleaners")
 
-                st.markdown("--- #######")
+                st.markdown("--- ")
                 st.subheader("Sales and Office Occupations")
                 st.markdown("Cashiers")
                 st.markdown("Customer Service Representatives")
 
-                st.markdown("--- #######")
+                st.markdown("--- ")
                 st.subheader("Natural resources, construction, and maintenance occupations")
                 st.markdown("Construction Laborers")
 
-                st.markdown("--- #######")
+                st.markdown("--- ")
                 st.subheader("Production, transportation, and material moving occupations")
                 st.markdown("Driver/sales workers and truck drivers")
                 st.markdown("Laborers and freight, stock, and material movers, hand")
