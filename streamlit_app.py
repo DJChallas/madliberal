@@ -377,7 +377,7 @@ left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
     # "Proceed to Visualizations" button, only for 'madlib_reveal' stage, at the very top of the left sidebar
-    if st.session_stage.game_stage == 'madlib_reveal':
+    if st.session_state.game_stage == 'madlib_reveal':
         if st.button("Proceed to Visualizations", key="proceed_from_left_sidebar", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
