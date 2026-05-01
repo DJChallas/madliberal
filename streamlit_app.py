@@ -439,14 +439,14 @@ with main_content:
                 ("Plural Noun 4", "plural_noun_4"),
                 ("Plural Noun 5", "plural_noun_5"),
                 ("Noun 7", "noun_7"),
-                
+
                 ("Adjective 2", "adjective_2"),
                 ("Noun 8", "noun_8"),
                 ("Noun 9", "noun_9"),
                 ("Proper Noun 3", "proper_noun_3"),
                 ("Noun 10", "noun_10"),
                 ("Noun 11", "noun_11"),
-                ("Noun 12", "noun_12"), 
+                ("Noun 12", "noun_12"),
 
                 ("Adjective 3", "adjective_3"),
                 ("Noun 13", "noun_13"),
@@ -455,10 +455,10 @@ with main_content:
                 ("Adverb 1", "adverb_1"),
                 ("Noun 16", "noun_16"),
                 ("Noun 17", "noun_17"),
-                ("Verb 1", "verb_2"), 
+                ("Verb 1", "verb_2"),
                 ("Adjective 4", "adjective_4"),
                 ("Noun 18", "noun_18"),
-                ("Verb 2", "verb_3"), 
+                ("Verb 2", "verb_3"),
                 ("Noun 19", "noun_19"),
                 ("Noun 20", "noun_20"),
                 ("Noun 21", "noun_21"),
@@ -471,7 +471,7 @@ with main_content:
                 ("Noun 26", "noun_26"),
                 ("Noun 27", "noun_27"),
                 ("Noun 28", "noun_28"),
-                ("Verb 3", "verb_4"), 
+                ("Verb 3", "verb_4"),
                 ("Noun 29", "noun_29"),
                 ("Noun 30", "noun_30"),
                 ("Noun 31", "noun_31"),
@@ -523,7 +523,7 @@ with main_content:
                 "noun_26": "digits",
                 "noun_27": "a bank account",
                 "noun_28": "symbol",
-                "verb_4": "desired",
+                "verb_3": "desired",
                 "noun_29": "bachelor",
                 "noun_30": "stoppage",
                 "noun_31": "hookups"
@@ -578,11 +578,11 @@ with main_content:
 
     # --- Mad Lib Reveal Stage ---
     elif st.session_state.game_stage == 'madlib_reveal':
-        st.subheader("Your Story:")
+        st.subheader("Her Story:")
         answers = st.session_state.madlib_answers
         st.markdown(f"While the history of <b>{answers['noun_1']}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{answers['noun_2']}</b>, the themes of our <b>{answers['noun_3']}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{answers['noun_4']}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{answers['noun_resource']}</b> within <b>{answers['noun_society_plural']}</b> across the globe.", unsafe_allow_html=True)
         st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_10']}</b> where huge swaths of <b>{answers['noun_11']}</b> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
-        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_13']}</b> and <b>{answers['noun_14']}</b> has persisted across <b>{answers['noun_15']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_16']}</b> have risen and <b>{answers['noun_17']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_18']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_19']}</b> of the <b>{answers['noun_20']}</b> and <b>{answers['noun_21']}</b>. At the local level, <b>{answers['noun_22']}</b> has always been necessary to maintain <b>{answers['noun_23']}</b> of <b>{answers['noun_24']}</b>, from the <b>{answers['noun_25']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_26']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_27']}</b> has been a <b>{answers['noun_28']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b> of the <b>{answers['noun_31']}</b>.", unsafe_allow_html=True)
+        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_13']}</b> and <b>{answers['noun_14']}</b> has persisted across <b>{answers['noun_15']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_16']}</b> have risen and <b>{answers['noun_17']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_18']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_19']}</b> of the <b>{answers['noun_20']}</b> and <b>{answers['noun_21']}</b>. At the local level, <b>{answers['noun_22']}</b> has always been necessary to maintain <b>{answers['noun_23']}</b> of <b>{answers['noun_24']}</b>, from the <b>{answers['noun_25']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_26']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_27']}</b> has been a <b>{answers['noun_28']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b> of the <b>{answers['noun_31']}</b>.</div>", unsafe_allow_html=True)
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -591,8 +591,8 @@ with main_content:
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
         col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
-        with col2_viz:
-            st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
+        with col3_viz:
+            st.markdown("<div style='display: flex; justify-content: flex-end;'>", unsafe_allow_html=True)
             if st.button("Proceed to Visualizations"):
                 st.session_state.game_stage = 'visualizations'
                 st.rerun()
