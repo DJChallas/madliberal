@@ -394,30 +394,23 @@ with left_sidebar:
 
         st.markdown("-" * 3)
 
-        if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
-            st.session_state.game_stage = 'visualizations'
-            st.rerun()
-        if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
-            st.session_state.game_stage = 'industry_visualizations'
-            st.rerun()
-        if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
-            st.session_state.game_stage = 'about_project'
-            st.rerun()
-        display_text_collage()
-
     elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
         display_text_collage()
         st.markdown("-" * 3) # Separator
 
-        if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar_common", use_container_width=True):
-            st.session_state.game_stage = 'visualizations'
-            st.rerun()
-        if st.button("Industry Visualizations", key="industry_viz_btn_sidebar_common", use_container_width=True):
-            st.session_state.game_stage = 'industry_visualizations'
-            st.rerun()
-        if st.button("About this Project", key="about_project_btn_sidebar_about", use_container_width=True):
-            st.session_state.game_stage = 'about_project'
-            st.rerun()
+with right_sidebar:
+    # Navigation buttons, always displayed in the right sidebar
+    st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
+    if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
+        st.session_state.game_stage = 'visualizations'
+        st.rerun()
+    if st.button("Industry Visualizations", key="industry_viz_btn_sidebar", use_container_width=True):
+        st.session_state.game_stage = 'industry_visualizations'
+        st.rerun()
+    if st.button("About this Project", key="about_project_btn_sidebar", use_container_width=True):
+        st.session_state.game_stage = 'about_project'
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with main_content:
     # --- Mad Lib Input Stage ---
@@ -654,12 +647,30 @@ with main_content:
                 st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
                 st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
-
+                st.markdown("--- #######")
                 st.subheader("Management, professional and related occupations")
+                st.markdown("Chief Executives")
+                st.markdown("Computer and Mathematical occupations")
+                st.markdown("Registered Nurses")
+
+                st.markdown("--- #######")
                 st.subheader("Service Occupations")
+                st.markdown("Food preparation and serving related occupations")
+                st.markdown("Janitors and building cleaners")
+
+                st.markdown("--- #######")
                 st.subheader("Sales and Office Occupations")
+                st.markdown("Cashiers")
+                st.markdown("Customer Service Representatives")
+
+                st.markdown("--- #######")
                 st.subheader("Natural resources, construction, and maintenance occupations")
+                st.markdown("Construction Laborers")
+
+                st.markdown("--- #######")
                 st.subheader("Production, transportation, and material moving occupations")
+                st.markdown("Driver/sales workers and truck drivers")
+                st.markdown("Laborers and freight, stock, and material movers, hand")
 
             else:
                 st.warning("Cannot generate labor force visualizations, data not available.")
