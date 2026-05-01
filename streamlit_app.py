@@ -327,7 +327,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         if chart_type_prefix == 'Unemployment':
             y_axis_label = 'Average Unemployment Rate (Proportion)'
             # Update title for unemployment comparisons
-            chart_title = f"Average Unemployment %: White Women vs. {display_comparison_group_name} in {year}"
+            chart_title = f"Average Unemployment: White Women vs. {display_comparison_group_name} in {year}"
         elif chart_type_prefix == 'Labor Force':
             y_axis_label = 'Average Labor Force (Thousands)'
             chart_title = f"Average {chart_type_prefix}: White Women vs. {display_comparison_group_name} in {year}"
@@ -419,10 +419,6 @@ with left_sidebar:
     elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
         display_text_collage()
         st.markdown("-" * 3) # Separator
-
-with right_sidebar:
-    # This column is now empty as navigation moved to left sidebar
-    pass
 
 with main_content:
     # --- Mad Lib Input Stage ---
@@ -547,7 +543,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
-            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <b>{answers['noun_12']}</b> are unable to reap the full benefit of their own <b>{answers['noun_11']}</b>.", unsafe_allow_html=True)
+            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 12</span>.", unsafe_allow_html=True)
 
             # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
