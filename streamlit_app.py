@@ -377,7 +377,7 @@ left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
     # "Proceed to Visualizations" button, only for 'madlib_reveal' stage, at the very top of the left sidebar
-    if st.session_state.game_stage == 'madlib_reveal':
+    if st.session_stage.game_stage == 'madlib_reveal':
         if st.button("Proceed to Visualizations", key="proceed_from_left_sidebar", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
@@ -399,7 +399,7 @@ with left_sidebar:
     # Content that appears during madlib_input or madlib_reveal (stripes and collage)
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
         # Add alternating red and white stripes
-        for i in range(47):
+        for i in range(46):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
