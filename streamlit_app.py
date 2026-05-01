@@ -592,9 +592,7 @@ with main_content:
     elif st.session_state.game_stage == 'about_project':
         st.header("About This Project")
         st.markdown("""
-The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality.
-
-The work I created has become artifacts of the life I’m leaving behind.
+The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.
 
 For me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”
 
@@ -609,13 +607,17 @@ Thank you to the individuals from Econ 8320: Tools for Data Analysis with shirts
         if 'df_cleaned_for_display' in st.session_state and not st.session_state.df_cleaned_for_display.empty:
             st.subheader("Cleaned Data Preview:")
             st.dataframe(st.session_state.df_cleaned_for_display)
-            csv = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="Download Full Cleaned Data",
-                data=csv,
-                file_name='cleaned_unemployment_data.csv',
-                mime='text/csv',
-            )
+
+            # Center the download button
+            col_dl_left, col_dl_center, col_dl_right = st.columns([1,1,1])
+            with col_dl_center:
+                csv = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download Full Cleaned Data",
+                    data=csv,
+                    file_name='cleaned_unemployment_data.csv',
+                    mime='text/csv',
+                )
         else:
             st.info("Cleaned data will appear here after visiting the 'Unemployment Visualizations' section.")
 
