@@ -220,6 +220,14 @@ def load_and_process_bls_data():
             else:
                 labor_force_avg_df['proportion'] = 0.0 # Assign 0.0 if sum is zero
 
+        # Calculate 'proportion' for industry_management_avg_df
+        if not industry_management_avg_df.empty:
+            total_management_prof_sum = industry_management_avg_df['value'].sum()
+            if total_management_prof_sum > 0:
+                industry_management_avg_df['proportion'] = industry_management_avg_df['value'] / total_management_prof_sum
+            else:
+                industry_management_avg_df['proportion'] = 0.0
+
         desired_order = [
             'Unemployment - Men',
             'Unemployment - Women',
@@ -298,18 +306,12 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Employment Level - Management, Professional':
-        base_sex_groups = ['Employment Level - Management, Professional, Men', 'Employment Level - Management, Professional, Women']
-        total_men_women_mp = avg_df[avg_df['series_name'].isin(base_sex_groups)]['value'].sum()
-
-        if total_men_women_mp > 0:
-            df_sex['proportion'] = df_sex['value'] / total_men_women_mp
-        else:
-            df_sex['proportion'] = 0
-
-        y_column = 'value' # Now plotting raw values
-        y_axis_label = 'Number of Jobs (in thousands)' # Updated label
-        tick_format = ',.0f' # Format for thousands, no decimals
-        text_auto_format = False # Let's not use text_auto for this one as we will set text manually
+        # Here, the proportion should already be calculated in load_and_process_bls_data()
+        # We want to plot this proportion directly.
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Management, Professional Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_sex = df_sex.sort_values(by=y_column, ascending=False)
 
@@ -320,11 +322,9 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         title=f'Average {chart_type_prefix} by Sex in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else False if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
+        text_auto=text_auto_format
     )
-    # Manually set text for Employment Level - Management, Professional to show proportion
-    if chart_type_prefix == 'Employment Level - Management, Professional':
-        fig.update_traces(text=df_sex['proportion'].apply(lambda x: f'{x:.1%}'), texttemplate='%{text}', textposition='outside')
+    # Removed manual text setting for 'Employment Level - Management, Professional' to use text_auto
 
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -364,23 +364,12 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Employment Level - Management, Professional':
-        base_race_groups = [
-            'Employment Level - Management, Professional, White',
-            'Employment Level - Management, Professional, Black or African American',
-            'Employment Level - Management, Professional, Asian',
-            'Employment Level - Management, Professional, Hispanic or Latino'
-        ]
-        total_race_mp = avg_df[avg_df['series_name'].isin(base_race_groups)]['value'].sum()
-
-        if total_race_mp > 0:
-            df_race['proportion'] = df_race['value'] / total_race_mp
-        else:
-            df_race['proportion'] = 0
-
-        y_column = 'value' # Now plotting raw values
-        y_axis_label = 'Number of Jobs (in thousands)' # Updated label
-        tick_format = ',.0f' # Format for thousands, no decimals
-        text_auto_format = False # Let's not use text_auto for this one as we will set text manually
+        # Here, the proportion should already be calculated in load_and_process_bls_data()
+        # We want to plot this proportion directly.
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Management, Professional Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
@@ -391,11 +380,9 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         title=f'Average {chart_type_prefix} by Race in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else False if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
+        text_auto=text_auto_format
     )
-    # Manually set text for Employment Level - Management, Professional to show proportion
-    if chart_type_prefix == 'Employment Level - Management, Professional':
-        fig.update_traces(text=df_race['proportion'].apply(lambda x: f'{x:.1%}'), texttemplate='%{text}', textposition='outside')
+    # Removed manual text setting for 'Employment Level - Management, Professional' to use text_auto
 
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -408,14 +395,14 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
     return fig
 
 def plot_rate_comparisons(avg_df, year, chart_type_prefix):
+    # This function is not used for industry visualizations based on user feedback.
+    # However, it's kept here in case it's needed for unemployment comparisons later.
     white_women_avg_series_name = f'{chart_type_prefix} - White Women'
     if white_women_avg_series_name not in avg_df['series_name'].values:
-        # Handle cases where 'White Women' might not be relevant for comparison (e.g. for Management)
-        # For 'Employment Level - Management, Professional', we compare against 'Employment Level - Management, Professional, Women'
         if chart_type_prefix == 'Employment Level - Management, Professional':
             white_women_avg_series_name = 'Employment Level - Management, Professional, Women'
             if white_women_avg_series_name not in avg_df['series_name'].values:
-                return [] # No relevant group to compare against
+                return []
         else:
             return []
 
@@ -524,25 +511,19 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
 
             white_women_avg_mp = avg_df[avg_df['series_name'] == white_women_avg_series_name_mp].iloc[0]
 
-            total_relevant_value = avg_df['value'].sum() # Sum of all values in avg_df for this category
-            if total_relevant_value > 0:
-                # Use the value from 'Employment Level - Management, Professional, Women' for comparison baseline
-                white_women_proportion = white_women_avg_mp['value'] / total_relevant_value
-                row_proportion = row['value'] / total_relevant_value
-            else:
-                white_women_proportion = 0
-                row_proportion = 0
+            # Use the pre-calculated proportions from the avg_df for the comparison
+            white_women_proportion = white_women_avg_mp['proportion']
+            row_proportion = row['proportion']
 
-            y_column = 'value' # Plotting raw values for y-axis
-            y_axis_label = f'Number of Jobs (in thousands)' # Updated label
+            y_column = 'proportion' # Plotting proportions for y-axis
+            y_axis_label = f'Proportion of Management, Professional Employment' # Updated label
             chart_title = f"Average Management, Professional: Women vs. {display_comparison_group_name} in {year}"
-            tick_format = ',.0f' # Format for thousands, no decimals
-            text_auto_format = False
+            tick_format = '.1%'
+            text_auto_format = '.1%'
 
             comparison_df = pd.DataFrame({
                 'series_name': [white_women_avg_series_name_mp, display_comparison_group_name],
-                'value': [white_women_avg_mp['value'], row['value']], # Use actual values for the bar height
-                'proportion': [white_women_proportion, row_proportion] # Store proportion for text display
+                'proportion': [white_women_proportion, row_proportion]
             })
 
         fig = px.bar(
@@ -552,12 +533,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             title=chart_title,
             labels={'series_name': 'Demographic Group', y_column: y_axis_label},
             color='series_name',
-            text_auto=text_auto_format if text_auto_format else False if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
+            text_auto=text_auto_format
         )
-
-        # Manually set text for Employment Level - Management, Professional to show proportion
-        if chart_type_prefix == 'Employment Level - Management, Professional':
-            fig.update_traces(text=comparison_df['proportion'].apply(lambda x: f'{x:.1%}'), texttemplate='%{text}', textposition='outside')
 
         fig.update_layout(
             xaxis_title='Demographic Group',
@@ -628,10 +605,6 @@ with main_content:
                 if not industry_management_avg_df.empty:
                     st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
                     st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
-                    st.subheader("Mad Liberal Comparisons for Management, Professional, and Related Occupations")
-                    industry_comparison_charts = plot_rate_comparisons(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional')
-                    for chart in industry_comparison_charts:
-                        st.plotly_chart(chart, width='stretch')
                 else:
                     st.warning("Cannot generate management, professional, and related occupations visualizations, data not available.")
 
