@@ -201,6 +201,14 @@ def load_and_process_bls_data():
         unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
 
+        # Calculate 'proportion' for labor_force_avg_df for display in About page
+        if not labor_force_avg_df.empty:
+            total_labor_force_sum = labor_force_avg_df['value'].sum()
+            if total_labor_force_sum > 0:
+                labor_force_avg_df['proportion'] = labor_force_avg_df['value'] / total_labor_force_sum
+            else:
+                labor_force_avg_df['proportion'] = 0.0 # Assign 0.0 if sum is zero
+
         desired_order = [
             'Unemployment - Men',
             'Unemployment - Women',
@@ -235,7 +243,7 @@ def load_and_process_bls_data():
         labor_force_avg_df = labor_force_avg_df.sort_values('series_name')
 
         return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df
-    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
@@ -674,7 +682,7 @@ with main_content:
         answers = st.session_state.madlib_answers
         st.markdown(f"While the history of <b>{answers['noun_1']}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{answers['noun_2']}</b>, the themes of our <b>{answers['noun_3']}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{answers['noun_4']}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{answers['noun_resource']}</b> within <b>{answers['noun_society_plural']}</b> across the globe.", unsafe_allow_html=True)
         st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_10']}</b> where huge swaths of <b>{answers['noun_11']}</b> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
-        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_13']}</b> and <b>{answers['noun_14']}</b> has persisted across <b>{answers['noun_15']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_16']}</b> have risen and <b>{answers['noun_17']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_18']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_19']}</b> of the <b>{answers['noun_20']}</b> and <b>{answers['noun_21']}</b>. At the local level, <b>{answers['noun_22']}</b> has always been necessary to maintain <b>{answers['noun_23']}</b> of <b>{answers['noun_24']}</b>, from the <b>{answers['noun_25']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_26']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_27']}</b> has been a <b>{answers['noun_28']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b> of the <b>{answers['noun_31']}</b>.</div>", unsafe_allow_html=True)
+        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_12']}</b> and <b>{answers['noun_13']}</b> has persisted across <b>{answers['noun_14']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_16']}</b> have risen and <b>{answers['noun_17']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_18']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_19']}</b> of the <b>{answers['noun_20']}</b> and <b>{answers['noun_21']}</b>. At the local level, <b>{answers['noun_22']}</b> has always been necessary to maintain <b>{answers['noun_23']}</b> of <b>{answers['noun_24']}</b>, from the <b>{answers['noun_25']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_26']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_27']}</b> has been a <b>{answers['noun_28']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b> of the <b>{answers['noun_31']}</b>.</div>", unsafe_allow_html=True)
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -720,7 +728,7 @@ with main_content:
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex and Race")
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
-            st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 5 categories.")
+            st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
             # Load data if not already in session state (e.g., if user navigated directly)
             if 'labor_force_avg_df' not in st.session_state or 'latest_full_year' not in st.session_state:
@@ -765,41 +773,6 @@ The first half of my adult life I dedicated to creating art. Primarily music and
 """)
 
         st.markdown("-" * 3)
-
-        # Display cleaned data if available
-        if 'unemployment_avg_df' in st.session_state and not st.session_state.unemployment_avg_df.empty:
-            st.subheader("Average Unemployment Data (Latest Full Year):")
-            display_df_unemployment = st.session_state.unemployment_avg_df[['series_name', 'value']].rename(columns={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'})
-            st.dataframe(display_df_unemployment)
-
-            col_dl_unemp_left, col_dl_unemp_right = st.columns([0.7, 0.3])
-            with col_dl_unemp_right:
-                csv_unemployment = display_df_unemployment.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="Download Unemployment Data",
-                    data=csv_unemployment,
-                    file_name='cleaned_unemployment_data.csv',
-                    mime='text/csv',
-                )
-
-        if 'labor_force_avg_df' in st.session_state and not st.session_state.labor_force_avg_df.empty:
-            st.subheader("Average Labor Force Data (Latest Full Year):")
-            display_df_labor_force = st.session_state.labor_force_avg_df[['series_name', 'value', 'proportion']].rename(columns={'series_name': 'Demographic Group', 'value': 'Average Labor Force (Thousands)', 'proportion': 'Proportion'})
-            st.dataframe(display_df_labor_force.style.format({'Proportion': '{:.2%}'}))
-
-            col_dl_lf_left, col_dl_lf_right = st.columns([0.7, 0.3])
-            with col_dl_lf_right:
-                csv_labor_force = display_df_labor_force.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="Download Labor Force Data",
-                    data=csv_labor_force,
-                    file_name='cleaned_labor_force_data.csv',
-                    mime='text/csv',
-                )
-
-        if 'unemployment_avg_df' not in st.session_state and 'labor_force_avg_df' not in st.session_state:
-            st.info("Dataframes will appear here after visiting the 'Unemployment Visualizations' or 'Industry Visualizations' sections.")
-
 
 # --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
