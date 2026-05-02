@@ -889,23 +889,19 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
     return fig
 
 def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_df, year, industry_prefix, plot_color):
-    # Define series names for labor force and management for men and women
-    lf_men_series = 'Labor Force - Men'
-    lf_women_series = 'Labor Force - Women'
+    # Define series names for management for men and women within the specific industry
     mp_men_series = f'Employment Level - {industry_prefix}, Men'
     mp_women_series = f'Employment Level - {industry_prefix}, Women'
 
-    # Get values for men
-    lf_men_value = labor_force_avg_df[labor_force_avg_df['series_name'] == lf_men_series]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == lf_men_series].empty else 0
+    # Get values for men and women within the industry
     mp_men_value = industry_df[industry_df['series_name'] == mp_men_series]['value'].iloc[0] if not industry_df[industry_df['series_name'] == mp_men_series].empty else 0
-
-    # Get values for women
-    lf_women_value = labor_force_avg_df[labor_force_avg_df['series_name'] == lf_women_series]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == lf_women_series].empty else 0
     mp_women_value = industry_df[industry_df['series_name'] == mp_women_series]['value'].iloc[0] if not industry_df[industry_df['series_name'] == mp_women_series].empty else 0
 
-    # Calculate proportions
-    prop_men = mp_men_value / lf_men_value if lf_men_value > 0 else 0
-    prop_women = mp_women_value / lf_women_value if lf_women_value > 0 else 0
+    total_industry_sex_employment = mp_men_value + mp_women_value
+
+    # Calculate proportions based on the total employment within the specific industry
+    prop_men = mp_men_value / total_industry_sex_employment if total_industry_sex_employment > 0 else 0
+    prop_women = mp_women_value / total_industry_sex_employment if total_industry_sex_employment > 0 else 0
 
     # Create DataFrame for plotting
     data_to_plot = pd.DataFrame({
@@ -917,7 +913,7 @@ def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industr
         data_to_plot,
         x='Demographic Group',
         y='Proportion in Occupations',
-        title=f'Proportion of Labor Force in {industry_prefix} Occupations by Sex in {year}',
+        title=f'Proportion of {industry_prefix} Occupations by Sex in {year}',
         labels={'Proportion in Occupations': 'Proportion'},
         color_discrete_sequence=[plot_color],
         text_auto='.1%'
