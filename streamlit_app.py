@@ -618,7 +618,7 @@ with main_content:
                 "verb_4": "desired",
                 "noun_29": "bachelor",
                 "noun_30": "stoppage",
-                "noun_31": "hookups"
+                "noun_31": "booty calls"
             }
 
             input_values = {}
@@ -759,7 +759,7 @@ with main_content:
     elif st.session_state.game_stage == 'about_project':
         # Force scroll to the top of the main content area when entering this stage
         st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
-        st.header("About This Project")
+        st.subheader("About This Project")
         st.markdown("""
 The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.\n\nFor me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”\n\nWhat has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.\n\nThank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, LNS14000004, LNS11000004, LNS11000005, LNS11032183, LNS11000001, LNS11000002, LNS11000003, LNS11000006, LNS11000009
 """)
