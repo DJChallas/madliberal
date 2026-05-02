@@ -95,16 +95,19 @@ def display_text_collage():
 def load_and_process_bls_data():
     headers = {'Content-type': 'application/json'}
     current_year = datetime.now().year
-    data = json.dumps({
-        "seriesid": [
-            'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
-            'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # New Labor Force IDs
-            'LNU02032526', 'LNU02032468', 'LNU02035886', 'LNU02035918', 'LNU02035957', 'LNU02035874' # New Industry Series IDs
-        ],
-        "startyear": str(current_year - 4),
-        "endyear": str(current_year),
-        "registrationkey": "9dd192e92c9c4989985db57deede9647"
-    })
+    data = json.dumps(
+        {
+            "seriesid": [
+                'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
+                'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # New Labor Force IDs
+                'LNU02032526', 'LNU02032468', 'LNU02035886', 'LNU02035918', 'LNU02035957', 'LNU02035874', # New Industry Series IDs - Management
+                'LNU02032539', 'LNU02032481', 'LNU02035042', 'LNU02035006', 'LNU02035041', 'LNU02035007' # New Industry Series IDs - Service
+            ],
+            "startyear": str(current_year - 4),
+            "endyear": str(current_year),
+            "registrationkey": "9dd192e92c9c4989985db57deede9647",
+        }
+    )
     p = requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/', data=data, headers=headers)
     json_data = json.loads(p.text)
 
@@ -138,13 +141,15 @@ def load_and_process_bls_data():
                 footnotes = ','.join(footnotes_list)
 
                 if ('M01' <= period <= 'M12') or ('Q01' <= period <= 'Q04'):
-                    all_series_data.append({
-                        'series_id': seriesId,
-                        'year': year,
-                        'period': period,
-                        'value': value,
-                        'footnotes': footnotes
-                    })
+                    all_series_data.append(
+                        {
+                            'series_id': seriesId,
+                            'year': year,
+                            'period': period,
+                            'value': value,
+                            'footnotes': footnotes,
+                        }
+                    )
         df = pd.DataFrame(all_series_data)
         df['month'] = df['period'].apply(period_to_month)
         df = df.dropna(subset=['month'])
@@ -190,7 +195,14 @@ def load_and_process_bls_data():
             'LNU02035886': 'Employment Level - Management, Professional, Asian',
             'LNU02035918': 'Employment Level - Management, Professional, White',
             'LNU02035957': 'Employment Level - Management, Professional, Hispanic or Latino',
-            'LNU02035874': 'Employment Level - Management, Professional, Black or African American'
+            'LNU02035874': 'Employment Level - Management, Professional, Black or African American',
+            # Industry Series - Service Occupations
+            'LNU02032539': 'Employment Level - Service, Women',
+            'LNU02032481': 'Employment Level - Service, Men',
+            'LNU02035042': 'Employment Level - Service, Asian',
+            'LNU02035006': 'Employment Level - Service, White',
+            'LNU02035041': 'Employment Level - Service, Black or African American',
+            'LNU02035007': 'Employment Level - Service, Hispanic or Latino'
         }
         series_name_mapping = sn_map
 
@@ -211,6 +223,7 @@ def load_and_process_bls_data():
         unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
         industry_management_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional')].copy()
+        industry_service_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Service')].copy()
 
         # Calculate 'proportion' for labor_force_avg_df for display in About page
         if not labor_force_avg_df.empty:
@@ -227,6 +240,14 @@ def load_and_process_bls_data():
                 industry_management_avg_df['proportion'] = industry_management_avg_df['value'] / total_management_prof_sum
             else:
                 industry_management_avg_df['proportion'] = 0.0
+
+        # Calculate 'proportion' for industry_service_avg_df
+        if not industry_service_avg_df.empty:
+            total_service_sum = industry_service_avg_df['value'].sum()
+            if total_service_sum > 0:
+                industry_service_avg_df['proportion'] = industry_service_avg_df['value'] / total_service_sum
+            else:
+                industry_service_avg_df['proportion'] = 0.0
 
         desired_order = [
             'Unemployment - Men',
@@ -250,7 +271,13 @@ def load_and_process_bls_data():
             'Employment Level - Management, Professional, Asian',
             'Employment Level - Management, Professional, White',
             'Employment Level - Management, Professional, Hispanic or Latino',
-            'Employment Level - Management, Professional, Black or African American'
+            'Employment Level - Management, Professional, Black or African American',
+            'Employment Level - Service, Women',
+            'Employment Level - Service, Men',
+            'Employment Level - Service, Asian',
+            'Employment Level - Service, White',
+            'Employment Level - Service, Hispanic or Latino',
+            'Employment Level - Service, Black or African American'
         ]
         unemployment_avg_df['series_name'] = pd.Categorical(
             unemployment_avg_df['series_name'],
@@ -274,8 +301,15 @@ def load_and_process_bls_data():
         )
         industry_management_avg_df = industry_management_avg_df.sort_values('series_name')
 
-        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df
-    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+        industry_service_avg_df['series_name'] = pd.Categorical(
+            industry_service_avg_df['series_name'],
+            categories=desired_order,
+            ordered=True
+        )
+        industry_service_avg_df = industry_service_avg_df.sort_values('series_name')
+
+        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df
+    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
@@ -283,6 +317,11 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         sex_groups = [
             'Employment Level - Management, Professional, Men',
             'Employment Level - Management, Professional, Women'
+        ]
+    elif chart_type_prefix == 'Employment Level - Service':
+        sex_groups = [
+            'Employment Level - Service, Men',
+            'Employment Level - Service, Women'
         ]
     else:
         sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
@@ -317,6 +356,12 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Management, Professional Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
+    elif chart_type_prefix == 'Employment Level - Service':
+        # We want to plot this proportion directly.
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Service Occupations Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_sex = df_sex.sort_values(by=y_column, ascending=False)
 
@@ -347,6 +392,13 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
             'Employment Level - Management, Professional, Hispanic or Latino',
             'Employment Level - Management, Professional, Asian',
             'Employment Level - Management, Professional, White'
+        ]
+    elif chart_type_prefix == 'Employment Level - Service':
+        race_groups = [
+            'Employment Level - Service, Black or African American',
+            'Employment Level - Service, Hispanic or Latino',
+            'Employment Level - Service, Asian',
+            'Employment Level - Service, White'
         ]
     else:
         race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
@@ -381,6 +433,12 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Management, Professional Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
+    elif chart_type_prefix == 'Employment Level - Service':
+        # We want to plot this proportion directly.
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Service Occupations Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
@@ -413,6 +471,10 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             white_women_avg_series_name = 'Employment Level - Management, Professional, Women'
             if white_women_avg_series_name not in avg_df['series_name'].values:
                 return []
+        elif chart_type_prefix == 'Employment Level - Service':
+            white_women_avg_series_name = 'Employment Level - Service, Women'
+            if white_women_avg_series_name not in avg_df['series_name'].values:
+                return []
         else:
             return []
 
@@ -441,6 +503,12 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Employment Level - Management, Professional, Hispanic or Latino',
         'Employment Level - Management, Professional, Black or African American'
     ]
+    comparison_order_industry_service = [
+        'Employment Level - Service, Asian',
+        'Employment Level - Service, Men',
+        'Employment Level - Service, Hispanic or Latino',
+        'Employment Level - Service, Black or African American'
+    ]
 
     if chart_type_prefix == 'Unemployment':
         comparison_order = comparison_order_unemployment
@@ -448,6 +516,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         comparison_order = comparison_order_labor_force
     elif chart_type_prefix == 'Employment Level - Management, Professional':
         comparison_order = comparison_order_industry_management
+    elif chart_type_prefix == 'Employment Level - Service':
+        comparison_order = comparison_order_industry_service
     else:
         comparison_order = []
 
@@ -467,7 +537,11 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Employment Level - Management, Professional, Asian': 'Management, Professional, Asian',
         'Employment Level - Management, Professional, Men': 'Management, Professional, Men',
         'Employment Level - Management, Professional, Hispanic or Latino': 'Management, Professional, Hispanic or Latino',
-        'Employment Level - Management, Professional, Black or African American': 'Management, Professional, Black or African American'
+        'Employment Level - Management, Professional, Black or African American': 'Management, Professional, Black or African American',
+        'Employment Level - Service, Asian': 'Service, Asian',
+        'Employment Level - Service, Men': 'Service, Men',
+        'Employment Level - Service, Hispanic or Latino': 'Service, Hispanic or Latino',
+        'Employment Level - Service, Black or African American': 'Service, Black or African American'
     }
 
     other_demographics_ordered = avg_df[
@@ -535,6 +609,26 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
                 'series_name': [white_women_avg_series_name_mp, display_comparison_group_name],
                 'proportion': [white_women_proportion, row_proportion]
             })
+        elif chart_type_prefix == 'Employment Level - Service':
+            white_women_avg_series_name_sv = 'Employment Level - Service, Women'
+            if white_women_avg_series_name_sv not in avg_df['series_name'].values:
+                return []
+
+            white_women_avg_sv = avg_df[avg_df['series_name'] == white_women_avg_series_name_sv].iloc[0]
+
+            white_women_proportion = white_women_avg_sv['proportion']
+            row_proportion = row['proportion']
+
+            y_column = 'proportion'
+            y_axis_label = f'Proportion of Service Occupations Employment'
+            chart_title = f"Average Service Occupations: Women vs. {display_comparison_group_name} in {year}"
+            tick_format = '.1%'
+            text_auto_format = '.1%'
+
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name_sv, display_comparison_group_name],
+                'proportion': [white_women_proportion, row_proportion]
+            })
 
         fig = px.bar(
             comparison_df,
@@ -556,10 +650,10 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         charts.append(fig)
     return charts
 
-def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_management_avg_df, year):
+def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_df, year, industry_name):
     """
     Generates a grouped bar chart comparing the proportion of each race in the total labor force
-    with their proportion in the Management, Professional, and Related Occupations industry.
+    with their proportion in a specified industry.
     """
     race_groups_labor_force = [
         'Labor Force - Black or African American',
@@ -567,11 +661,13 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
         'Labor Force - Asian',
         'Labor Force - White'
     ]
-    race_groups_industry_management = [
-        'Employment Level - Management, Professional, Black or African American',
-        'Employment Level - Management, Professional, Hispanic or Latino',
-        'Employment Level - Management, Professional, Asian',
-        'Employment Level - Management, Professional, White'
+
+    # Dynamically create race_groups for the specified industry
+    race_groups_industry = [
+        f'Employment Level - {industry_name}, Black or African American',
+        f'Employment Level - {industry_name}, Hispanic or Latino',
+        f'Employment Level - {industry_name}, Asian',
+        f'Employment Level - {industry_name}, White'
     ]
 
     # Extract relevant data from labor force
@@ -579,16 +675,16 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
     df_labor_force['category'] = 'Total Labor Force'
     df_labor_force['demographic'] = df_labor_force['series_name'].str.replace('Labor Force - ', '')
 
-    # Extract relevant data from industry management
-    df_industry_management = industry_management_avg_df[industry_management_avg_df['series_name'].isin(race_groups_industry_management)].copy()
-    df_industry_management['category'] = 'Management, Professional Occupations'
-    df_industry_management['demographic'] = df_industry_management['series_name'].str.replace('Employment Level - Management, Professional, ', '')
+    # Extract relevant data from industry
+    df_industry = industry_df[industry_df['series_name'].isin(race_groups_industry)].copy()
+    df_industry['category'] = industry_name + ' Occupations'
+    df_industry['demographic'] = df_industry['series_name'].str.replace(f'Employment Level - {industry_name}, ', '')
 
     # Concatenate the two dataframes
-    comparison_df = pd.concat([df_labor_force, df_industry_management])
+    comparison_df = pd.concat([df_labor_force, df_industry])
 
     # Ensure 'demographic' column is consistent for plotting
-    # Remove ' or African American' from Black or African American
+    # Remove ' or African American' from Black or African American if it exists
     comparison_df['demographic'] = comparison_df['demographic'].replace('Black or African American', 'Black')
 
 
@@ -598,7 +694,7 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
         y='proportion',
         color='category',
         barmode='group',
-        title=f'Comparison of Racial Representation: Labor Force vs. Management/Professional Occupations in {year}',
+        title=f'Comparison of Racial Representation: Labor Force vs. {industry_name} Occupations in {year}',
         labels={
             'demographic': 'Racial/Ethnic Group',
             'proportion': 'Proportion of Group Total',
@@ -616,20 +712,20 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
 
     return fig
 
-def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, year):
+def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_df, year, industry_prefix):
     # Define series names for labor force and management for men and women
     lf_men_series = 'Labor Force - Men'
     lf_women_series = 'Labor Force - Women'
-    mp_men_series = 'Employment Level - Management, Professional, Men'
-    mp_women_series = 'Employment Level - Management, Professional, Women'
+    mp_men_series = f'Employment Level - {industry_prefix}, Men'
+    mp_women_series = f'Employment Level - {industry_prefix}, Women'
 
     # Get values for men
     lf_men_value = labor_force_avg_df[labor_force_avg_df['series_name'] == lf_men_series]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == lf_men_series].empty else 0
-    mp_men_value = industry_management_avg_df[industry_management_avg_df['series_name'] == mp_men_series]['value'].iloc[0] if not industry_management_avg_df[industry_management_avg_df['series_name'] == mp_men_series].empty else 0
+    mp_men_value = industry_df[industry_df['series_name'] == mp_men_series]['value'].iloc[0] if not industry_df[industry_df['series_name'] == mp_men_series].empty else 0
 
     # Get values for women
     lf_women_value = labor_force_avg_df[labor_force_avg_df['series_name'] == lf_women_series]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == lf_women_series].empty else 0
-    mp_women_value = industry_management_avg_df[industry_management_avg_df['series_name'] == mp_women_series]['value'].iloc[0] if not industry_management_avg_df[industry_management_avg_df['series_name'] == mp_women_series].empty else 0
+    mp_women_value = industry_df[industry_df['series_name'] == mp_women_series]['value'].iloc[0] if not industry_df[industry_df['series_name'] == mp_women_series].empty else 0
 
     # Calculate proportions
     prop_men = mp_men_value / lf_men_value if lf_men_value > 0 else 0
@@ -638,15 +734,15 @@ def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industr
     # Create DataFrame for plotting
     data_to_plot = pd.DataFrame({
         'Demographic Group': ['Men', 'Women'],
-        'Proportion in Management, Professional Occupations': [prop_men, prop_women]
+        'Proportion in Occupations': [prop_men, prop_women]
     })
 
     fig = px.bar(
         data_to_plot,
         x='Demographic Group',
-        y='Proportion in Management, Professional Occupations',
-        title=f'Proportion of Labor Force in Management/Professional by Sex in {year}',
-        labels={'Proportion in Management, Professional Occupations': 'Proportion'},
+        y='Proportion in Occupations',
+        title=f'Proportion of Labor Force in {industry_prefix} Occupations by Sex in {year}',
+        labels={'Proportion in Occupations': 'Proportion'},
         color='Demographic Group',
         text_auto='.1%'
     )
@@ -658,31 +754,31 @@ def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industr
     fig.update_yaxes(tickformat='.1%')
     return fig
 
-def plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, year):
+def plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_df, year, industry_prefix):
     # Define series names for labor force and management for race groups
     race_groups = {
-        'White': {'lf': 'Labor Force - White', 'mp': 'Employment Level - Management, Professional, White'},
-        'Black or African American': {'lf': 'Labor Force - Black or African American', 'mp': 'Employment Level - Management, Professional, Black or African American'},
-        'Asian': {'lf': 'Labor Force - Asian', 'mp': 'Employment Level - Management, Professional, Asian'},
-        'Hispanic or Latino': {'lf': 'Labor Force - Hispanic or Latino', 'mp': 'Employment Level - Management, Professional, Hispanic or Latino'}
+        'White': {'lf': 'Labor Force - White', 'mp': f'Employment Level - {industry_prefix}, White'},
+        'Black or African American': {'lf': 'Labor Force - Black or African American', 'mp': f'Employment Level - {industry_prefix}, Black or African American'},
+        'Asian': {'lf': 'Labor Force - Asian', 'mp': f'Employment Level - {industry_prefix}, Asian'},
+        'Hispanic or Latino': {'lf': 'Labor Force - Hispanic or Latino', 'mp': f'Employment Level - {industry_prefix}, Hispanic or Latino'}
     }
 
     proportions = []
     for race, series_names in race_groups.items():
         lf_value = labor_force_avg_df[labor_force_avg_df['series_name'] == series_names['lf']]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == series_names['lf']].empty else 0
-        mp_value = industry_management_avg_df[industry_management_avg_df['series_name'] == series_names['mp']]['value'].iloc[0] if not industry_management_avg_df[industry_management_avg_df['series_name'] == series_names['mp']].empty else 0
+        mp_value = industry_df[industry_df['series_name'] == series_names['mp']]['value'].iloc[0] if not industry_df[industry_df['series_name'] == series_names['mp']].empty else 0
 
         proportion = mp_value / lf_value if lf_value > 0 else 0
-        proportions.append({'Demographic Group': race, 'Proportion in Management, Professional Occupations': proportion})
+        proportions.append({'Demographic Group': race, 'Proportion in Occupations': proportion})
 
     data_to_plot = pd.DataFrame(proportions)
 
     fig = px.bar(
         data_to_plot,
         x='Demographic Group',
-        y='Proportion in Management, Professional Occupations',
-        title=f'Proportion of Labor Force in Management/Professional by Race in {year}',
-        labels={'Proportion in Management, Professional Occupations': 'Proportion'},
+        y='Proportion in Occupations',
+        title=f'Proportion of Labor Force in {industry_prefix} Occupations by Race in {year}',
+        labels={'Proportion in Occupations': 'Proportion'},
         color='Demographic Group',
         text_auto='.1%'
     )
@@ -734,7 +830,7 @@ with main_content:
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
             st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
-            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df = load_and_process_bls_data()
+            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df = load_and_process_bls_data()
 
             # Store data in session state for other pages (if this were a multi-page app)
             st.session_state.df_cleaned_for_display = df_filtered.copy()
@@ -742,6 +838,7 @@ with main_content:
             st.session_state.unemployment_avg_df = unemployment_avg_df
             st.session_state.labor_force_avg_df = labor_force_avg_df
             st.session_state.industry_management_avg_df = industry_management_avg_df
+            st.session_state.industry_service_avg_df = industry_service_avg_df
 
             if not labor_force_avg_df.empty:
                 st.subheader("Average Labor Force by Sex and Race")
@@ -752,8 +849,8 @@ with main_content:
                 st.subheader("Management, professional and related occupations")
                 if not industry_management_avg_df.empty:
                     # Removed existing plots and added new ones as per user request
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional'), use_container_width=True)
 
                     # New headers for OLS models
                     st.subheader("Mad Liberal Comparisons")
@@ -764,6 +861,13 @@ with main_content:
 
                 st.markdown("---" * 3)
                 st.subheader("Service Occupations")
+                if not industry_service_avg_df.empty:
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service'), use_container_width=True)
+                    # Add the new comparison chart for Service Occupations
+                    st.plotly_chart(plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service'), use_container_width=True)
+                else:
+                    st.warning("Cannot generate Service Occupations visualizations, data not available.")
 
                 st.markdown("---" * 3)
                 st.subheader("Sales and Office Occupations")
