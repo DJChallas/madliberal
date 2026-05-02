@@ -586,7 +586,7 @@ with main_content:
                 "plural_noun_5": "attractive",
                 "noun_7": "divas",
                 "adjective_2": "guestlist",
-                "noun_8": "a cocktail",
+                "noun_8": "vodka",
                 "noun_9": "vodka",
                 "proper_noun_3": "potatoes",
                 "noun_10": "money",
@@ -634,7 +634,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 2 - after Plural Noun 2
-            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
+            st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN</span>.", unsafe_allow_html=True)
 
             # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
@@ -740,28 +740,18 @@ with main_content:
 
                 st.markdown("--- ")
                 st.subheader("Management, professional and related occupations")
-                st.markdown("Chief Executives")
-                st.markdown("Computer and Mathematical occupations")
-                st.markdown("Registered Nurses")
 
                 st.markdown("--- ")
                 st.subheader("Service Occupations")
-                st.markdown("Food preparation and serving related occupations")
-                st.markdown("Janitors and building cleaners")
 
                 st.markdown("--- ")
                 st.subheader("Sales and Office Occupations")
-                st.markdown("Cashiers")
-                st.markdown("Customer Service Representatives")
 
                 st.markdown("--- ")
                 st.subheader("Natural resources, construction, and maintenance occupations")
-                st.markdown("Construction Laborers")
 
                 st.markdown("--- ")
                 st.subheader("Production, transportation, and material moving occupations")
-                st.markdown("Driver/sales workers and truck drivers")
-                st.markdown("Laborers and freight, stock, and material movers, hand")
 
             else:
                 st.warning("Cannot generate labor force visualizations, data not available.")
