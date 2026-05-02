@@ -546,11 +546,18 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
+    # Dynamic title adjustment based on user request
+    if chart_type_prefix.startswith('Employment Level - '):
+        industry_name = chart_type_prefix.replace('Employment Level - ', '')
+        title_text = f'Proportion of Available Labor force by Specific Race in {industry_name} in {year}'
+    else:
+        title_text = f'Average {chart_type_prefix} by Race in {year}' # Keep existing for non-industry plots
+
     fig = px.bar(
         df_race,
         x='series_name',
         y=y_column,
-        title=f'Average {chart_type_prefix} by Race in {year}',
+        title=title_text,
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
         text_auto=text_auto_format
