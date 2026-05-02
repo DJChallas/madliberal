@@ -616,6 +616,84 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
 
     return fig
 
+def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, year):
+    # Define series names for labor force and management for men and women
+    lf_men_series = 'Labor Force - Men'
+    lf_women_series = 'Labor Force - Women'
+    mp_men_series = 'Employment Level - Management, Professional, Men'
+    mp_women_series = 'Employment Level - Management, Professional, Women'
+
+    # Get values for men
+    lf_men_value = labor_force_avg_df[labor_force_avg_df['series_name'] == lf_men_series]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == lf_men_series].empty else 0
+    mp_men_value = industry_management_avg_df[industry_management_avg_df['series_name'] == mp_men_series]['value'].iloc[0] if not industry_management_avg_df[industry_management_avg_df['series_name'] == mp_men_series].empty else 0
+
+    # Get values for women
+    lf_women_value = labor_force_avg_df[labor_force_avg_df['series_name'] == lf_women_series]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == lf_women_series].empty else 0
+    mp_women_value = industry_management_avg_df[industry_management_avg_df['series_name'] == mp_women_series]['value'].iloc[0] if not industry_management_avg_df[industry_management_avg_df['series_name'] == mp_women_series].empty else 0
+
+    # Calculate proportions
+    prop_men = mp_men_value / lf_men_value if lf_men_value > 0 else 0
+    prop_women = mp_women_value / lf_women_value if lf_women_value > 0 else 0
+
+    # Create DataFrame for plotting
+    data_to_plot = pd.DataFrame({
+        'Demographic Group': ['Men', 'Women'],
+        'Proportion in Management, Professional Occupations': [prop_men, prop_women]
+    })
+
+    fig = px.bar(
+        data_to_plot,
+        x='Demographic Group',
+        y='Proportion in Management, Professional Occupations',
+        title=f'Proportion of Labor Force in Management/Professional by Sex in {year}',
+        labels={'Proportion in Management, Professional Occupations': 'Proportion'},
+        color='Demographic Group',
+        text_auto='.1%'
+    )
+
+    fig.update_layout(
+        yaxis_title='Proportion',
+        showlegend=False
+    )
+    fig.update_yaxes(tickformat='.1%')
+    return fig
+
+def plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, year):
+    # Define series names for labor force and management for race groups
+    race_groups = {
+        'White': {'lf': 'Labor Force - White', 'mp': 'Employment Level - Management, Professional, White'},
+        'Black or African American': {'lf': 'Labor Force - Black or African American', 'mp': 'Employment Level - Management, Professional, Black or African American'},
+        'Asian': {'lf': 'Labor Force - Asian', 'mp': 'Employment Level - Management, Professional, Asian'},
+        'Hispanic or Latino': {'lf': 'Labor Force - Hispanic or Latino', 'mp': 'Employment Level - Management, Professional, Hispanic or Latino'}
+    }
+
+    proportions = []
+    for race, series_names in race_groups.items():
+        lf_value = labor_force_avg_df[labor_force_avg_df['series_name'] == series_names['lf']]['value'].iloc[0] if not labor_force_avg_df[labor_force_avg_df['series_name'] == series_names['lf']].empty else 0
+        mp_value = industry_management_avg_df[industry_management_avg_df['series_name'] == series_names['mp']]['value'].iloc[0] if not industry_management_avg_df[industry_management_avg_df['series_name'] == series_names['mp']].empty else 0
+
+        proportion = mp_value / lf_value if lf_value > 0 else 0
+        proportions.append({'Demographic Group': race, 'Proportion in Management, Professional Occupations': proportion})
+
+    data_to_plot = pd.DataFrame(proportions)
+
+    fig = px.bar(
+        data_to_plot,
+        x='Demographic Group',
+        y='Proportion in Management, Professional Occupations',
+        title=f'Proportion of Labor Force in Management/Professional by Race in {year}',
+        labels={'Proportion in Management, Professional Occupations': 'Proportion'},
+        color='Demographic Group',
+        text_auto='.1%'
+    )
+
+    fig.update_layout(
+        yaxis_title='Proportion',
+        showlegend=False
+    )
+    fig.update_yaxes(tickformat='.1%')
+    return fig
+
 # --- Streamlit App ---
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
 with col_title_global:
@@ -673,8 +751,9 @@ with main_content:
                 st.markdown("---" * 3)
                 st.subheader("Management, professional and related occupations")
                 if not industry_management_avg_df.empty:
-                    st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
-                    st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+                    # Removed existing plots and added new ones as per user request
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
 
                     # New comparison chart
                     st.markdown("#### Labor Force vs. Management/Professional Occupations (Racial Comparison)")
