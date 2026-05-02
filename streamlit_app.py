@@ -187,6 +187,9 @@ def load_and_process_bls_data():
         }
         series_name_mapping = sn_map
 
+        # Add series_name to df_filtered before returning
+        df_filtered['series_name'] = df_filtered['series_id'].map(series_name_mapping)
+
         latest_full_year = df_filtered['year'].astype(int).max()
         if latest_full_year == datetime.now().year:
             latest_full_year -= 1 # Use the last full year if current year is not complete
@@ -483,7 +486,7 @@ with left_sidebar:
 
     # Regular navigation buttons, only displayed when NOT in madlib input/reveal stages
     if st.session_state.game_stage not in ['madlib_input', 'madlib_reveal']:
-        st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
+        st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify: space-around; height: 100%;'>", unsafe_allow_html=True)
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
