@@ -719,7 +719,7 @@ with left_sidebar:
     st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
     st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
-    st.markdown("---" * 3)
+    st.markdown("-" * 3)
 
 with main_content:
     # --- Industry Visualizations Stage ---
@@ -755,9 +755,10 @@ with main_content:
                     st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
                     st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
 
-                    # New comparison chart
-                    st.markdown("#### Labor Force vs. Management/Professional Occupations (Racial Comparison)")
-                    st.plotly_chart(plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
+                    # New headers for OLS models
+                    st.subheader("Mad Liberal Comparisons")
+                    st.markdown("#### Check your privilege!")
+
                 else:
                     st.warning("Cannot generate management, professional, and related occupations visualizations, data not available.")
 
