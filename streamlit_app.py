@@ -197,12 +197,12 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     y_column = 'value'
     y_axis_label = ''
     tick_format = None
-    text_auto_format = False
+    bar_text = None # New variable to hold text to be displayed on bars
 
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
         tick_format = '.1%'
-        text_auto_format = '.1%'
+        bar_text = df_sex['value'].apply(lambda x: f'{x:.1%}') # Use value directly for text if it's already proportion
     elif chart_type_prefix == 'Labor Force':
         # Calculate proportions relative to total Men + Women labor force
         base_sex_groups = ['Labor Force - Men', 'Labor Force - Women']
@@ -216,7 +216,7 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         y_column = 'proportion'
         y_axis_label = 'Proportion of Total Men + Women Labor Force'
         tick_format = '.1%'
-        text_auto_format = '.1%'
+        bar_text = df_sex['proportion'].apply(lambda x: f'{x:.1%}')
     elif chart_type_prefix == 'Employment Level - Management, Professional':
         base_sex_groups = ['Employment Level - Management, Professional, Men', 'Employment Level - Management, Professional, Women']
         total_men_women_mp = avg_df[avg_df['series_name'].isin(base_sex_groups)]['value'].sum()
@@ -226,21 +226,21 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         else:
             df_sex['proportion'] = 0
 
-        y_column = 'proportion'
-        y_axis_label = 'Proportion of Management, Professional Employment'
-        tick_format = '.1%'
-        text_auto_format = '.1%'
+        y_column = 'value' # Now plotting raw values
+        y_axis_label = 'Number of Jobs (in thousands)' # Updated label
+        tick_format = ',.0f' # Format for thousands, no decimals
+        bar_text = df_sex['proportion'].apply(lambda x: f'{x:.1%}') # Display proportion as text
 
     df_sex = df_sex.sort_values(by=y_column, ascending=False)
 
     fig = px.bar(
         df_sex,
         x='series_name',
-        y=y_column,
+        y=y_column, # Use the determined y_column ('value' or 'proportion')
         title=f'Average {chart_type_prefix} by Sex in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else False
+        text=bar_text # Use the custom text for bars
     )
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -259,12 +259,12 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
     y_column = 'value'
     y_axis_label = ''
     tick_format = None
-    text_auto_format = False
+    bar_text = None # New variable to hold text to be displayed on bars
 
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
         tick_format = '.1%'
-        text_auto_format = '.1%'
+        bar_text = df_race['value'].apply(lambda x: f'{x:.1%}')
     elif chart_type_prefix == 'Labor Force':
         # Calculate proportions relative to specific race groups labor force
         base_race_groups = ['Labor Force - White', 'Labor Force - Black or African American', 'Labor Force - Asian', 'Labor Force - Hispanic or Latino']
@@ -278,7 +278,7 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         y_column = 'proportion'
         y_axis_label = 'Proportion of Selected Racial/Ethnic Labor Force'
         tick_format = '.1%'
-        text_auto_format = '.1%'
+        bar_text = df_race['proportion'].apply(lambda x: f'{x:.1%}')
     elif chart_type_prefix == 'Employment Level - Management, Professional':
         base_race_groups = [
             'Employment Level - Management, Professional, White',
@@ -293,21 +293,21 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         else:
             df_race['proportion'] = 0
 
-        y_column = 'proportion'
-        y_axis_label = 'Proportion of Management, Professional Employment'
-        tick_format = '.1%'
-        text_auto_format = '.1%'
+        y_column = 'value' # Now plotting raw values
+        y_axis_label = 'Number of Jobs (in thousands)' # Updated label
+        tick_format = ',.0f' # Format for thousands, no decimals
+        bar_text = df_race['proportion'].apply(lambda x: f'{x:.1%}') # Display proportion as text
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
     fig = px.bar(
         df_race,
         x='series_name',
-        y=y_column,
+        y=y_column, # Use the determined y_column
         title=f'Average {chart_type_prefix} by Race in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else False
+        text=bar_text # Use the custom text for bars
     )
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -389,7 +389,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         y_column = 'value'
         y_axis_label = ''
         tick_format = None
-        text_auto_format = False
+        bar_text = None # New variable
         comparison_df = pd.DataFrame() # Initialize comparison_df
 
         if chart_type_prefix == 'Unemployment':
@@ -397,13 +397,12 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             # Update title for unemployment comparisons
             chart_title = f"Average Unemployment: White Women vs. {display_comparison_group_name} in {year}"
             tick_format = '.1%'
-            text_auto_format = '.1%'
             comparison_df = pd.DataFrame({
                 'series_name': [white_women_avg_series_name, display_comparison_group_name],
                 'value': [white_women_avg[y_column], row[y_column]]
             })
-        elif chart_type_prefix == 'Labor Force' or chart_type_prefix == 'Employment Level - Management, Professional':
-            # For labor force and industry comparisons, we want proportion of overall total if not specified otherwise
+            bar_text = comparison_df['value'].apply(lambda x: f'{x:.1%}') # Using value which is already proportion
+        elif chart_type_prefix == 'Labor Force':
             total_relevant_value = avg_df['value'].sum()
             if total_relevant_value > 0:
                 white_women_proportion = white_women_avg['value'] / total_relevant_value
@@ -416,21 +415,40 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             y_axis_label = f'Proportion of Total {chart_type_prefix} Force'
             chart_title = f"Average {chart_type_prefix}: White Women vs. {display_comparison_group_name} in {year}"
             tick_format = '.1%'
-            text_auto_format = '.1%'
 
             comparison_df = pd.DataFrame({
                 'series_name': [white_women_avg_series_name, display_comparison_group_name],
                 'proportion': [white_women_proportion, row_proportion]
             })
+            bar_text = comparison_df['proportion'].apply(lambda x: f'{x:.1%}')
+        elif chart_type_prefix == 'Employment Level - Management, Professional':
+            total_relevant_value = avg_df['value'].sum()
+            if total_relevant_value > 0:
+                white_women_proportion = white_women_avg['value'] / total_relevant_value
+                row_proportion = row['value'] / total_relevant_value
+            else:
+                white_women_proportion = 0
+                row_proportion = 0
+
+            y_column = 'value' # Plotting raw values for y-axis
+            y_axis_label = f'Number of Jobs (in thousands)' # Updated label
+            tick_format = ',.0f' # Format for thousands, no decimals
+            
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name, display_comparison_group_name],
+                'value': [white_women_avg['value'], row['value']], # Use actual values for the bar height
+                'proportion': [white_women_proportion, row_proportion] # Store proportion for text display
+            })
+            bar_text = comparison_df['proportion'].apply(lambda x: f'{x:.1%}') # Display proportion as text
 
         fig = px.bar(
             comparison_df,
             x='series_name',
-            y=y_column,
+            y=y_column, # Use the determined y_column
             title=chart_title,
             labels={'series_name': 'Demographic Group', y_column: y_axis_label},
             color='series_name',
-            text_auto=text_auto_format if text_auto_format else False
+            text=bar_text # Use custom text
         )
 
         fig.update_layout(
