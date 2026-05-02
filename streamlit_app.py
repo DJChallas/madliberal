@@ -102,11 +102,12 @@ def load_and_process_bls_data():
                 'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # New Labor Force IDs
                 'LNU02032526', 'LNU02032468', 'LNU02035886', 'LNU02035918', 'LNU02035957', 'LNU02035874', # New Industry Series IDs - Management
                 'LNU02032539', 'LNU02032481', 'LNU02035042', 'LNU02035006', 'LNU02035041', 'LNU02035007', # New Industry Series IDs - Service
-                'LNU02032545', 'LNU02032487', 'LNU02035920', 'LNU02035959', 'LNU02035877', 'LNU02035889' # New Industry Series IDs - Sales and Office
+                'LNU02032545', 'LNU02032487', 'LNU02035920', 'LNU02035959', 'LNU02035877', 'LNU02035889', # New Industry Series IDs - Sales and Office
+                'LNU02032490', 'LNU02034909', 'LNU02032548', 'LNU02034877', 'LNU02034935Q', 'LNU02034893' # New Industry Series IDs - Natural Resources, Construction, and Maintenance
             ],
             "startyear": str(current_year - 4),
             "endyear": str(current_year),
-            "registrationkey": "9dd192e92c9c4989985db57deede9647",
+            "registrationkey": "9dd192e92c9c4989985db57deede9647"
         }
     )
     p = requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/', data=data, headers=headers)
@@ -148,7 +149,7 @@ def load_and_process_bls_data():
                             'year': year,
                             'period': period,
                             'value': value,
-                            'footnotes': footnotes,
+                            'footnotes': footnotes
                         }
                     )
         df = pd.DataFrame(all_series_data)
@@ -210,7 +211,14 @@ def load_and_process_bls_data():
             'LNU02035920': 'Employment Level - Sales and Office, White',
             'LNU02035959': 'Employment Level - Sales and Office, Hispanic or Latino',
             'LNU02035877': 'Employment Level - Sales and Office, Black or African American',
-            'LNU02035889': 'Employment Level - Sales and Office, Asian'
+            'LNU02035889': 'Employment Level - Sales and Office, Asian',
+            # Industry Series - Natural resources, construction, and maintenance occupations
+            'LNU02032490': 'Employment Level - Natural resources, construction, and maintenance, Men',
+            'LNU02034909': 'Employment Level - Natural resources, construction, and maintenance, Asian',
+            'LNU02032548': 'Employment Level - Natural resources, construction, and maintenance, Women',
+            'LNU02034877': 'Employment Level - Natural resources, construction, and maintenance, White',
+            'LNU02034935Q': 'Employment Level - Natural resources, construction, and maintenance, Hispanic or Latino',
+            'LNU02034893': 'Employment Level - Natural resources, construction, and maintenance, Black or African American'
         }
         series_name_mapping = sn_map
 
@@ -233,6 +241,7 @@ def load_and_process_bls_data():
         industry_management_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional')].copy()
         industry_service_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Service')].copy()
         industry_sales_office_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Sales and Office')].copy()
+        industry_natural_construction_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Natural resources, construction, and maintenance')].copy()
 
         # Calculate 'proportion' for labor_force_avg_df for display in About page
         if not labor_force_avg_df.empty:
@@ -265,6 +274,14 @@ def load_and_process_bls_data():
                 industry_sales_office_avg_df['proportion'] = industry_sales_office_avg_df['value'] / total_sales_office_sum
             else:
                 industry_sales_office_avg_df['proportion'] = 0.0
+
+        # Calculate 'proportion' for industry_natural_construction_avg_df
+        if not industry_natural_construction_avg_df.empty:
+            total_natural_construction_sum = industry_natural_construction_avg_df['value'].sum()
+            if total_natural_construction_sum > 0:
+                industry_natural_construction_avg_df['proportion'] = industry_natural_construction_avg_df['value'] / total_natural_construction_sum
+            else:
+                industry_natural_construction_avg_df['proportion'] = 0.0
 
         desired_order = [
             'Unemployment - Men',
@@ -300,7 +317,13 @@ def load_and_process_bls_data():
             'Employment Level - Sales and Office, White',
             'Employment Level - Sales and Office, Hispanic or Latino',
             'Employment Level - Sales and Office, Black or African American',
-            'Employment Level - Sales and Office, Asian'
+            'Employment Level - Sales and Office, Asian',
+            'Employment Level - Natural resources, construction, and maintenance, Women',
+            'Employment Level - Natural resources, construction, and maintenance, Men',
+            'Employment Level - Natural resources, construction, and maintenance, Asian',
+            'Employment Level - Natural resources, construction, and maintenance, White',
+            'Employment Level - Natural resources, construction, and maintenance, Hispanic or Latino',
+            'Employment Level - Natural resources, construction, and maintenance, Black or African American'
         ]
         unemployment_avg_df['series_name'] = pd.Categorical(
             unemployment_avg_df['series_name'],
@@ -338,8 +361,15 @@ def load_and_process_bls_data():
         )
         industry_sales_office_avg_df = industry_sales_office_avg_df.sort_values('series_name')
 
-        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df
-    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+        industry_natural_construction_avg_df['series_name'] = pd.Categorical(
+            industry_natural_construction_avg_df['series_name'],
+            categories=desired_order,
+            ordered=True
+        )
+        industry_natural_construction_avg_df = industry_natural_construction_avg_df.sort_values('series_name')
+
+        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, industry_natural_construction_avg_df
+    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
@@ -357,6 +387,11 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         sex_groups = [
             'Employment Level - Sales and Office, Men',
             'Employment Level - Sales and Office, Women'
+        ]
+    elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+        sex_groups = [
+            'Employment Level - Natural resources, construction, and maintenance, Men',
+            'Employment Level - Natural resources, construction, and maintenance, Women'
         ]
     else:
         sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
@@ -400,6 +435,11 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     elif chart_type_prefix == 'Employment Level - Sales and Office':
         y_column = 'proportion'
         y_axis_label = 'Proportion of Sales and Office Occupations Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
+    elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Natural Resources, Construction, and Maintenance Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
 
@@ -447,6 +487,13 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
             'Employment Level - Sales and Office, Asian',
             'Employment Level - Sales and Office, White'
         ]
+    elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+        race_groups = [
+            'Employment Level - Natural resources, construction, and maintenance, Black or African American',
+            'Employment Level - Natural resources, construction, and maintenance, Hispanic or Latino',
+            'Employment Level - Natural resources, construction, and maintenance, Asian',
+            'Employment Level - Natural resources, construction, and maintenance, White'
+        ]
     else:
         race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
     df_race = avg_df[avg_df['series_name'].isin(race_groups)].copy()
@@ -491,6 +538,11 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Sales and Office Occupations Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
+    elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Natural Resources, Construction, and Maintenance Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
@@ -529,6 +581,10 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
                 return []
         elif chart_type_prefix == 'Employment Level - Sales and Office':
             white_women_avg_series_name = 'Employment Level - Sales and Office, Women'
+            if white_women_avg_series_name not in avg_df['series_name'].values:
+                return []
+        elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+            white_women_avg_series_name = 'Employment Level - Natural resources, construction, and maintenance, Women'
             if white_women_avg_series_name not in avg_df['series_name'].values:
                 return []
         else:
@@ -571,6 +627,12 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Employment Level - Sales and Office, Hispanic or Latino',
         'Employment Level - Sales and Office, Black or African American'
     ]
+    comparison_order_industry_natural_construction = [
+        'Employment Level - Natural resources, construction, and maintenance, Asian',
+        'Employment Level - Natural resources, construction, and maintenance, Men',
+        'Employment Level - Natural resources, construction, and maintenance, Hispanic or Latino',
+        'Employment Level - Natural resources, construction, and maintenance, Black or African American'
+    ]
 
     if chart_type_prefix == 'Unemployment':
         comparison_order = comparison_order_unemployment
@@ -582,6 +644,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         comparison_order = comparison_order_industry_service
     elif chart_type_prefix == 'Employment Level - Sales and Office':
         comparison_order = comparison_order_industry_sales_office
+    elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+        comparison_order = comparison_order_industry_natural_construction
     else:
         comparison_order = []
 
@@ -609,7 +673,11 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Employment Level - Sales and Office, Asian': 'Sales and Office, Asian',
         'Employment Level - Sales and Office, Men': 'Sales and Office, Men',
         'Employment Level - Sales and Office, Hispanic or Latino': 'Sales and Office, Hispanic or Latino',
-        'Employment Level - Sales and Office, Black or African American': 'Sales and Office, Black or African American'
+        'Employment Level - Sales and Office, Black or African American': 'Sales and Office, Black or African American',
+        'Employment Level - Natural resources, construction, and maintenance, Asian': 'Natural resources, construction, and maintenance, Asian',
+        'Employment Level - Natural resources, construction, and maintenance, Men': 'Natural resources, construction, and maintenance, Men',
+        'Employment Level - Natural resources, construction, and maintenance, Hispanic or Latino': 'Natural resources, construction, and maintenance, Hispanic or Latino',
+        'Employment Level - Natural resources, construction, and maintenance, Black or African American': 'Natural resources, construction, and maintenance, Black or African American'
     }
 
     other_demographics_ordered = avg_df[
@@ -668,7 +736,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             row_proportion = row['proportion']
 
             y_column = 'proportion' # Plotting proportions for y-axis
-            y_axis_label = f'Proportion of Management, Professional Employment' # Updated label
+            y_axis_label = f'Proportion of Management, Professional Employment'
             chart_title = f"Average Management, Professional: Women vs. {display_comparison_group_name} in {year}"
             tick_format = '.1%'
             text_auto_format = '.1%'
@@ -715,6 +783,26 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
 
             comparison_df = pd.DataFrame({
                 'series_name': [white_women_avg_series_name_so, display_comparison_group_name],
+                'proportion': [white_women_proportion, row_proportion]
+            })
+        elif chart_type_prefix == 'Employment Level - Natural resources, construction, and maintenance':
+            white_women_avg_series_name_nr = 'Employment Level - Natural resources, construction, and maintenance, Women'
+            if white_women_avg_series_name_nr not in avg_df['series_name'].values:
+                return []
+
+            white_women_avg_nr = avg_df[avg_df['series_name'] == white_women_avg_series_name_nr].iloc[0]
+
+            white_women_proportion = white_women_avg_nr['proportion']
+            row_proportion = row['proportion']
+
+            y_column = 'proportion'
+            y_axis_label = f'Proportion of Natural Resources, Construction, and Maintenance Employment'
+            chart_title = f"Average Natural Resources, Construction, and Maintenance: Women vs. {display_comparison_group_name} in {year}"
+            tick_format = '.1%'
+            text_auto_format = '.1%'
+
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name_nr, display_comparison_group_name],
                 'proportion': [white_women_proportion, row_proportion]
             })
 
@@ -920,7 +1008,7 @@ with main_content:
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
             st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
-            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df = load_and_process_bls_data()
+            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, industry_natural_construction_avg_df = load_and_process_bls_data()
 
             # Store data in session state for other pages (if this were a multi-page app)
             st.session_state.df_cleaned_for_display = df_filtered.copy()
@@ -930,6 +1018,7 @@ with main_content:
             st.session_state.industry_management_avg_df = industry_management_avg_df
             st.session_state.industry_service_avg_df = industry_service_avg_df
             st.session_state.industry_sales_office_avg_df = industry_sales_office_avg_df
+            st.session_state.industry_natural_construction_avg_df = industry_natural_construction_avg_df
 
             if not labor_force_avg_df.empty:
                 st.subheader("Average Labor Force by Sex and Race")
@@ -940,8 +1029,8 @@ with main_content:
                 st.subheader("Management, professional and related occupations")
                 if not industry_management_avg_df.empty:
                     # Removed existing plots and added new ones as per user request
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional', color_scale='Greens'), use_container_width=True)
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional', color_scale='Greens'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional', color_scale='Greens_r'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional', color_scale='Greens_r'), use_container_width=True)
 
                     # New headers for OLS models
                     st.subheader("Mad Liberal Comparisons")
@@ -953,8 +1042,8 @@ with main_content:
                 st.markdown("---" * 3)
                 st.subheader("Service Occupations")
                 if not industry_service_avg_df.empty:
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service', color_scale='Blues'), use_container_width=True)
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service', color_scale='Blues'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service', color_scale='Blues_r'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service', color_scale='Blues_r'), use_container_width=True)
                     st.subheader("Mad Liberal Comparisons")
                     st.markdown("#### Check your privilege!")
                 else:
@@ -963,8 +1052,8 @@ with main_content:
                 st.markdown("---" * 3)
                 st.subheader("Sales and Office Occupations")
                 if not industry_sales_office_avg_df.empty:
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_sales_office_avg_df, latest_full_year, 'Sales and Office', color_scale='Oranges'), use_container_width=True)
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_sales_office_avg_df, latest_full_year, 'Sales and Office', color_scale='Oranges'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_sales_office_avg_df, latest_full_year, 'Sales and Office', color_scale='Oranges_r'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_sales_office_avg_df, latest_full_year, 'Sales and Office', color_scale='Oranges_r'), use_container_width=True)
                     st.subheader("Mad Liberal Comparisons")
                     st.markdown("#### Check your privilege!")
                 else:
@@ -972,6 +1061,13 @@ with main_content:
 
                 st.markdown("---" * 3)
                 st.subheader("Natural resources, construction, and maintenance occupations")
+                if not industry_natural_construction_avg_df.empty:
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_natural_construction_avg_df, latest_full_year, 'Natural resources, construction, and maintenance', color_scale='Reds_r'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_natural_construction_avg_df, latest_full_year, 'Natural resources, construction, and maintenance', color_scale='Reds_r'), use_container_width=True)
+                    st.subheader("Mad Liberal Comparisons")
+                    st.markdown("#### Check your privilege!")
+                else:
+                    st.warning("Cannot generate Natural resources, construction, and maintenance occupations visualizations, data not available.")
 
                 st.markdown("---" * 3)
                 st.subheader("Production, transportation, and material moving occupations")
