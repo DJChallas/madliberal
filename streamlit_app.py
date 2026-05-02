@@ -151,10 +151,18 @@ def load_and_process_bls_data():
         df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
         df = df.drop(columns=['month'])
 
-    # Data Cleaning
+    # Data Cleaning and value conversion based on series type
     if not df.empty:
-        df['value'] = df['value'].astype(str).str.replace(r'\s+\(\d+\)', '', regex=True)
-        df['value'] = pd.to_numeric(df['value'], errors='coerce') / 100 # Unemployment is proportion
+        # Convert 'value' to numeric, coercing errors
+        df['value'] = pd.to_numeric(df['value'].astype(str).replace(r'\s+\(\d+\)', '', regex=True), errors='coerce')
+
+        # Apply division by 100 only for Unemployment series (which are proportions)
+        unemployment_series_ids = [
+            'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 
+            'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'
+        ]
+        df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] = df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] / 100
+
         df_filtered = df.dropna(subset=['value']).copy()
 
         sn_map = {
@@ -192,22 +200,6 @@ def load_and_process_bls_data():
         # Separate unemployment and labor force dataframes
         unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
-
-        # Calculate total labor force and proportions for labor_force_avg_df
-        if not labor_force_avg_df.empty:
-            # The 'value' column for labor force series represents values in thousands (not proportions)
-            # We need to filter for only 'Labor Force' series to sum them up correctly
-            labor_force_series_values = df_seasonal[df_seasonal['series_name'].str.contains('Labor Force')]['value']
-            # Multiply by 100 to get the original 'thousands' value, then sum
-            total_labor_force_overall = (labor_force_series_values * 100).sum() # Sum of values in thousands
-
-            # We also need to get the sum of the averaged labor force values (which are already divided by 100 for display consistency in df_filtered)
-            sum_avg_labor_force_values = labor_force_avg_df['value'].sum()
-
-            if sum_avg_labor_force_values > 0:
-                labor_force_avg_df['proportion'] = labor_force_avg_df['value'] / sum_avg_labor_force_values
-            else:
-                labor_force_avg_df['proportion'] = 0
 
         desired_order = [
             'Unemployment - Men',
@@ -249,7 +241,6 @@ def load_and_process_bls_data():
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
     df_sex = avg_df[avg_df['series_name'].isin(sex_groups)].copy()
-    df_sex = df_sex.sort_values(by='value', ascending=False)
 
     y_column = 'value'
     y_axis_label = ''
@@ -261,10 +252,21 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Labor Force':
+        # Calculate proportions relative to total Men + Women labor force
+        base_sex_groups = ['Labor Force - Men', 'Labor Force - Women']
+        total_men_women_lf = avg_df[avg_df['series_name'].isin(base_sex_groups)]['value'].sum()
+
+        if total_men_women_lf > 0:
+            df_sex['proportion'] = df_sex['value'] / total_men_women_lf
+        else:
+            df_sex['proportion'] = 0
+
         y_column = 'proportion'
-        y_axis_label = 'Proportion of Total Labor Force'
+        y_axis_label = 'Proportion of Total Men + Women Labor Force'
         tick_format = '.1%'
         text_auto_format = '.1%'
+    
+    df_sex = df_sex.sort_values(by=y_column, ascending=False)
 
     fig = px.bar(
         df_sex,
@@ -288,7 +290,6 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
 def plot_rates_by_race(avg_df, year, chart_type_prefix):
     race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
     df_race = avg_df[avg_df['series_name'].isin(race_groups)].copy()
-    df_race = df_race.sort_values(by='value', ascending=False)
 
     y_column = 'value'
     y_axis_label = ''
@@ -300,10 +301,21 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Labor Force':
+        # Calculate proportions relative to specific race groups labor force
+        base_race_groups = ['Labor Force - White', 'Labor Force - Black or African American', 'Labor Force - Asian', 'Labor Force - Hispanic or Latino']
+        total_race_lf = avg_df[avg_df['series_name'].isin(base_race_groups)]['value'].sum()
+
+        if total_race_lf > 0:
+            df_race['proportion'] = df_race['value'] / total_race_lf
+        else:
+            df_race['proportion'] = 0
+        
         y_column = 'proportion'
-        y_axis_label = 'Proportion of Total Labor Force'
+        y_axis_label = 'Proportion of Selected Racial/Ethnic Labor Force'
         tick_format = '.1%'
         text_auto_format = '.1%'
+
+    df_race = df_race.sort_values(by=y_column, ascending=False)
 
     fig = px.bar(
         df_race,
@@ -327,7 +339,6 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
 def plot_rate_comparisons(avg_df, year, chart_type_prefix):
     white_women_avg_series_name = f'{chart_type_prefix} - White Women'
     if white_women_avg_series_name not in avg_df['series_name'].values:
-        # st.warning(f"'{white_women_avg_series_name}' not found in data for comparisons.")
         return []
     white_women_avg = avg_df[avg_df['series_name'] == white_women_avg_series_name].iloc[0]
 
@@ -386,23 +397,39 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             tick_format = '.1%'
             text_auto_format = '.1%'
         elif chart_type_prefix == 'Labor Force':
+            # For labor force comparisons, we want proportion of overall total if not specified otherwise
+            # This requires recalculating the overall total if not already done
+            total_lf_value = avg_df['value'].sum()
+            if total_lf_value > 0:
+                # Ensure we are using the 'value' column from avg_df for proportions here
+                white_women_proportion = white_women_avg['value'] / total_lf_value
+                row_proportion = row['value'] / total_lf_value
+            else:
+                white_women_proportion = 0
+                row_proportion = 0
+
             y_column = 'proportion'
             y_axis_label = 'Proportion of Total Labor Force'
             chart_title = f"Average {chart_type_prefix}: White Women vs. {display_comparison_group_name} in {year}"
             tick_format = '.1%'
             text_auto_format = '.1%'
-
-        comparison_df = pd.DataFrame({
-            'series_name': [white_women_avg_series_name, display_comparison_group_name],
-            'value': [white_women_avg[y_column], row[y_column]]
-        })
+            
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name, display_comparison_group_name],
+                'proportion': [white_women_proportion, row_proportion]
+            })
+        else:
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name, display_comparison_group_name],
+                'value': [white_women_avg[y_column], row[y_column]]
+            })
 
         fig = px.bar(
             comparison_df,
             x='series_name',
-            y='value',
+            y=y_column,
             title=chart_title,
-            labels={'series_name': 'Demographic Group', 'value': y_axis_label},
+            labels={'series_name': 'Demographic Group', y_column: y_axis_label},
             color='series_name',
             text_auto=text_auto_format if text_auto_format else False
         )
@@ -645,7 +672,7 @@ with main_content:
         st.subheader("Her Story:")
         answers = st.session_state.madlib_answers
         st.markdown(f"While the history of <b>{answers['noun_1']}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{answers['noun_2']}</b>, the themes of our <b>{answers['noun_3']}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{answers['noun_4']}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{answers['noun_resource']}</b> within <b>{answers['noun_society_plural']}</b> across the globe.", unsafe_allow_html=True)
-        st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_10']}</b> where huge swaths of <b>{answers['noun_11']}</b> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
+        st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_9']}</b> where huge swaths of <b>{answers['noun_10']}</b> are unable to reap the full benefit of their own <b>{answers['noun_11']}</b>.", unsafe_allow_html=True)
         st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_12']}</b> and <b>{answers['noun_13']}</b> has persisted across <b>{answers['noun_14']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_15']}</b> have risen and <b>{answers['noun_16']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_17']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_18']}</b> of the <b>{answers['noun_19']}</b> and <b>{answers['noun_20']}</b>. At the local level, <b>{answers['noun_21']}</b> has always been necessary to maintain <b>{answers['noun_22']}</b> of <b>{answers['noun_23']}</b>, from the <b>{answers['noun_24']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_25']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_26']}</b> has been a <b>{answers['noun_27']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_28']}</b> to compel the <b>{answers['noun_29']}</b> of the <b>{answers['noun_30']}</b>.</div>", unsafe_allow_html=True)
 
         st.subheader("The Real Story:")
@@ -653,15 +680,6 @@ with main_content:
         st.markdown(f"While the history of <b>{real_noun_1}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{real_noun_2}</b>, the themes of our <b>{real_noun_3}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{real_noun_4}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{real_noun_resource}</b> within <b>{real_noun_society_plural}</b> across the globe.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
-
-        # Removed this button from main_content as it's now in the left sidebar
-        # col1_viz, col2_viz, col3_viz = st.columns([1,1,1])
-        # with col2_viz:
-        #     st.markdown("<div style='display: flex; justify-content: center;'>", unsafe_allow_html=True)
-        #     if st.button("Proceed to Visualizations"):
-        #         st.session_state.game_stage = 'visualizations'
-        #         st.rerun()
-        #     st.markdown("</div>", unsafe_allow_html=True)
 
     # --- Visualizations Stage ---
     elif st.session_state.game_stage == 'visualizations':
