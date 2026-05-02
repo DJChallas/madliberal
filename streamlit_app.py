@@ -279,7 +279,13 @@ def load_and_process_bls_data():
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
-    sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
+    if chart_type_prefix == 'Employment Level - Management, Professional':
+        sex_groups = [
+            'Employment Level - Management, Professional, Men',
+            'Employment Level - Management, Professional, Women'
+        ]
+    else:
+        sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
     df_sex = avg_df[avg_df['series_name'].isin(sex_groups)].copy()
 
     y_column = 'value'
@@ -306,7 +312,6 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Employment Level - Management, Professional':
-        # Here, the proportion should already be calculated in load_and_process_bls_data()
         # We want to plot this proportion directly.
         y_column = 'proportion'
         y_axis_label = 'Proportion of Management, Professional Employment'
@@ -324,7 +329,6 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         color='series_name',
         text_auto=text_auto_format
     )
-    # Removed manual text setting for 'Employment Level - Management, Professional' to use text_auto
 
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -337,7 +341,15 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     return fig
 
 def plot_rates_by_race(avg_df, year, chart_type_prefix):
-    race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
+    if chart_type_prefix == 'Employment Level - Management, Professional':
+        race_groups = [
+            'Employment Level - Management, Professional, Black or African American',
+            'Employment Level - Management, Professional, Hispanic or Latino',
+            'Employment Level - Management, Professional, Asian',
+            'Employment Level - Management, Professional, White'
+        ]
+    else:
+        race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
     df_race = avg_df[avg_df['series_name'].isin(race_groups)].copy()
 
     y_column = 'value'
@@ -364,7 +376,6 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Employment Level - Management, Professional':
-        # Here, the proportion should already be calculated in load_and_process_bls_data()
         # We want to plot this proportion directly.
         y_column = 'proportion'
         y_axis_label = 'Proportion of Management, Professional Employment'
@@ -382,7 +393,6 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         color='series_name',
         text_auto=text_auto_format
     )
-    # Removed manual text setting for 'Employment Level - Management, Professional' to use text_auto
 
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -552,7 +562,7 @@ with col_title_global:
     st.markdown("<div style='background-color:red; padding: 2px; border-radius: 10px;'><h1 style='color:white; text-align:center; margin: 0; padding: 0;'>Mad Liberal</h1></div>", unsafe_allow_html=True)
 with col_subtitle_global:
     st.markdown("""
-        <div style='display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 5px 0;'>
+        <div style='display: flex; flex-direction: column; justify: space-around; height: 100%; padding: 5px 0;'>
             <h4 style='color:blue; text-align:left; margin: 0; padding: 0;'>Python Programming by Casey Hallas for UNO Econ 8320 - May 2026</h4>
             <h4 style='color:black; text-align:left; margin: 0; padding: 0;'>Data collected from The US Bureau of Labor Statistics, www.bls.gov</h4>
         </div>
@@ -571,7 +581,7 @@ with left_sidebar:
     st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
     st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
-    st.markdown("-" * 3)
+    st.markdown("---" * 3)
 
 with main_content:
     # --- Industry Visualizations Stage ---
@@ -597,27 +607,27 @@ with main_content:
 
             if not labor_force_avg_df.empty:
                 st.subheader("Average Labor Force by Sex and Race")
-                st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
-                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
+                st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
+                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
-                st.markdown("--- ")
+                st.markdown("---" * 3)
                 st.subheader("Management, professional and related occupations")
                 if not industry_management_avg_df.empty:
-                    st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
-                    st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
+                    st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+                    st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
                 else:
                     st.warning("Cannot generate management, professional, and related occupations visualizations, data not available.")
 
-                st.markdown("--- ")
+                st.markdown("---" * 3)
                 st.subheader("Service Occupations")
 
-                st.markdown("--- ")
+                st.markdown("---" * 3)
                 st.subheader("Sales and Office Occupations")
 
-                st.markdown("--- ")
+                st.markdown("---" * 3)
                 st.subheader("Natural resources, construction, and maintenance occupations")
 
-                st.markdown("--- ")
+                st.markdown("---" * 3)
                 st.subheader("Production, transportation, and material moving occupations")
 
             else:
