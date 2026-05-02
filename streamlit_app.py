@@ -720,14 +720,16 @@ with main_content:
                     st.plotly_chart(chart, use_container_width=True)
 
                 # Add download link for cleaned data
-                csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="Download Cleaned Data (CSV)",
-                    data=csv_data,
-                    file_name="bls_cleaned_data.csv",
-                    mime="text/csv",
-                    help="Download the pre-processed BLS data as a CSV file."
-                )
+                _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
+                with download_col:
+                    csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="Download Cleaned Data (CSV)",
+                        data=csv_data,
+                        file_name="bls_cleaned_data.csv",
+                        mime="text/csv",
+                        help="Download the pre-processed BLS data as a CSV file."
+                    )
 
             else:
                 st.warning("Cannot generate unemployment visualizations, data not available.")
