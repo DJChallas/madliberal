@@ -101,7 +101,8 @@ def load_and_process_bls_data():
                 'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
                 'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # New Labor Force IDs
                 'LNU02032526', 'LNU02032468', 'LNU02035886', 'LNU02035918', 'LNU02035957', 'LNU02035874', # New Industry Series IDs - Management
-                'LNU02032539', 'LNU02032481', 'LNU02035042', 'LNU02035006', 'LNU02035041', 'LNU02035007' # New Industry Series IDs - Service
+                'LNU02032539', 'LNU02032481', 'LNU02035042', 'LNU02035006', 'LNU02035041', 'LNU02035007', # New Industry Series IDs - Service
+                'LNU02032545', 'LNU02032487', 'LNU02035920', 'LNU02035959', 'LNU02035877', 'LNU02035889' # New Industry Series IDs - Sales and Office
             ],
             "startyear": str(current_year - 4),
             "endyear": str(current_year),
@@ -202,7 +203,14 @@ def load_and_process_bls_data():
             'LNU02035042': 'Employment Level - Service, Asian',
             'LNU02035006': 'Employment Level - Service, White',
             'LNU02035041': 'Employment Level - Service, Black or African American',
-            'LNU02035007': 'Employment Level - Service, Hispanic or Latino'
+            'LNU02035007': 'Employment Level - Service, Hispanic or Latino',
+            # Industry Series - Sales and Office Occupations
+            'LNU02032545': 'Employment Level - Sales and Office, Women',
+            'LNU02032487': 'Employment Level - Sales and Office, Men',
+            'LNU02035920': 'Employment Level - Sales and Office, White',
+            'LNU02035959': 'Employment Level - Sales and Office, Hispanic or Latino',
+            'LNU02035877': 'Employment Level - Sales and Office, Black or African American',
+            'LNU02035889': 'Employment Level - Sales and Office, Asian'
         }
         series_name_mapping = sn_map
 
@@ -224,6 +232,7 @@ def load_and_process_bls_data():
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
         industry_management_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional')].copy()
         industry_service_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Service')].copy()
+        industry_sales_office_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Sales and Office')].copy()
 
         # Calculate 'proportion' for labor_force_avg_df for display in About page
         if not labor_force_avg_df.empty:
@@ -248,6 +257,14 @@ def load_and_process_bls_data():
                 industry_service_avg_df['proportion'] = industry_service_avg_df['value'] / total_service_sum
             else:
                 industry_service_avg_df['proportion'] = 0.0
+
+        # Calculate 'proportion' for industry_sales_office_avg_df
+        if not industry_sales_office_avg_df.empty:
+            total_sales_office_sum = industry_sales_office_avg_df['value'].sum()
+            if total_sales_office_sum > 0:
+                industry_sales_office_avg_df['proportion'] = industry_sales_office_avg_df['value'] / total_sales_office_sum
+            else:
+                industry_sales_office_avg_df['proportion'] = 0.0
 
         desired_order = [
             'Unemployment - Men',
@@ -277,7 +294,13 @@ def load_and_process_bls_data():
             'Employment Level - Service, Asian',
             'Employment Level - Service, White',
             'Employment Level - Service, Hispanic or Latino',
-            'Employment Level - Service, Black or African American'
+            'Employment Level - Service, Black or African American',
+            'Employment Level - Sales and Office, Women',
+            'Employment Level - Sales and Office, Men',
+            'Employment Level - Sales and Office, White',
+            'Employment Level - Sales and Office, Hispanic or Latino',
+            'Employment Level - Sales and Office, Black or African American',
+            'Employment Level - Sales and Office, Asian'
         ]
         unemployment_avg_df['series_name'] = pd.Categorical(
             unemployment_avg_df['series_name'],
@@ -308,8 +331,15 @@ def load_and_process_bls_data():
         )
         industry_service_avg_df = industry_service_avg_df.sort_values('series_name')
 
-        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df
-    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+        industry_sales_office_avg_df['series_name'] = pd.Categorical(
+            industry_sales_office_avg_df['series_name'],
+            categories=desired_order,
+            ordered=True
+        )
+        industry_sales_office_avg_df = industry_sales_office_avg_df.sort_values('series_name')
+
+        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df
+    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
@@ -322,6 +352,11 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         sex_groups = [
             'Employment Level - Service, Men',
             'Employment Level - Service, Women'
+        ]
+    elif chart_type_prefix == 'Employment Level - Sales and Office':
+        sex_groups = [
+            'Employment Level - Sales and Office, Men',
+            'Employment Level - Sales and Office, Women'
         ]
     else:
         sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
@@ -362,6 +397,11 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Service Occupations Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
+    elif chart_type_prefix == 'Employment Level - Sales and Office':
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Sales and Office Occupations Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_sex = df_sex.sort_values(by=y_column, ascending=False)
 
@@ -399,6 +439,13 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
             'Employment Level - Service, Hispanic or Latino',
             'Employment Level - Service, Asian',
             'Employment Level - Service, White'
+        ]
+    elif chart_type_prefix == 'Employment Level - Sales and Office':
+        race_groups = [
+            'Employment Level - Sales and Office, Black or African American',
+            'Employment Level - Sales and Office, Hispanic or Latino',
+            'Employment Level - Sales and Office, Asian',
+            'Employment Level - Sales and Office, White'
         ]
     else:
         race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
@@ -439,6 +486,11 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Service Occupations Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
+    elif chart_type_prefix == 'Employment Level - Sales and Office':
+        y_column = 'proportion'
+        y_axis_label = 'Proportion of Sales and Office Occupations Employment'
+        tick_format = '.1%'
+        text_auto_format = '.1%'
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
@@ -475,6 +527,10 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             white_women_avg_series_name = 'Employment Level - Service, Women'
             if white_women_avg_series_name not in avg_df['series_name'].values:
                 return []
+        elif chart_type_prefix == 'Employment Level - Sales and Office':
+            white_women_avg_series_name = 'Employment Level - Sales and Office, Women'
+            if white_women_avg_series_name not in avg_df['series_name'].values:
+                return []
         else:
             return []
 
@@ -509,6 +565,12 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Employment Level - Service, Hispanic or Latino',
         'Employment Level - Service, Black or African American'
     ]
+    comparison_order_industry_sales_office = [
+        'Employment Level - Sales and Office, Asian',
+        'Employment Level - Sales and Office, Men',
+        'Employment Level - Sales and Office, Hispanic or Latino',
+        'Employment Level - Sales and Office, Black or African American'
+    ]
 
     if chart_type_prefix == 'Unemployment':
         comparison_order = comparison_order_unemployment
@@ -518,6 +580,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         comparison_order = comparison_order_industry_management
     elif chart_type_prefix == 'Employment Level - Service':
         comparison_order = comparison_order_industry_service
+    elif chart_type_prefix == 'Employment Level - Sales and Office':
+        comparison_order = comparison_order_industry_sales_office
     else:
         comparison_order = []
 
@@ -541,7 +605,11 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Employment Level - Service, Asian': 'Service, Asian',
         'Employment Level - Service, Men': 'Service, Men',
         'Employment Level - Service, Hispanic or Latino': 'Service, Hispanic or Latino',
-        'Employment Level - Service, Black or African American': 'Service, Black or African American'
+        'Employment Level - Service, Black or African American': 'Service, Black or African American',
+        'Employment Level - Sales and Office, Asian': 'Sales and Office, Asian',
+        'Employment Level - Sales and Office, Men': 'Sales and Office, Men',
+        'Employment Level - Sales and Office, Hispanic or Latino': 'Sales and Office, Hispanic or Latino',
+        'Employment Level - Sales and Office, Black or African American': 'Sales and Office, Black or African American'
     }
 
     other_demographics_ordered = avg_df[
@@ -627,6 +695,26 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
 
             comparison_df = pd.DataFrame({
                 'series_name': [white_women_avg_series_name_sv, display_comparison_group_name],
+                'proportion': [white_women_proportion, row_proportion]
+            })
+        elif chart_type_prefix == 'Employment Level - Sales and Office':
+            white_women_avg_series_name_so = 'Employment Level - Sales and Office, Women'
+            if white_women_avg_series_name_so not in avg_df['series_name'].values:
+                return []
+
+            white_women_avg_so = avg_df[avg_df['series_name'] == white_women_avg_series_name_so].iloc[0]
+
+            white_women_proportion = white_women_avg_so['proportion']
+            row_proportion = row['proportion']
+
+            y_column = 'proportion'
+            y_axis_label = f'Proportion of Sales and Office Occupations Employment'
+            chart_title = f"Average Sales and Office Occupations: Women vs. {display_comparison_group_name} in {year}"
+            tick_format = '.1%'
+            text_auto_format = '.1%'
+
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name_so, display_comparison_group_name],
                 'proportion': [white_women_proportion, row_proportion]
             })
 
@@ -832,7 +920,7 @@ with main_content:
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
             st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
-            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df = load_and_process_bls_data()
+            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df = load_and_process_bls_data()
 
             # Store data in session state for other pages (if this were a multi-page app)
             st.session_state.df_cleaned_for_display = df_filtered.copy()
@@ -841,6 +929,7 @@ with main_content:
             st.session_state.labor_force_avg_df = labor_force_avg_df
             st.session_state.industry_management_avg_df = industry_management_avg_df
             st.session_state.industry_service_avg_df = industry_service_avg_df
+            st.session_state.industry_sales_office_avg_df = industry_sales_office_avg_df
 
             if not labor_force_avg_df.empty:
                 st.subheader("Average Labor Force by Sex and Race")
@@ -873,6 +962,13 @@ with main_content:
 
                 st.markdown("---" * 3)
                 st.subheader("Sales and Office Occupations")
+                if not industry_sales_office_avg_df.empty:
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_sales_office_avg_df, latest_full_year, 'Sales and Office', color_scale='Oranges'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_sales_office_avg_df, latest_full_year, 'Sales and Office', color_scale='Oranges'), use_container_width=True)
+                    st.subheader("Mad Liberal Comparisons")
+                    st.markdown("#### Check your privilege!")
+                else:
+                    st.warning("Cannot generate Sales and Office Occupations visualizations, data not available.")
 
                 st.markdown("---" * 3)
                 st.subheader("Natural resources, construction, and maintenance occupations")
