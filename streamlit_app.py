@@ -320,7 +320,7 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         title=f'Average {chart_type_prefix} by Sex in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else None if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
+        text_auto=text_auto_format if text_auto_format else False if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
     )
     # Manually set text for Employment Level - Management, Professional to show proportion
     if chart_type_prefix == 'Employment Level - Management, Professional':
@@ -391,7 +391,7 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         title=f'Average {chart_type_prefix} by Race in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else None if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
+        text_auto=text_auto_format if text_auto_format else False if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
     )
     # Manually set text for Employment Level - Management, Professional to show proportion
     if chart_type_prefix == 'Employment Level - Management, Professional':
@@ -552,7 +552,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             title=chart_title,
             labels={'series_name': 'Demographic Group', y_column: y_axis_label},
             color='series_name',
-            text_auto=text_auto_format if text_auto_format else None if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
+            text_auto=text_auto_format if text_auto_format else False if chart_type_prefix == 'Employment Level - Management, Professional' else '.1%'
         )
 
         # Manually set text for Employment Level - Management, Professional to show proportion
@@ -620,18 +620,18 @@ with main_content:
 
             if not labor_force_avg_df.empty:
                 st.subheader("Average Labor Force by Sex and Race")
-                st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
-                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
+                st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
+                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
 
                 st.markdown("--- ")
                 st.subheader("Management, professional and related occupations")
                 if not industry_management_avg_df.empty:
-                    st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
-                    st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+                    st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
+                    st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
                     st.subheader("Mad Liberal Comparisons for Management, Professional, and Related Occupations")
                     industry_comparison_charts = plot_rate_comparisons(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional')
                     for chart in industry_comparison_charts:
-                        st.plotly_chart(chart, use_container_width=True)
+                        st.plotly_chart(chart, width='stretch')
                 else:
                     st.warning("Cannot generate management, professional, and related occupations visualizations, data not available.")
 
