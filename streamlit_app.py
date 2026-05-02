@@ -501,7 +501,7 @@ with left_sidebar:
     # Content that appears during madlib_input or madlib_reveal (stripes and collage)
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
         # Add alternating red and white stripes
-        for i in range(46):
+        for i in range(45):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
