@@ -556,6 +556,66 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         charts.append(fig)
     return charts
 
+def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_management_avg_df, year):
+    """
+    Generates a grouped bar chart comparing the proportion of each race in the total labor force
+    with their proportion in the Management, Professional, and Related Occupations industry.
+    """
+    race_groups_labor_force = [
+        'Labor Force - Black or African American',
+        'Labor Force - Hispanic or Latino',
+        'Labor Force - Asian',
+        'Labor Force - White'
+    ]
+    race_groups_industry_management = [
+        'Employment Level - Management, Professional, Black or African American',
+        'Employment Level - Management, Professional, Hispanic or Latino',
+        'Employment Level - Management, Professional, Asian',
+        'Employment Level - Management, Professional, White'
+    ]
+
+    # Extract relevant data from labor force
+    df_labor_force = labor_force_avg_df[labor_force_avg_df['series_name'].isin(race_groups_labor_force)].copy()
+    df_labor_force['category'] = 'Total Labor Force'
+    df_labor_force['demographic'] = df_labor_force['series_name'].str.replace('Labor Force - ', '')
+
+    # Extract relevant data from industry management
+    df_industry_management = industry_management_avg_df[industry_management_avg_df['series_name'].isin(race_groups_industry_management)].copy()
+    df_industry_management['category'] = 'Management, Professional Occupations'
+    df_industry_management['demographic'] = df_industry_management['series_name'].str.replace('Employment Level - Management, Professional, ', '')
+
+    # Concatenate the two dataframes
+    comparison_df = pd.concat([df_labor_force, df_industry_management])
+
+    # Ensure 'demographic' column is consistent for plotting
+    # Remove ' or African American' from Black or African American
+    comparison_df['demographic'] = comparison_df['demographic'].replace('Black or African American', 'Black')
+
+
+    fig = px.bar(
+        comparison_df,
+        x='demographic',
+        y='proportion',
+        color='category',
+        barmode='group',
+        title=f'Comparison of Racial Representation: Labor Force vs. Management/Professional Occupations in {year}',
+        labels={
+            'demographic': 'Racial/Ethnic Group',
+            'proportion': 'Proportion of Group Total',
+            'category': 'Category'
+        },
+        text_auto='.1%'
+    )
+
+    fig.update_layout(
+        yaxis_title='Proportion',
+        showlegend=True,
+        legend_title_text='Category'
+    )
+    fig.update_yaxes(tickformat='.1%')
+
+    return fig
+
 # --- Streamlit App ---
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
 with col_title_global:
@@ -615,6 +675,10 @@ with main_content:
                 if not industry_management_avg_df.empty:
                     st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
                     st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+
+                    # New comparison chart
+                    st.markdown("#### Labor Force vs. Management/Professional Occupations (Racial Comparison)")
+                    st.plotly_chart(plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year), use_container_width=True)
                 else:
                     st.warning("Cannot generate management, professional, and related occupations visualizations, data not available.")
 
