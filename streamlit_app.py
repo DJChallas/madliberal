@@ -712,7 +712,7 @@ def plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry
 
     return fig
 
-def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_df, year, industry_prefix):
+def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_df, year, industry_prefix, color_scale='Greens'):
     # Define series names for labor force and management for men and women
     lf_men_series = 'Labor Force - Men'
     lf_women_series = 'Labor Force - Women'
@@ -743,7 +743,8 @@ def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industr
         y='Proportion in Occupations',
         title=f'Proportion of Labor Force in {industry_prefix} Occupations by Sex in {year}',
         labels={'Proportion in Occupations': 'Proportion'},
-        color='Demographic Group',
+        color='Proportion in Occupations', # Changed to color by value
+        color_continuous_scale=color_scale, # Added color scale
         text_auto='.1%'
     )
 
@@ -754,7 +755,7 @@ def plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industr
     fig.update_yaxes(tickformat='.1%')
     return fig
 
-def plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_df, year, industry_prefix):
+def plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_df, year, industry_prefix, color_scale='Greens'):
     # Define series names for labor force and management for race groups
     race_groups = {
         'White': {'lf': 'Labor Force - White', 'mp': f'Employment Level - {industry_prefix}, White'},
@@ -779,7 +780,8 @@ def plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, indust
         y='Proportion in Occupations',
         title=f'Proportion of Labor Force in {industry_prefix} Occupations by Race in {year}',
         labels={'Proportion in Occupations': 'Proportion'},
-        color='Demographic Group',
+        color='Proportion in Occupations', # Changed to color by value
+        color_continuous_scale=color_scale, # Added color scale
         text_auto='.1%'
     )
 
@@ -849,8 +851,8 @@ with main_content:
                 st.subheader("Management, professional and related occupations")
                 if not industry_management_avg_df.empty:
                     # Removed existing plots and added new ones as per user request
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional'), use_container_width=True)
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional', color_scale='Greens'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_management_avg_df, latest_full_year, 'Management, Professional', color_scale='Greens'), use_container_width=True)
 
                     # New headers for OLS models
                     st.subheader("Mad Liberal Comparisons")
@@ -862,10 +864,10 @@ with main_content:
                 st.markdown("---" * 3)
                 st.subheader("Service Occupations")
                 if not industry_service_avg_df.empty:
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service'), use_container_width=True)
-                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service'), use_container_width=True)
-                    # Add the new comparison chart for Service Occupations
-                    st.plotly_chart(plot_labor_force_vs_industry_comparison_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_sex(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service', color_scale='Blues'), use_container_width=True)
+                    st.plotly_chart(plot_management_proportion_of_labor_force_by_race(labor_force_avg_df, industry_service_avg_df, latest_full_year, 'Service', color_scale='Blues'), use_container_width=True)
+                    st.subheader("Mad Liberal Comparisons")
+                    st.markdown("#### Check your privilege!")
                 else:
                     st.warning("Cannot generate Service Occupations visualizations, data not available.")
 
