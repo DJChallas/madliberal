@@ -785,17 +785,6 @@ with main_content:
                     results_ww = model_ww.fit()
                     st.text(results_ww.summary())
                     # --- End OLS Regression Integration ---
-
-                    # Add download link for cleaned data
-                    _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
-                    with download_col:
-                        csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
-                        st.download_button(
-                            label="Download Cleaned Data (CSV)",
-                            data=csv_data,
-                            file_name="bls_cleaned_data.csv",
-                            mime="text/csv",
-                            help="Download the pre-processed BLS data as a CSV file."
                         )
 
                 else:
