@@ -407,7 +407,7 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
             df_sex['proportion'] = 0
 
         y_column = 'proportion'
-        y_axis_label = 'Proportion of Employment Level' # Dynamically set label
+        y_axis_label = 'Percentage'
         tick_format = '.1%'
         text_auto_format = '.1%'
 
@@ -446,6 +446,14 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
 
     df_race = avg_df[avg_df['series_name'].isin(race_groups)].copy()
 
+    # Simplify x-axis labels
+    if chart_type_prefix.startswith('Employment Level'):
+        df_race['series_name'] = df_race['series_name'].str.replace(f'{chart_type_prefix} - ', '')
+    elif chart_type_prefix == 'Labor Force':
+         df_race['series_name'] = df_race['series_name'].str.replace('Labor Force - ', '')
+    elif chart_type_prefix == 'Unemployment':
+        df_race['series_name'] = df_race['series_name'].str.replace('Unemployment - ', '')
+
     y_column = 'value'
     y_axis_label = ''
     tick_format = None
@@ -483,7 +491,7 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
             df_race['proportion'] = 0
 
         y_column = 'proportion'
-        y_axis_label = 'Proportion of Employment Level'
+        y_axis_label = 'Percentage'
         tick_format = '.1%'
         text_auto_format = '.1%'
 
@@ -656,7 +664,6 @@ with left_sidebar:
     st.markdown("-" * 3)
 
 with main_content:
-    # Force scroll to the top of the main content area when entering this stage
     st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
 
     viz_col = st.columns([1]) # Use a single column for visualizations in main_content
@@ -683,48 +690,48 @@ with main_content:
 
         if not labor_force_avg_df.empty:
             st.subheader("Average Labor Force by Sex and Race")
-            st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
+            st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
 
             st.markdown("--- ")
 
             # --- Management, Professional, and Related Occupations ---
             industry_title_mp = 'Management, Professional, and Related Occupations'
             st.subheader(industry_title_mp)
-            st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
+            st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
 
             st.markdown("--- ")
 
             # --- Service Occupations ---
             industry_title_service = 'Service Occupations'
             st.subheader(industry_title_service)
-            st.plotly_chart(plot_rates_by_sex(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_sex(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), width='stretch')
+            st.plotly_chart(plot_rates_by_race(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), width='stretch')
 
             st.markdown("--- ")
 
             # --- Sales and Office Occupations ---
             industry_title_sales_office = 'Sales and Office Occupations'
             st.subheader(industry_title_sales_office)
-            st.plotly_chart(plot_rates_by_sex(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_sex(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), width='stretch')
+            st.plotly_chart(plot_rates_by_race(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), width='stretch')
 
             st.markdown("--- ")
 
             # --- Natural resources, construction, and maintenance occupations ---
             industry_title_natural_resources = 'Natural resources, construction, and maintenance occupations'
             st.subheader(industry_title_natural_resources)
-            st.plotly_chart(plot_rates_by_sex(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_sex(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), width='stretch')
+            st.plotly_chart(plot_rates_by_race(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), width='stretch')
 
             st.markdown("--- ")
 
             # --- Production, transportation, and material moving occupations ---
             industry_title_transportation = 'Production, transportation, and material moving occupations'
             st.subheader(industry_title_transportation)
-            st.plotly_chart(plot_rates_by_sex(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_sex(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), width='stretch')
+            st.plotly_chart(plot_rates_by_race(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), width='stretch')
 
         else:
             st.warning("Cannot generate labor force visualizations, data not available.")
