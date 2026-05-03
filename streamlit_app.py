@@ -235,8 +235,8 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
 
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
-        tick_format = '.3 / 1000'
-        text_auto_format = '.3 / 1000'
+        tick_format = '3'
+        text_auto_format = '3'
     elif chart_type_prefix == 'Labor Force':
         # Calculate proportions relative to total Men + Women labor force
         base_sex_groups = ['Labor Force - Men', 'Labor Force - Women']
