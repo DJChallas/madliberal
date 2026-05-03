@@ -423,102 +423,6 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         charts.append(fig)
     return charts
 
-def calculate_and_display_logit_odds(df_filtered, latest_full_year, category_name, series_ids_women, series_ids_men, series_name_mapping):
-    """Calculates and displays Logit regression odds for employment by sex for a given category."""
-
-    # Get total labor force for men and women from the broader dataset
-    total_male_lf_id = 'LNS11000001' # Labor Force - Men
-    total_female_lf_id = 'LNS11000002' # Labor Force - Women
-
-    # Filter for the latest full year
-    df_latest_year = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
-
-    # Get average employment for the category by sex
-    category_employment_df = df_latest_year[df_latest_year['series_id'].isin(series_ids_women + series_ids_men)].copy()
-    avg_cat_employment = category_employment_df.groupby('series_id')['value'].mean().reset_index()
-
-    # Extract specific average employment values
-    avg_cat_employment_women = avg_cat_employment[avg_cat_employment['series_id'].isin(series_ids_women)]['value'].sum()
-    avg_cat_employment_men = avg_cat_employment[avg_cat_employment['series_id'].isin(series_ids_men)]['value'].sum()
-
-    # Get average total labor force for men and women
-    avg_total_lf_men = df_latest_year[df_latest_year['series_id'] == total_male_lf_id]['value'].mean()
-    avg_total_lf_women = df_latest_year[df_latest_year['series_id'] == total_female_lf_id]['value'].mean()
-
-    # Handle potential NaN values or zero total labor force
-    if pd.isna(avg_total_lf_men) or pd.isna(avg_total_lf_women) or avg_total_lf_men <= 0 or avg_total_lf_women <= 0:
-        st.warning(f"Cannot calculate odds for {category_name}: Total labor force data for men or women is missing or zero for the year {latest_full_year}.")
-        return
-
-    # Prepare data for Logit regression
-    # Create a DataFrame for the current category's employment and non-employment counts
-    # Assuming 'value' is employment in thousands
-    # Calculate non-employment as total labor force minus employment in the category
-
-    # For women:
-    employed_women = avg_cat_employment_women
-    non_employed_women = avg_total_lf_women - employed_women if (avg_total_lf_women - employed_women) >= 0 else 0
-
-    # For men:
-    employed_men = avg_cat_employment_men
-    non_employed_men = avg_total_lf_men - employed_men if (avg_total_lf_men - employed_men) >= 0 else 0
-
-    # Create the DataFrame for Logit model
-    logit_data = pd.DataFrame({
-        'employment': [1, 0, 1, 0],  # 1 for employed, 0 for not employed
-        'gender_is_female': [1, 1, 0, 0], # 1 for female, 0 for male
-        'count': [employed_women, non_employed_women, employed_men, non_employed_men]
-    })
-
-    # Filter out rows with zero count, as they don't contribute to the model and can cause issues
-    logit_data = logit_data[logit_data['count'] > 0]
-
-    if logit_data.empty or logit_data['gender_is_female'].nunique() < 2 or logit_data['employment'].nunique() < 2:
-        st.warning(f"Cannot perform Logit regression for {category_name}: Insufficient data variation after filtering for employment/non-employment and gender. This may indicate perfect separation or only one outcome/group present.")
-        return
-
-    try:
-        # Fit Logit model
-        # Dependent variable: employment (binary)
-        # Independent variable: gender_is_female (binary)
-        logit_model = sm.Logit(logit_data['employment'], sm.add_constant(logit_data['gender_is_female']), weights=logit_data['count'])
-        logit_results = logit_model.fit(disp=False) # disp=False to suppress optimization messages
-
-        # Get the coefficient for 'gender_is_female'
-        female_coeff = logit_results.params['gender_is_female']
-
-        # Calculate odds ratio (women vs. men)
-        odds_ratio = np.exp(female_coeff)
-
-        # Calculate confidence interval for the odds ratio
-        conf_int = logit_results.conf_int(alpha=0.05)
-        odds_ratio_ci_lower = np.exp(conf_int.loc['gender_is_female', 0])
-        odds_ratio_ci_upper = np.exp(conf_int.loc['gender_is_female', 1])
-
-        st.markdown(f"""
-        ##### Logit Regression: Odds of Employment in {category_name} (Women vs. Men)
-        - **Odds Ratio (Women vs. Men):** {odds_ratio:.2f} (95% CI: {odds_ratio_ci_lower:.2f} - {odds_ratio_ci_upper:.2f})
-        """)
-
-        if odds_ratio > 1:
-            st.info(f"**Interpretation:** Women are approximately **{odds_ratio:.2f} times more likely** to be employed in '{category_name}' than men, after accounting for overall labor force participation in {latest_full_year}.")
-        elif odds_ratio < 1:
-            inverse_odds_ratio = 1 / odds_ratio
-            st.info(f"**Interpretation:** Women are approximately **{inverse_odds_ratio:.2f} times less likely** to be employed (or men are {inverse_odds_ratio:.2f} times more likely) in '{category_name}' than men, after accounting for overall labor force participation in {latest_full_year}.")
-        else:
-            st.info(f"**Interpretation:** Women and men have approximately equal odds of employment in '{category_name}', after accounting for overall labor force participation in {latest_full_year}.")
-
-        # Optional: Display full regression summary
-        with st.expander("View Logit Regression Details"):
-            st.write(logit_results.summary())
-
-    except Exception as e:
-        # Catch specific statsmodels errors like perfect separation
-        if "PerfectSeparationError" in str(e):
-            st.warning(f"Cannot perform Logit regression for {category_name}: Perfect separation detected. This means one gender perfectly predicts employment/non-employment in this category.")
-        else:
-            st.warning(f"An error occurred during Logit regression for {category_name}: {e}")
-
 def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, category_name, series_ids_women, series_ids_men, series_name_mapping):
     # Filter data for the specific category and latest full year
     category_df = df_filtered[
@@ -551,9 +455,6 @@ def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, categor
     fig.update_traces(texttemplate='%{text:,.0f}', textposition='outside')
     fig.update_layout(yaxis_title='Average Employment Level (in thousands)', showlegend=False)
     st.plotly_chart(fig, use_container_width=True)
-
-    # Call the Logit regression function here
-    calculate_and_display_logit_odds(df_filtered, latest_full_year, category_name, series_ids_women, series_ids_men, series_name_mapping)
 
 
 # --- Streamlit App ---
@@ -878,9 +779,22 @@ with main_content:
                 latest_full_year = st.session_state.latest_full_year
                 series_name_mapping = st.session_state.series_name_mapping
 
+            # Ensure labor_force_avg_df is available for plot_rates_by_race
+            labor_force_series_ids = [
+                'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001',
+                'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'
+            ]
+            df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
+            avg_rates_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
+            avg_rates_latest_year['series_name'] = avg_rates_latest_year['series_id'].map(series_name_mapping)
+            labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(labor_force_series_ids)].copy()
+
             if not df_filtered.empty:
-                # Generate bar charts for each requested occupation category
+                st.subheader("Labor Force by Race")
+                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
                 st.markdown("--- ")
+
+                # Generate bar charts for each requested occupation category
                 st.subheader("Management, Professional, and Related Occupations")
                 plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Management, Professional, and Related Occupations",
