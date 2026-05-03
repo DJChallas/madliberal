@@ -110,8 +110,8 @@ def load_and_process_bls_data():
             df = pd.DataFrame()
     else:
         df = pd.DataFrame()
-    
-""" # If CSV doesn't exist or is empty, fetch from API
+  
+    # If CSV doesn't exist or is empty, fetch from API
     if df.empty:
         print("Fetching fresh data from BLS API...")
         headers = {'Content-type': 'application/json'}
@@ -169,7 +169,7 @@ def load_and_process_bls_data():
             df['month'] = df['period'].apply(period_to_month)
             df = df.dropna(subset=['month'])
             df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
-            df = df.drop(columns=['month'])"""
+            df = df.drop(columns=['month'])
     
     # Data cleaning and processing
     if not df.empty:
