@@ -109,7 +109,7 @@ def load_and_process_bls_data():
             'LNU02032490', 'LNU02032548', # Natural Resources, Construction, and Maintenance Occupations - Sex
             'LNU02035896', 'LNU02035928', 'LNU02035967', 'LNU02035884', # Natural Resources, Construction, and Maintenance Occupations - Race
             'LNU02032554', 'LNU02032496',  # Transportation and Material Moving Occupations - Sex
-            'LNU02035902', 'LNU02035934', 'LNU02035973', 'LNU02035890'  # Transportation and Material Moving Occupations - Race
+            'LNU02035873', 'LNU02035897', 'LNU02035964', 'LNU02035885' # UPDATED Transportation and Material Moving Occupations - Race
         ],
         "startyear": str(current_year - 4),
         "endyear": str(current_year),
@@ -229,11 +229,11 @@ def load_and_process_bls_data():
             # Industry Series - Transportation and Material Moving Occupations - Sex
             'LNU02032554': 'Employment Level - Transportation and Material Moving - Women',
             'LNU02032496': 'Employment Level - Transportation and Material Moving - Men',
-            # Industry Series - Transportation and Material Moving Occupations - Race
-            'LNU02035902': 'Employment Level - Transportation and Material Moving - Asian',
-            'LNU02035934': 'Employment Level - Transportation and Material Moving - White',
-            'LNU02035973': 'Employment Level - Transportation and Material Moving - Hispanic or Latino',
-            'LNU02035890': 'Employment Level - Transportation and Material Moving - Black or African American'
+            # UPDATED Industry Series - Transportation and Material Moving Occupations - Race
+            'LNU02035873': 'Employment Level - Transportation and Material Moving - White',
+            'LNU02035897': 'Employment Level - Transportation and Material Moving - Asian',
+            'LNU02035964': 'Employment Level - Transportation and Material Moving - Hispanic or Latino',
+            'LNU02035885': 'Employment Level - Transportation and Material Moving - Black or African American'
         }
         series_name_mapping = sn_map
 
@@ -666,7 +666,7 @@ with left_sidebar:
 with main_content:
     st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
 
-    viz_col = st.columns([1]) # Use a single column for visualizations in main_content
+    viz_col = st.columns([1])
 
     with viz_col[0]:
         st.subheader("Industry Visualizations about Sex and Race")
@@ -677,7 +677,6 @@ with main_content:
         industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, \
         industry_natural_resources_avg_df, industry_transportation_avg_df = load_and_process_bls_data()
 
-        # Store data in session state for other pages
         st.session_state.df_cleaned_for_display = df_filtered.copy()
         st.session_state.latest_full_year = latest_full_year
         st.session_state.unemployment_avg_df = unemployment_avg_df
@@ -690,52 +689,99 @@ with main_content:
 
         if not labor_force_avg_df.empty:
             st.subheader("Average Labor Force by Sex and Race")
-            st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
-            st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), width='stretch')
+            st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
             st.markdown("--- ")
 
             # --- Management, Professional, and Related Occupations ---
             industry_title_mp = 'Management, Professional, and Related Occupations'
             st.subheader(industry_title_mp)
-            st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
-            st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), width='stretch')
+            st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
 
             st.markdown("--- ")
 
             # --- Service Occupations ---
             industry_title_service = 'Service Occupations'
             st.subheader(industry_title_service)
-            st.plotly_chart(plot_rates_by_sex(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), width='stretch')
-            st.plotly_chart(plot_rates_by_race(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), width='stretch')
+            st.plotly_chart(plot_rates_by_sex(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_race(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), use_container_width=True)
 
             st.markdown("--- ")
 
             # --- Sales and Office Occupations ---
             industry_title_sales_office = 'Sales and Office Occupations'
             st.subheader(industry_title_sales_office)
-            st.plotly_chart(plot_rates_by_sex(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), width='stretch')
-            st.plotly_chart(plot_rates_by_race(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), width='stretch')
+            st.plotly_chart(plot_rates_by_sex(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_race(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), use_container_width=True)
 
             st.markdown("--- ")
 
             # --- Natural resources, construction, and maintenance occupations ---
             industry_title_natural_resources = 'Natural resources, construction, and maintenance occupations'
             st.subheader(industry_title_natural_resources)
-            st.plotly_chart(plot_rates_by_sex(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), width='stretch')
-            st.plotly_chart(plot_rates_by_race(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), width='stretch')
+            st.plotly_chart(plot_rates_by_sex(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_race(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), use_container_width=True)
 
             st.markdown("--- ")
 
             # --- Production, transportation, and material moving occupations ---
             industry_title_transportation = 'Production, transportation, and material moving occupations'
             st.subheader(industry_title_transportation)
-            st.plotly_chart(plot_rates_by_sex(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), width='stretch')
-            st.plotly_chart(plot_rates_by_race(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), width='stretch')
+            st.plotly_chart(plot_rates_by_sex(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), use_container_width=True)
+            st.plotly_chart(plot_rates_by_race(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), use_container_width=True)
+
+            st.markdown("--- ")
+
+            # --- NEW: Logit Regression Analysis for Sex by Industry ---
+            st.subheader("Logit Regression Analysis for Sex by Industry")
+            st.markdown("This section presents the results of binary logit regression models predicting the probability of employment in each industry based on an individual's sex (Female vs. Male).")
+
+            industry_dfs = {
+                'Management, Professional, and Related Occupations': {
+                    'df': industry_management_avg_df,
+                    'prefix': 'Employment Level - Management, Professional'
+                },
+                'Service Occupations': {
+                    'df': industry_service_avg_df,
+                    'prefix': 'Employment Level - Service Occupations'
+                },
+                'Sales and Office Occupations': {
+                    'df': industry_sales_office_avg_df,
+                    'prefix': 'Employment Level - Sales and Office Occupations'
+                },
+                'Natural Resources, Construction, and Maintenance Occupations': {
+                    'df': industry_natural_resources_avg_df,
+                    'prefix': 'Employment Level - Natural Resources, Construction, and Maintenance'
+                },
+                'Production, Transportation, and Material Moving Occupations': {
+                    'df': industry_transportation_avg_df,
+                    'prefix': 'Employment Level - Transportation and Material Moving'
+                }
+            }
+
+            all_sex_regression_results = []
+
+            for industry_title, data in industry_dfs.items():
+                results = perform_logit_regression_for_sex(data['df'], data['prefix'], labor_force_avg_df)
+                if results:
+                    all_sex_regression_results.append(results)
+
+            if all_sex_regression_results:
+                sex_results_df = pd.DataFrame(all_sex_regression_results)
+                st.dataframe(sex_results_df.set_index('Industry'))
+
+                st.markdown("**Interpretation Notes:**")
+                st.markdown("- **Odds Ratio (Female vs. Male):** An odds ratio greater than 1 indicates that female individuals have higher odds of employment in that industry compared to male individuals, all else being equal. An odds ratio less than 1 indicates lower odds.")
+                st.markdown("- **P-value (is_female):** A p-value less than a chosen significance level (e.g., 0.05) suggests a statistically significant difference in employment probability between female and male individuals.")
+                st.markdown("- **Predicted Probability:** The estimated probability of employment for male and female individuals in that industry, based on the model.")
+                st.markdown("**Disclaimer:** This analysis uses a simulated dataset derived from aggregated BLS employment levels. For a precise and robust analysis, individual-level survey data would be required.")
+            else:
+                st.warning("No logit regression results could be generated for the industries based on sex data.")
 
         else:
             st.warning("Cannot generate labor force visualizations, data not available.")
 
 
-# --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
