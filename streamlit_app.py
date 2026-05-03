@@ -99,8 +99,7 @@ def load_and_process_bls_data():
     data = json.dumps({
         "seriesid": [
             'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
-            'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # New Labor Force IDs
-            'LNU02032526', 'LNU02032468', 'LNU02035886', 'LNU02035918', 'LNU02035957', 'LNU02035874' # New Industry Series IDs
+            'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'  # New Labor Force IDs
         ],
         "startyear": str(current_year - 4),
         "endyear": str(current_year),
@@ -184,19 +183,9 @@ def load_and_process_bls_data():
             'LNS11000002': 'Labor Force - Women',
             'LNS11000003': 'Labor Force - White',
             'LNS11000006': 'Labor Force - Black or African American',
-            'LNS11000009': 'Labor Force - Hispanic or Latino',
-            # Industry Series - Management, Professional, and Related Occupations
-            'LNU02032526': 'Employment Level - Management, Professional, Women',
-            'LNU02032468': 'Employment Level - Management, Professional, Men',
-            'LNU02035886': 'Employment Level - Management, Professional, Asian',
-            'LNU02035918': 'Employment Level - Management, Professional, White',
-            'LNU02035957': 'Employment Level - Management, Professional, Hispanic or Latino',
-            'LNU02035874': 'Employment Level - Management, Professional, Black or African American'
+            'LNS11000009': 'Labor Force - Hispanic or Latino'
         }
         series_name_mapping = sn_map
-
-        # Add series_name to df_filtered before returning
-        df_filtered['series_name'] = df_filtered['series_id'].map(series_name_mapping)
 
         latest_full_year = df_filtered['year'].astype(int).max()
         if latest_full_year == datetime.now().year:
@@ -211,15 +200,6 @@ def load_and_process_bls_data():
         # Separate unemployment and labor force dataframes
         unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
-        industry_management_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional')].copy()
-
-        # Calculate 'proportion' for labor_force_avg_df for display in About page
-        if not labor_force_avg_df.empty:
-            total_labor_force_sum = labor_force_avg_df['value'].sum()
-            if total_labor_force_sum > 0:
-                labor_force_avg_df['proportion'] = labor_force_avg_df['value'] / total_labor_force_sum
-            else:
-                labor_force_avg_df['proportion'] = 0.0 # Assign 0.0 if sum is zero
 
         desired_order = [
             'Unemployment - Men',
@@ -237,13 +217,7 @@ def load_and_process_bls_data():
             'Labor Force - Black or African American',
             'Labor Force - Hispanic or Latino',
             'Labor Force - Asian',
-            'Labor Force - White',
-            'Employment Level - Management, Professional, Women',
-            'Employment Level - Management, Professional, Men',
-            'Employment Level - Management, Professional, Asian',
-            'Employment Level - Management, Professional, White',
-            'Employment Level - Management, Professional, Hispanic or Latino',
-            'Employment Level - Management, Professional, Black or African American'
+            'Labor Force - White'
         ]
         unemployment_avg_df['series_name'] = pd.Categorical(
             unemployment_avg_df['series_name'],
@@ -260,14 +234,7 @@ def load_and_process_bls_data():
         )
         labor_force_avg_df = labor_force_avg_df.sort_values('series_name')
 
-        industry_management_avg_df['series_name'] = pd.Categorical(
-            industry_management_avg_df['series_name'],
-            categories=desired_order,
-            ordered=True
-        )
-        industry_management_avg_df = industry_management_avg_df.sort_values('series_name')
-
-        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df
+        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df
     return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
@@ -296,19 +263,6 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
 
         y_column = 'proportion'
         y_axis_label = 'Proportion of Total Men + Women Labor Force'
-        tick_format = '.1%'
-        text_auto_format = '.1%'
-    elif chart_type_prefix == 'Employment Level - Management, Professional':
-        base_sex_groups = ['Employment Level - Management, Professional, Men', 'Employment Level - Management, Professional, Women']
-        total_men_women_mp = avg_df[avg_df['series_name'].isin(base_sex_groups)]['value'].sum()
-
-        if total_men_women_mp > 0:
-            df_sex['proportion'] = df_sex['value'] / total_men_women_mp
-        else:
-            df_sex['proportion'] = 0
-
-        y_column = 'proportion'
-        y_axis_label = 'Proportion of Management, Professional Employment'
         tick_format = '.1%'
         text_auto_format = '.1%'
 
@@ -360,24 +314,6 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Selected Racial/Ethnic Labor Force'
         tick_format = '.1%'
         text_auto_format = '.1%'
-    elif chart_type_prefix == 'Employment Level - Management, Professional':
-        base_race_groups = [
-            'Employment Level - Management, Professional, White',
-            'Employment Level - Management, Professional, Black or African American',
-            'Employment Level - Management, Professional, Asian',
-            'Employment Level - Management, Professional, Hispanic or Latino'
-        ]
-        total_race_mp = avg_df[avg_df['series_name'].isin(base_race_groups)]['value'].sum()
-
-        if total_race_mp > 0:
-            df_race['proportion'] = df_race['value'] / total_race_mp
-        else:
-            df_race['proportion'] = 0
-
-        y_column = 'proportion'
-        y_axis_label = 'Proportion of Management, Professional Employment'
-        tick_format = '.1%'
-        text_auto_format = '.1%'
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
@@ -423,21 +359,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Labor Force - Hispanic or Latino',
         'Labor Force - Black or African American'
     ]
-    comparison_order_industry_management = [
-        'Employment Level - Management, Professional, Asian',
-        'Employment Level - Management, Professional, Men',
-        'Employment Level - Management, Professional, Hispanic or Latino',
-        'Employment Level - Management, Professional, Black or African American'
-    ]
-
-    if chart_type_prefix == 'Unemployment':
-        comparison_order = comparison_order_unemployment
-    elif chart_type_prefix == 'Labor Force':
-        comparison_order = comparison_order_labor_force
-    elif chart_type_prefix == 'Employment Level - Management, Professional':
-        comparison_order = comparison_order_industry_management
-    else:
-        comparison_order = []
+    comparison_order = comparison_order_unemployment if chart_type_prefix == 'Unemployment' else comparison_order_labor_force
 
     label_mapping = {
         'Unemployment - Asian': 'Asian, Men/Women',
@@ -451,11 +373,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Labor Force - Men': 'Men, All Races',
         'Labor Force - Women': 'Women, All Races',
         'Labor Force - Hispanic or Latino': 'Hispanic or Latino, Men/Women',
-        'Labor Force - Black or African American': 'Black or African American, Men/Women',
-        'Employment Level - Management, Professional, Asian': 'Management, Professional, Asian',
-        'Employment Level - Management, Professional, Men': 'Management, Professional, Men',
-        'Employment Level - Management, Professional, Hispanic or Latino': 'Management, Professional, Hispanic or Latino',
-        'Employment Level - Management, Professional, Black or African American': 'Management, Professional, Black or African American'
+        'Labor Force - Black or African American': 'Black or African American, Men/Women'
     }
 
     other_demographics_ordered = avg_df[
@@ -471,7 +389,6 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         y_axis_label = ''
         tick_format = None
         text_auto_format = False
-        comparison_df = pd.DataFrame() # Initialize comparison_df
 
         if chart_type_prefix == 'Unemployment':
             y_axis_label = 'Average Unemployment Rate (Proportion)'
@@ -479,22 +396,20 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             chart_title = f"Average Unemployment: White Women vs. {display_comparison_group_name} in {year}"
             tick_format = '.1%'
             text_auto_format = '.1%'
-            comparison_df = pd.DataFrame({
-                'series_name': [white_women_avg_series_name, display_comparison_group_name],
-                'value': [white_women_avg[y_column], row[y_column]]
-            })
-        elif chart_type_prefix == 'Labor Force' or chart_type_prefix == 'Employment Level - Management, Professional':
-            # For labor force and industry comparisons, we want proportion of overall total if not specified otherwise
-            total_relevant_value = avg_df['value'].sum()
-            if total_relevant_value > 0:
-                white_women_proportion = white_women_avg['value'] / total_relevant_value
-                row_proportion = row['value'] / total_relevant_value
+        elif chart_type_prefix == 'Labor Force':
+            # For labor force comparisons, we want proportion of overall total if not specified otherwise
+            # This requires recalculating the overall total if not already done
+            total_lf_value = avg_df['value'].sum()
+            if total_lf_value > 0:
+                # Ensure we are using the 'value' column from avg_df for proportions here
+                white_women_proportion = white_women_avg['value'] / total_lf_value
+                row_proportion = row['value'] / total_lf_value
             else:
                 white_women_proportion = 0
                 row_proportion = 0
 
             y_column = 'proportion'
-            y_axis_label = f'Proportion of Total {chart_type_prefix} Force'
+            y_axis_label = 'Proportion of Total Labor Force'
             chart_title = f"Average {chart_type_prefix}: White Women vs. {display_comparison_group_name} in {year}"
             tick_format = '.1%'
             text_auto_format = '.1%'
@@ -503,7 +418,11 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
                 'series_name': [white_women_avg_series_name, display_comparison_group_name],
                 'proportion': [white_women_proportion, row_proportion]
             })
-        # The `else` block for `comparison_df` was removed as it's now explicitly handled.
+        else:
+            comparison_df = pd.DataFrame({
+                'series_name': [white_women_avg_series_name, display_comparison_group_name],
+                'value': [white_women_avg[y_column], row[y_column]]
+            })
 
         fig = px.bar(
             comparison_df,
@@ -555,7 +474,7 @@ with left_sidebar:
 
     # Regular navigation buttons, only displayed when NOT in madlib input/reveal stages
     if st.session_state.game_stage not in ['madlib_input', 'madlib_reveal']:
-        st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify: space-around; height: 100%;'>", unsafe_allow_html=True)
+        st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: space-around; height: 100%;'>", unsafe_allow_html=True)
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
@@ -570,7 +489,7 @@ with left_sidebar:
     # Content that appears during madlib_input or madlib_reveal (stripes and collage)
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
         # Add alternating red and white stripes
-        for i in range(44):
+        for i in range(46):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
@@ -666,7 +585,7 @@ with main_content:
                 "plural_noun_5": "attractive",
                 "noun_7": "divas",
                 "adjective_2": "guestlist",
-                "noun_8": "vodka",
+                "noun_8": "a cocktail",
                 "noun_9": "vodka",
                 "proper_noun_3": "potatoes",
                 "noun_10": "money",
@@ -679,7 +598,7 @@ with main_content:
                 "adverb_1": "unbelievably",
                 "noun_16": "comments",
                 "noun_17": "thumbs down",
-                "verb_2": "fallen",
+                "verb_2": "sparked",
                 "adjective_4": "boring",
                 "noun_18": "DM's",
                 "verb_3": "text",
@@ -698,7 +617,7 @@ with main_content:
                 "verb_4": "desired",
                 "noun_29": "bachelor",
                 "noun_30": "stoppage",
-                "noun_31": "booty calls"
+                "noun_31": "hookups"
             }
 
             input_values = {}
@@ -724,7 +643,7 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 3 - after Noun 12
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 13</span> and <span style='color:red;'>NOUN 14</span> has persisted across <span style='color:red;'>NOUN 15</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 16</span> have risen and <span style='color:red;'>NOUN 17</span> have <span style='color:red;'>VERB 1</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 18</span> have reached across the globe seeking to <span style='color:red;'>VERB 2</span> the <span style='color:red;'>NOUN 19</span> of the <span style='color:red;'>NOUN 20</span> and <span style='color:red;'>NOUN 21</span>. At the local level, <span style='color:red;'>NOUN 22</span> has always been necessary to maintain <span style='color:red;'>NOUN 23</span> of <span style='color:red;'>NOUN 24</span>, from the <span style='color:red;'>NOUN 25</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 26</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 27</span> has been a <span style='color:red;'>NOUN 28</span> of the <b><span style='color:red;'>VERB 3</span></b> <span style='color:black;'> | </span><span style='color:red;'>NOUN 29</span> to compel the <span style='color:red;'>NOUN 30</span> of the <span style='color:red;'>NOUN 31</span>.", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 13</span> and <span style='color:red;'>NOUN 14</span> has persisted across <span style='color:red;'>NOUN 15</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 16</span> have risen and <span style='color:red;'>NOUN 17</span> have <span style='color:red;'>VERB 1</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 18</span> have reached across the globe seeking to <span style='color:red;'>VERB 2</span> the <span style='color:red;'>NOUN 19</span> of the <span style='color:red;'>NOUN 20</span> and <span style='color:red;'>NOUN 21</span>. At the local level, <span style='color:red;'>NOUN 22</span> has always been necessary to maintain <span style='color:red;'>NOUN 23</span> of <span style='color:red;'>NOUN 24</span>, from the <span style='color:red;'>NOUN 25}</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 26</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 27</span> has been a <span style='color:red;'>NOUN 28</span> of the <span style='color:red;'>VERB 3</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 29</span> to compel the <span style='color:red;'>NOUN 30</span> of the <span style='color:red;'>NOUN 31</span>.", unsafe_allow_html=True)
 
             # Input fields 21+ (Adjective 3 through Noun 31) - Adjusted start index
             cols = st.columns(3)
@@ -753,8 +672,8 @@ with main_content:
         st.subheader("Her Story:")
         answers = st.session_state.madlib_answers
         st.markdown(f"While the history of <b>{answers['noun_1']}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{answers['noun_2']}</b>, the themes of our <b>{answers['noun_3']}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{answers['noun_4']}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{answers['noun_resource']}</b> within <b>{answers['noun_society_plural']}</b> across the globe.", unsafe_allow_html=True)
-        st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_10']}</b> where huge swaths of <b>{answers['noun_11']}</b> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
-        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_13']}</b> and <b>{answers['noun_14']}</b> has persisted across <b>{answers['noun_15']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_16']}</b> have risen and <b>{answers['noun_16']}</b> have fallen as <b>{answers['adjective_4']}</b> <b>{answers['noun_18']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_19']}</b> of the <b>{answers['noun_20']}</b> and <b>{answers['noun_21']}</b>. At the local level, <b>{answers['noun_22']}</b> has always been necessary to maintain <b>{answers['noun_23']}</b> of <b>{answers['noun_24']}</b>, from the <b>{answers['noun_25']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_26']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_27']}</b> has been a <b>{answers['noun_28']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b>.</div>", unsafe_allow_html=True)
+        st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_9']}</b> where huge swaths of <b>{answers['noun_10']}</b> are unable to reap the full benefit of their own <b>{answers['noun_11']}</b>.", unsafe_allow_html=True)
+        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_12']}</b> and <b>{answers['noun_13']}</b> has persisted across <b>{answers['noun_14']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_15']}</b> have risen and <b>{answers['noun_16']}</b> have <b>{answers['verb_2']}</b> as <b>{answers['adjective_4']}</b> <b>{answers['noun_17']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_18']}</b> of the <b>{answers['noun_19']}</b> and <b>{answers['noun_20']}</b>. At the local level, <b>{answers['noun_21']}</b> has always been necessary to maintain <b>{answers['noun_22']}</b> of <b>{answers['noun_23']}</b>, from the <b>{answers['noun_24']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_25']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_26']}</b> has been a <b>{answers['noun_27']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_28']}</b> to compel the <b>{answers['noun_29']}</b> of the <b>{answers['noun_30']}</b>.</div>", unsafe_allow_html=True)
 
         st.subheader("The Real Story:")
         # The real story variables are now defined globally
@@ -770,7 +689,7 @@ with main_content:
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
-            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, _ = load_and_process_bls_data()
+            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df = load_and_process_bls_data()
 
             # Store data in session state for other pages
             st.session_state.df_cleaned_for_display = df_filtered.copy()
@@ -787,19 +706,6 @@ with main_content:
                 unemployment_comparison_charts = plot_rate_comparisons(unemployment_avg_df, latest_full_year, 'Unemployment')
                 for chart in unemployment_comparison_charts:
                     st.plotly_chart(chart, use_container_width=True)
-
-                # Add download link for cleaned data
-                _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
-                with download_col:
-                    csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="Download Cleaned Data (CSV)",
-                        data=csv_data,
-                        file_name="bls_cleaned_data.csv",
-                        mime="text/csv",
-                        help="Download the pre-processed BLS data as a CSV file."
-                    )
-
             else:
                 st.warning("Cannot generate unemployment visualizations, data not available.")
 
@@ -813,20 +719,18 @@ with main_content:
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex and Race")
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
-            st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
+            st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 5 categories.")
 
             # Load data if not already in session state (e.g., if user navigated directly)
             if 'labor_force_avg_df' not in st.session_state or 'latest_full_year' not in st.session_state:
-                df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df = load_and_process_bls_data()
+                df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df = load_and_process_bls_data()
                 st.session_state.df_cleaned_for_display = df_filtered.copy()
                 st.session_state.latest_full_year = latest_full_year
                 st.session_state.unemployment_avg_df = unemployment_avg_df
                 st.session_state.labor_force_avg_df = labor_force_avg_df
-                st.session_state.industry_management_avg_df = industry_management_avg_df
             else:
                 latest_full_year = st.session_state.latest_full_year
                 labor_force_avg_df = st.session_state.labor_force_avg_df
-                industry_management_avg_df = st.session_state.industry_management_avg_df
 
             if not labor_force_avg_df.empty:
                 st.subheader("Average Labor Force by Sex and Race")
@@ -835,20 +739,28 @@ with main_content:
 
                 st.markdown("--- ")
                 st.subheader("Management, professional and related occupations")
-                st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
-                st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+                st.markdown("Chief Executives")
+                st.markdown("Computer and Mathematical occupations")
+                st.markdown("Registered Nurses")
 
                 st.markdown("--- ")
                 st.subheader("Service Occupations")
+                st.markdown("Food preparation and serving related occupations")
+                st.markdown("Janitors and building cleaners")
 
                 st.markdown("--- ")
                 st.subheader("Sales and Office Occupations")
+                st.markdown("Cashiers")
+                st.markdown("Customer Service Representatives")
 
                 st.markdown("--- ")
                 st.subheader("Natural resources, construction, and maintenance occupations")
+                st.markdown("Construction Laborers")
 
                 st.markdown("--- ")
                 st.subheader("Production, transportation, and material moving occupations")
+                st.markdown("Driver/sales workers and truck drivers")
+                st.markdown("Laborers and freight, stock, and material movers, hand")
 
             else:
                 st.warning("Cannot generate labor force visualizations, data not available.")
@@ -856,47 +768,47 @@ with main_content:
     elif st.session_state.game_stage == 'about_project':
         # Force scroll to the top of the main content area when entering this stage
         st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
-        st.subheader("About This Project")
+        st.header("About This Project")
         st.markdown("""
-The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.\n\nFor me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”\n\nWhat has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.\n\nThank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White.
-"""
-)
-
-        st.markdown("""
-### Unemployment Series
-Here are the BLS series IDs used for the unemployment visualizations:
-* LNS14000006: Unemployment - Black or African American
-* LNS14000009: Unemployment - Hispanic or Latino
-* LNS14000003: Unemployment - White
-* LNS14032183: Unemployment - Asian
-* LNS14000002: Unemployment - Women
-* LNS14000001: Unemployment - Men
-* LNS14000005: Unemployment - White Women
-* LNS14000004: Unemployment - White Men
-
-### Labor Series
-These BLS series IDs are for the labor force data:
-* LNS11000004: Labor Force - White Men
-* LNS11000005: Labor Force - White Women
-* LNS11032183: Labor Force - Asian
-* LNS11000001: Labor Force - Men
-* LNS11000002: Labor Force - Women
-* LNS11000003: Labor Force - White
-* LNS11000006: Labor Force - Black or African American
-* LNS11000009: Labor Force - Hispanic or Latino
-
-### Industry Series
-Here are the BLS series IDs used for Management, Professional, and Related Occupations:
-* LNU02032526 (Unadj) Employment Level - Management, Professional, and Related Occupations, Women
-* LNU02032468 (Unadj) Employment Level - Management, Professional, and Related Occupations, Men
-* LNU02035886 (Unadj) Employment Level - Management, Professional, and Related Occupations, Asian
-* LNU02035918 (Unadj) Employment Level - Management, Professional, and Related Occupations, White
-* LNU02035957 (Unadj) Employment Level - Management, Professional, and Related Occupations, Hispanic or Latino
-* LNU02035874 (Unadj) Employment Level - Management, Professional, and Related Occupations, Black or African American
-"""
-)
+The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.\n\nFor me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”\n\nWhat has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.\n\nThank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White. Series for visualizations from BLS: LNS14000006, LNS14000009, LNS14000003, LNS14032183, LNS14000002, LNS14000001, LNS14000005, LNS14000004, LNS11000004, LNS11000005, LNS11032183, LNS11000001, LNS11000002, LNS11000003, LNS11000006, LNS11000009
+""")
 
         st.markdown("-" * 3)
+
+        # Display cleaned data if available
+        if 'unemployment_avg_df' in st.session_state and not st.session_state.unemployment_avg_df.empty:
+            st.subheader("Average Unemployment Data (Latest Full Year):")
+            display_df_unemployment = st.session_state.unemployment_avg_df[['series_name', 'value']].rename(columns={'series_name': 'Demographic Group', 'value': 'Average Unemployment Rate (Proportion)'})
+            st.dataframe(display_df_unemployment)
+
+            col_dl_unemp_left, col_dl_unemp_right = st.columns([0.7, 0.3])
+            with col_dl_unemp_right:
+                csv_unemployment = display_df_unemployment.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download Unemployment Data",
+                    data=csv_unemployment,
+                    file_name='cleaned_unemployment_data.csv',
+                    mime='text/csv',
+                )
+
+        if 'labor_force_avg_df' in st.session_state and not st.session_state.labor_force_avg_df.empty:
+            st.subheader("Average Labor Force Data (Latest Full Year):")
+            display_df_labor_force = st.session_state.labor_force_avg_df[['series_name', 'value', 'proportion']].rename(columns={'series_name': 'Demographic Group', 'value': 'Average Labor Force (Thousands)', 'proportion': 'Proportion'})
+            st.dataframe(display_df_labor_force.style.format({'Proportion': '{:.2%}'}))
+
+            col_dl_lf_left, col_dl_lf_right = st.columns([0.7, 0.3])
+            with col_dl_lf_right:
+                csv_labor_force = display_df_labor_force.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download Labor Force Data",
+                    data=csv_labor_force,
+                    file_name='cleaned_labor_force_data.csv',
+                    mime='text/csv',
+                )
+
+        if 'unemployment_avg_df' not in st.session_state and 'labor_force_avg_df' not in st.session_state:
+            st.info("Dataframes will appear here after visiting the 'Unemployment Visualizations' or 'Industry Visualizations' sections.")
+
 
 # --- Footer ---
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
