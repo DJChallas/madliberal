@@ -235,8 +235,8 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
 
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
-        tick_format = '.2% // 1000'
-        text_auto_format = '.2% // 1000'
+        tick_format = '.3% / 1000'
+        text_auto_format = '.3% / 1000'
     elif chart_type_prefix == 'Labor Force':
         # Calculate proportions relative to total Men + Women labor force
         base_sex_groups = ['Labor Force - Men', 'Labor Force - Women']
@@ -287,8 +287,8 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
 
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
-        tick_format = '.2%'
-        text_auto_format = '.2%'
+        tick_format = '.3% / 1000'
+        text_auto_format = '.3% / 1000'
     elif chart_type_prefix == 'Labor Force':
         # Calculate proportions relative to specific race groups labor force
         base_race_groups = ['Labor Force - White', 'Labor Force - Black or African American', 'Labor Force - Asian', 'Labor Force - Hispanic or Latino']
@@ -384,8 +384,8 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             y_axis_label = 'Average Unemployment Rate (Proportion)'
             # Update title for unemployment comparisons
             chart_title = f"Average Unemployment: White Women vs. {display_comparison_group_name} in {year}"
-            tick_format = '.2%'
-            text_auto_format = '.2%'
+            tick_format = '.3% / 1000'
+            text_auto_format = '.3% / 1000'
             comparison_df = pd.DataFrame({
                 'series_name': [white_women_avg_series_name, display_comparison_group_name],
                 'value': [white_women_avg[y_column], row[y_column]]
