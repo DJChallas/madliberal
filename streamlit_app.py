@@ -186,8 +186,8 @@ def load_and_process_bls_data():
             'LNS11000006': 'Labor Force - Black or African American',
             'LNS11000009': 'Labor Force - Hispanic or Latino',
             # Industry Series - Management, Professional, and Related Occupations - Only Sex
-            'LNU02032526': 'Employment Level - Management, Professional, Women',
-            'LNU02032468': 'Employment Level - Management, Professional, Men'
+            'LNU02032526': 'Employment Level - Management, Professional - Women',
+            'LNU02032468': 'Employment Level - Management, Professional - Men'
         }
         series_name_mapping = sn_map
 
@@ -209,8 +209,8 @@ def load_and_process_bls_data():
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
         # Filter industry_management_avg_df to only include sex-related series
         industry_management_avg_df = avg_rates_latest_year[
-            avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional, Men') |
-            avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional, Women')
+            avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional - Men') | # Updated to use hyphen
+            avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional - Women') # Updated to use hyphen
         ].copy()
 
         # Calculate 'proportion' for labor_force_avg_df for display in About page
@@ -238,8 +238,8 @@ def load_and_process_bls_data():
             'Labor Force - Hispanic or Latino',
             'Labor Force - Asian',
             'Labor Force - White',
-            'Employment Level - Management, Professional, Women',
-            'Employment Level - Management, Professional, Men'
+            'Employment Level - Management, Professional - Women', # Updated to use hyphen
+            'Employment Level - Management, Professional - Men' # Updated to use hyphen
         ]
         unemployment_avg_df['series_name'] = pd.Categorical(
             unemployment_avg_df['series_name'],
@@ -268,7 +268,12 @@ def load_and_process_bls_data():
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
-    sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
+    # Adjust sex_groups generation to handle 'Employment Level - Management, Professional' correctly
+    if chart_type_prefix == 'Employment Level - Management, Professional':
+        sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women']
+    else:
+        sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
+
     df_sex = avg_df[avg_df['series_name'].isin(sex_groups)].copy()
 
     y_column = 'value'
@@ -294,7 +299,7 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         tick_format = '.1%'
         text_auto_format = '.1%'
     elif chart_type_prefix == 'Employment Level - Management, Professional':
-        base_sex_groups = ['Employment Level - Management, Professional, Men', 'Employment Level - Management, Professional, Women']
+        base_sex_groups = ['Employment Level - Management, Professional - Men', 'Employment Level - Management, Professional - Women'] # Updated to use hyphen
         total_men_women_mp = avg_df[avg_df['series_name'].isin(base_sex_groups)]['value'].sum()
 
         if total_men_women_mp > 0:
@@ -402,7 +407,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
     ]
     # Removed race-related entries for industry management comparison
     comparison_order_industry_management = [
-        'Employment Level - Management, Professional, Men'
+        'Employment Level - Management, Professional - Men' # Updated to use hyphen
     ]
 
     if chart_type_prefix == 'Unemployment':
@@ -427,7 +432,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Labor Force - Women': 'Women, All Races',
         'Labor Force - Hispanic or Latino': 'Hispanic or Latino, Men/Women',
         'Labor Force - Black or African American': 'Black or African American, Men/Women',
-        'Employment Level - Management, Professional, Men': 'Management, Professional, Men'
+        'Employment Level - Management, Professional - Men': 'Management, Professional - Men' # Updated to use hyphen
     }
 
     other_demographics_ordered = avg_df[
