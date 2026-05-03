@@ -456,6 +456,9 @@ def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, categor
     fig.update_layout(yaxis_title='Average Employment Level (in thousands)', showlegend=False)
     st.plotly_chart(fig, use_container_width=True)
 
+    # Call the Logit regression function here
+    calculate_and_display_logit_odds(df_filtered, latest_full_year, category_name, series_ids_women, series_ids_men, series_name_mapping)
+
 
 # --- Streamlit App ---
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
@@ -783,30 +786,30 @@ with main_content:
                 # Generate bar charts for each requested occupation category
                 st.markdown("--- ")
                 st.subheader("Management, Professional, and Related Occupations")
-                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Management, Professional, and Related Occupations",
                                                       ['LNU02032526'], ['LNU02032468'], series_name_mapping)
 
                 st.markdown("--- ")
                 st.subheader("Service Occupations")
-                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Service Occupations",
                                                       ['LNU02032539'], ['LNU02032481'], series_name_mapping)
 
                 st.markdown("--- ")
                 st.subheader("Sales and Office Occupations")
-                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Sales and Office Occupations",
                                                       ['LNU02032545'], ['LNU02032487'], series_name_mapping)
                 st.markdown("--- ")
                 st.subheader("Natural Resources, Construction, and Maintenance Occupations")
-                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Natural Resources, Construction, and Maintenance Occupations",
                                                       ['LNU02032548'], ['LNU02032490'], series_name_mapping)
 
                 st.markdown("--- ")
                 st.subheader("Transportation and Material Moving Occupations")
-                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Transportation and Material Moving Occupations",
                                                       ['LNU02032554'], ['LNU02032496'], series_name_mapping)
 
@@ -819,7 +822,7 @@ with main_content:
         st.subheader("About This Project")
         st.markdown("""
 The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.\n\nFor me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”\n\nWhat has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.\n\nThank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White.\n\nSeries for visualizations from BLS: \n\nLNS14000006\n\nLNS14000009\n\nLNS14000003\n\nLNS14032183\n\nLNS14000002\n\nLNS14000001\n\nLNS14000005\n\nLNS14000004\n\nLNS11000004\n\nLNS11000005\n\nLNS11032183\n\nLNS11000001\n\nLNS11000002\n\nLNS11000003\n\nLNS11000006\n\nLNS11000009
-""")
+""", unsafe_allow_html=True)
 
         st.markdown("-" * 3)
 
