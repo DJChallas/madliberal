@@ -360,7 +360,7 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
             df_sex['proportion'] = 0
 
         y_column = 'proportion'
-        y_axis_label = f'Proportion of {chart_type_prefix} Employment' # Dynamically set label
+        y_axis_label = 'Proportion of Employment Level' # Dynamically set label
         tick_format = '.1%'
         text_auto_format = '.1%'
 
