@@ -740,6 +740,44 @@ with main_content:
                     for chart in unemployment_comparison_charts:
                         st.plotly_chart(chart, use_container_width=True)
 
+                    # --- Start OLS Regression Integration ---
+                    st.subheader("OLS Regression Analysis: Unemployment Rates")
+
+                    # OLS for 'Black or African American'
+                    st.markdown("#### Impact of Being Black or African American on Unemployment Rate")
+                    st.markdown("This regression models the average unemployment rate across all demographic groups. A binary indicator `is_black_or_african_american` is used as a predictor. The coefficient for `is_black_or_african_american` represents the estimated difference in unemployment rate for 'Black or African American' individuals compared to the average unemployment rate of all other demographic groups included in the model.")
+
+                    df_unemployment_ols = df_filtered[
+                        df_filtered['series_name'].str.contains('Unemployment')
+                    ].copy()
+                    df_unemployment_ols['is_black_or_african_american'] = (
+                        df_unemployment_ols['series_name'] == 'Unemployment - Black or African American'
+                    ).astype(int)
+                    y = df_unemployment_ols['value']
+                    X = df_unemployment_ols[['is_black_or_african_american']]
+                    X = sm.add_constant(X)
+                    model = sm.OLS(y, X)
+                    results = model.fit()
+                    st.text(results.summary())
+
+                    # OLS for 'White Women'
+                    st.markdown("#### Impact of Being White Woman on Unemployment Rate")
+                    st.markdown("This regression models the average unemployment rate across all demographic groups. A binary indicator `is_white_woman` is used as a predictor. The coefficient for `is_white_woman` represents the estimated difference in unemployment rate for 'White Woman' individuals compared to the average unemployment rate of all other demographic groups included in the model.")
+
+                    df_unemployment_ols_ww = df_filtered[
+                        df_filtered['series_name'].str.contains('Unemployment')
+                    ].copy()
+                    df_unemployment_ols_ww['is_white_woman'] = (
+                        df_unemployment_ols_ww['series_name'] == 'Unemployment - White Women'
+                    ).astype(int)
+                    y_ww = df_unemployment_ols_ww['value']
+                    X_ww = df_unemployment_ols_ww[['is_white_woman']]
+                    X_ww = sm.add_constant(X_ww)
+                    model_ww = sm.OLS(y_ww, X_ww)
+                    results_ww = model_ww.fit()
+                    st.text(results_ww.summary())
+                    # --- End OLS Regression Integration ---
+
                     # Add download link for cleaned data
                     _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
                     with download_col:
