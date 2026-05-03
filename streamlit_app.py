@@ -1,3 +1,4 @@
+!pip install streamlit
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -104,7 +105,7 @@ def load_and_process_bls_data():
             'LNU02032526', 'LNU02032468', # Management, Professional, and Related Occupations, Women and Men
             'LNU02032539', 'LNU02032481', # Service Occupations, Women and Men
             'LNU02032545', 'LNU02032487', # Sales and Office Occupations, Women and Men
-            'RLNU02032490', 'LNU02032548', # Natural Resources, Construction, and Maintenance Occupations, Men and Women
+            'LNU02032490', 'LNU02032548', # Natural Resources, Construction, and Maintenance Occupations, Men and Women
             'LNU02032554', 'LNU02032496'  # Transportation and Material Moving Occupations, Women and Men
         ],
         "startyear": str(current_year - 4),
@@ -197,7 +198,7 @@ def load_and_process_bls_data():
             'LNU02032481': 'Service Occupations - Men',
             'LNU02032545': 'Sales and Office Occupations - Women',
             'LNU02032487': 'Sales and Office Occupations - Men',
-            'RLNU02032490': 'Natural Resources, Construction, and Maintenance Occupations - Men',
+            'LNU02032490': 'Natural Resources, Construction, and Maintenance Occupations - Men',
             'LNU02032548': 'Natural Resources, Construction, and Maintenance Occupations - Women',
             'LNU02032554': 'Transportation and Material Moving Occupations - Women',
             'LNU02032496': 'Transportation and Material Moving Occupations - Men'
@@ -799,7 +800,6 @@ with main_content:
                 plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
                                                       "Sales and Office Occupations",
                                                       ['LNU02032545'], ['LNU02032487'], series_name_mapping)
-
                 st.markdown("--- ")
                 st.subheader("Natural Resources, Construction, and Maintenance Occupations")
                 plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
