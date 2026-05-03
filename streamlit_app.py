@@ -521,9 +521,9 @@ with left_sidebar:
 
         st.markdown("-" * 3)
 
-    # REMOVED: elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
-    # REMOVED:     display_text_collage()
-    # REMOVED:     st.markdown("-" * 3) # Separator
+    elif st.session_state.game_stage == 'about_project': # Show 'Collage' and navigation in left sidebar
+        display_text_collage()
+        st.markdown("-" * 3) # Separator
 
 with main_content:
     # --- Mad Lib Input Stage ---
@@ -658,4 +658,186 @@ with main_content:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
             # Paragraph 3 - after Noun 12
-            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 13</span> and <span style='color:red;'>NOUN 14</span> has persisted across <span style='color:red;'>NOUN 15</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 16</span> have risen and <span style='color:red;'>NOUN 17</span> have <span style='color:red;'>VERB 1</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 18</span> have reached across the globe seeking to <span style='color:red;'>VERB 2</span> the <span style='color:red;'>NOUN 19</span> of the <span style='color:red;'>NOUN 20</span> and <span style='color:red;'>NOUN 21</span>. At the local level, <span style='color:red;'>NOUN 22</span> has always been necessary to maintain <span style='color:red;'>NOUN 23</span> of <span style='color:red;'>NOUN 24</span>, from the <span style='color:red;'>NOUN 25</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 26</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 27</span> has been a <span style='color:red;'>NOUN 28</span> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b> of the <b>{answers['noun_31']}</b>.</div>", unsafe_allow_html=True)
+            st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 13</span> and <span style='color:red;'>NOUN 14</span> has persisted across <span style='color:red;'>NOUN 15</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 16</span> have risen and <span style='color:red;'>NOUN 17</span> have <span style='color:red;'>VERB 1</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 18</span> have reached across the globe seeking to <span style='color:red;'>VERB 2</span> the <span style='color:red;'>NOUN 19</span> of the <span style='color:red;'>NOUN 20</span> and <span style='color:red;'>NOUN 21</span>. At the local level, <span style='color:red;'>NOUN 22</span> has always been necessary to maintain <span style='color:red;'>NOUN 23</span> of <span style='color:red;'>NOUN 24</span>, from the <span style='color:red;'>NOUN 25</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 26</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 27</span> has been a <span style='color:red;'>NOUN 28</span> of the <span style='color:red;'>VERB 3</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 29</span> to compel the <span style='color:red;'>NOUN 30</span> of the <span style='color:red;'>NOUN 31</span>.", unsafe_allow_html=True)
+
+            # Input fields 21+ (Adjective 3 through Noun 31) - Adjusted start index
+            cols = st.columns(3)
+            for i in range(21, len(input_fields_all)):
+                label, key = input_fields_all[i]
+                with cols[(i - 21) % 3]:
+                    input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
+
+            # Add some spacing after the input fields
+            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+            # Center the button
+            _, center_col, _ = st.columns(3)
+            with center_col:
+                submitted = st.form_submit_button("Submit Your Mad Lib!", use_container_width=True)
+
+        if submitted:
+            if all(input_values.values()):
+                st.session_state.madlib_answers = input_values
+                st.session_state.game_stage = 'madlib_reveal'
+                st.rerun() # Rerun to switch stage
+            else:
+                st.warning("Please fill in all the blanks!")
+
+    # --- Mad Lib Reveal Stage ---
+    elif st.session_state.game_stage == 'madlib_reveal':
+        st.subheader("Her Story:")
+        answers = st.session_state.madlib_answers
+        st.markdown(f"While the history of <b>{answers['noun_1']}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{answers['noun_2']}</b>, the themes of our <b>{answers['noun_3']}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{answers['noun_4']}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{answers['noun_resource']}</b> within <b>{answers['noun_society_plural']}</b> across the globe.", unsafe_allow_html=True)
+        st.markdown(f"From Mesopotamia to ancient Mexico and Rome to ancient <b>{answers['proper_noun_2']}</b>, we find <b>{answers['plural_noun_3']}</b> that create a <b>{answers['adjective_1']}</b> <b>{answers['noun_5']}</b> that assigns greater value to their own <b>{answers['noun_6']}</b>, and greater resources to themselves and their <b>{answers['plural_noun_4']}</b>. This comes, of course, at the expense of the <b>{answers['plural_noun_5']}</b>, the <b>{answers['noun_7']}</b> who have toiled in the service of others of <b>{answers['adjective_2']}</b> standing. From prehistory through the modern era, <b>{answers['noun_8']}</b> has existed in various forms and under various names. This includes the <b>{answers['noun_9']}</b> of medieval <b>{answers['proper_noun_3']}</b> to the chattel <b>{answers['noun_8']}</b> of the early United States, and it persists to this day as wage <b>{answers['noun_10']}</b> where huge swaths of <b>{answers['noun_11']}</b> are unable to reap the full benefit of their own <b>{answers['noun_12']}</b>.", unsafe_allow_html=True)
+        st.markdown(f"While this <b>{answers['adjective_3']}</b> stratification of <b>{answers['noun_13']}</b> and <b>{answers['noun_14']}</b> has persisted across <b>{answers['noun_15']}</b> and, <b>{answers['adverb_1']}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{answers['noun_16']}</b> have risen and <b>{answers['noun_16']}</b> have fallen as <b>{answers['adjective_4']}</b> <b>{answers['noun_18']}</b> have reached across the globe seeking to <b>{answers['verb_3']}</b> the <b>{answers['noun_19']}</b> of the <b>{answers['noun_20']}</b> and <b>{answers['noun_21']}</b>. At the local level, <b>{answers['noun_22']}</b> has always been necessary to maintain <b>{answers['noun_23']}</b> of <b>{answers['noun_24']}</b>, from the <b>{answers['noun_25']}</b> patrols of <b>{answers['adjective_5']}</b> America to the targeting of <b>{answers['noun_26']}</b> by <b>{answers['proper_noun_4']}</b> today. Even on the individual level, <b>{answers['noun_27']}</b> has been a <b>{answers['noun_28']}</b> of the <b>{answers['verb_4']}</b> <b>{answers['noun_29']}</b> to compel the <b>{answers['noun_30']}</b> of the <b>{answers['noun_31']}</b>.</div>", unsafe_allow_html=True)
+
+        st.subheader("The Real Story:")
+        # The real story variables are now defined globally
+        st.markdown(f"While the history of <b>{real_noun_1}</b> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <b>{real_noun_2}</b>, the themes of our <b>{real_noun_3}</b> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <b>{real_noun_4}</b>. Perhaps the predominant theme throughout is the competition for and allocation of <b>{real_noun_resource}</b> within <b>{real_noun_society_plural}</b> across the globe.</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
+
+    # --- Visualizations Stage ---
+    elif st.session_state.game_stage == 'visualizations':
+        # Force scroll to the top of the main content area when entering this stage
+        st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
+
+        viz_col = st.columns([1]) # Use a single column for visualizations in main_content
+
+        with viz_col[0]:
+            df_filtered, latest_full_year, series_name_mapping = load_and_process_bls_data()
+
+            # Separate unemployment and labor force dataframes (using previous logic)
+            unemployment_series_ids = [
+                'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183',
+                'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'
+            ]
+            labor_force_series_ids = [
+                'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001',
+                'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'
+            ]
+
+            if not df_filtered.empty:
+                df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
+                avg_rates_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
+                avg_rates_latest_year['series_name'] = avg_rates_latest_year['series_id'].map(series_name_mapping)
+
+                unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(unemployment_series_ids)].copy()
+                labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(labor_force_series_ids)].copy()
+
+                # Store data in session state for other pages
+                st.session_state.df_cleaned_for_display = df_filtered.copy()
+                st.session_state.latest_full_year = latest_full_year
+                st.session_state.unemployment_avg_df = unemployment_avg_df
+                st.session_state.labor_force_avg_df = labor_force_avg_df
+
+                if not unemployment_avg_df.empty:
+                    st.subheader("Average Unemployment Rates")
+                    st.markdown("The current calculations for unemployment are generated by averaging the seasonal unemployment percentages for all of the listed categories for a period of one year starting from the most recent release by the US Bureau of Labor Statistics: Men, Women, White Men, White Women, Black or African American, Hispanic or Latino and Asian. The data used for Hispanic or Latino is from a subcategory for unemployment statistics independent of the White, Black and Asian datasets.")
+                    st.plotly_chart(plot_rates_by_sex(unemployment_avg_df, latest_full_year, 'Unemployment'), use_container_width=True)
+                    st.plotly_chart(plot_rates_by_race(unemployment_avg_df, latest_full_year, 'Unemployment'), use_container_width=True)
+                    st.subheader("Mad Liberal Comparisons")
+                    unemployment_comparison_charts = plot_rate_comparisons(unemployment_avg_df, latest_full_year, 'Unemployment')
+                    for chart in unemployment_comparison_charts:
+                        st.plotly_chart(chart, use_container_width=True)
+
+                    # Add download link for cleaned data
+                    _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
+                    with download_col:
+                        csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="Download Cleaned Data (CSV)",
+                            data=csv_data,
+                            file_name="bls_cleaned_data.csv",
+                            mime="text/csv",
+                            help="Download the pre-processed BLS data as a CSV file."
+                        )
+
+                else:
+                    st.warning("Cannot generate unemployment visualizations, data not available.")
+
+            else:
+                st.warning("Cannot load BLS data. Please check the API key or data availability.")
+
+
+
+    # --- Industry Visualizations Stage ---
+    elif st.session_state.game_stage == 'industry_visualizations':
+        # Force scroll to the top of the main content area when entering this stage
+        st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
+
+        viz_col = st.columns([1]) # Use a single column for visualizations in main_content
+
+        with viz_col[0]:
+            st.subheader("Industry Visualizations for Race and Sex")
+            st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. For the visulizations in this section I'm looking at the distribution of Biological Sex across the 5 main industries of the US Economy provided by the BLS.")
+
+            # Load data if not already in session state (e.g., if user navigated directly)
+            if 'df_cleaned_for_display' not in st.session_state or 'latest_full_year' not in st.session_state or 'series_name_mapping' not in st.session_state:
+                df_filtered, latest_full_year, series_name_mapping = load_and_process_bls_data()
+                st.session_state.df_cleaned_for_display = df_filtered.copy()
+                st.session_state.latest_full_year = latest_full_year
+                st.session_state.series_name_mapping = series_name_mapping # Store mapping
+            else:
+                df_filtered = st.session_state.df_cleaned_for_display
+                latest_full_year = st.session_state.latest_full_year
+                series_name_mapping = st.session_state.series_name_mapping
+
+            # Ensure labor_force_avg_df is available for plot_rates_by_race
+            labor_force_series_ids = [
+                'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001',
+                'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'
+            ]
+            df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
+            avg_rates_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
+            avg_rates_latest_year['series_name'] = avg_rates_latest_year['series_id'].map(series_name_mapping)
+            labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(labor_force_series_ids)].copy()
+
+            if not df_filtered.empty:
+                st.subheader("Labor Force by Race")
+                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
+                st.markdown("--- ")
+
+                # Generate bar charts for each requested occupation category
+                st.subheader("Management, Professional, and Related Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
+                                                      "Management, Professional, and Related Occupations",
+                                                      ['LNU02032526'], ['LNU02032468'], series_name_mapping)
+
+                st.markdown("--- ")
+                st.subheader("Service Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
+                                                      "Service Occupations",
+                                                      ['LNU02032539'], ['LNU02032481'], series_name_mapping)
+
+                st.markdown("--- ")
+                st.subheader("Sales and Office Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
+                                                      "Sales and Office Occupations",
+                                                      ['LNU02032545'], ['LNU02032487'], series_name_mapping)
+                st.markdown("--- ")
+                st.subheader("Natural Resources, Construction, and Maintenance Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
+                                                      "Natural Resources, Construction, and Maintenance Occupations",
+                                                      ['LNU02032548'], ['LNU02032490'], series_name_mapping)
+
+                st.markdown("--- ")
+                st.subheader("Transportation and Material Moving Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
+                                                      "Transportation and Material Moving Occupations",
+                                                      ['LNU02032554'], ['LNU02032496'], series_name_mapping)
+
+            else:
+                st.warning("Cannot generate industry visualizations, data not available.")
+
+    elif st.session_state.game_stage == 'about_project':
+        # Force scroll to the top of the main content area when entering this stage
+        st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
+        st.subheader("About This Project")
+        st.markdown("""
+The first half of my adult life I dedicated to creating art. Primarily music and video - finally producing a body of paintings before starting a graduate program at UNO in Data Science. While attending a liberal arts college in the Midwest I was subjected to civil rights abuses that changed the way I thought and perceived the world. These experiences drove me further into the pursuit of art as a form of social criticism and spirituality. The work I created has become artifacts of the life I’m leaving behind.\n\nFor me the pursuit of spirituality can be best understood as a search for truth, to understand the metaphysical nature of reality - the sciences inform us about nature and consciousness itself through measured processes and measured reporting. While art is a personal presentation of the truth, science is collective expression of it. The process must be explained, defined and understood for expression to be considered “correct.”\n\nWhat has become troubling to me as I mature are the common bounds our mediated environment normalizes as reality. Because once these bounds become distorted our collective perception of reality becomes distorted. This project is a way for me to examine the limits of Classic Liberalism by parodying the normative reality of Modern Liberalism, focusing on the most dangerous thinkers in Human History: White Women.\n\nThank you to the individuals from Econ 8320: Tools for Data Analysis with shirts and hairstyling provided by Professor Dustin White.\n\nSeries for visualizations from BLS: \n\nLNS14000006\n\nLNS14000009\n\nLNS14000003\n\nLNS14032183\n\nLNS14000002\n\nLNS14000001\n\nLNS14000005\n\nLNS14000004\n\nLNS11000004\n\nLNS11000005\n\nLNS11032183\n\nLNS11000001\n\nLNS11000002\n\nLNS11000003\n\nLNS11000006\n\nLNS11000009
+""", unsafe_allow_html=True)
+
+        st.markdown("-" * 3)
+
+# --- Footer ---
+st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
