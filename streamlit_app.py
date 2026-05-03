@@ -287,8 +287,8 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
 
     if chart_type_prefix == 'Unemployment':
         y_axis_label = 'Average Unemployment Rate (Proportion)'
-        tick_format = '.3% / 1000'
-        text_auto_format = '.3% / 1000'
+        tick_format = '3'
+        text_auto_format = '3'
     elif chart_type_prefix == 'Labor Force':
         # Calculate proportions relative to specific race groups labor force
         base_race_groups = ['Labor Force - White', 'Labor Force - Black or African American', 'Labor Force - Asian', 'Labor Force - Hispanic or Latino']
