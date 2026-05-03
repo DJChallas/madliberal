@@ -1,3 +1,4 @@
+!pip install streamlit
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -804,7 +805,7 @@ with main_content:
                 st.subheader("Natural Resources, Construction, and Maintenance Occupations")
                 plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
                                                       "Natural Resources, Construction, and Maintenance Occupations",
-                                                      ['LNU02032548'], ['RLNU02032490'], series_name_mapping)
+                                                      ['LNU02032548'], ['LNU02032490'], series_name_mapping)
 
                 st.markdown("--- ")
                 st.subheader("Transportation and Material Moving Occupations")
