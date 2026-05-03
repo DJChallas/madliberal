@@ -94,85 +94,95 @@ def display_text_collage():
 # --- Data Loading and Processing Function ---
 @st.cache_data
 def load_and_process_bls_data():
-    headers = {'Content-type': 'application/json'}
-    current_year = datetime.now().year
-    data = json.dumps({
-        "seriesid": [
-            'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
-            'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # Existing Labor Force IDs
-            # New Employment Level IDs for Occupations
-            'LNU02032526', 'LNU02032468', # Management, Professional, and Related Occupations, Women and Men
-            'LNU02032539', 'LNU02032481', # Service Occupations, Women and Men
-            'LNU02032545', 'LNU02032487', # Sales and Office Occupations, Women and Men
-            'LNU02032490', 'LNU02032548', # Natural Resources, Construction, and Maintenance Occupations, Men and Women
-            'LNU02032554', 'LNU02032496'  # Transportation and Material Moving Occupations, Women and Men
-        ],
-        "startyear": str(current_year - 4),
-        "endyear": str(current_year),
-        "registrationkey": "9dd192e92c9c4989985db57deede9647"
-    })
-    p = requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/', data=data, headers=headers)
-    json_data = json.loads(p.text)
-
-    all_series_data = []
-
-    def period_to_month(period_str):
-        if period_str.startswith('M'):
-            return int(period_str[1:])
-        elif period_str == 'Q01':
-            return 1
-        elif period_str == 'Q02':
-            return 4
-        elif period_str == 'Q03':
-            return 7
-        elif period_str == 'Q04':
-            return 10
-        return None
-
-    df = pd.DataFrame() # Initialize df outside if/else for broader scope
-    if 'Results' in json_data and 'series' in json_data['Results']:
-        for series in json_data['Results']['series']:
-            seriesId = series['seriesID']
-            for item in series['data']:
-                year = item['year']
-                period = item['period']
-                value = item['value']
-                footnotes_list = []
-                for footnote in item['footnotes']:
-                    if footnote:
-                        footnotes_list.append(footnote['text'])
-                footnotes = ','.join(footnotes_list)
-
-                if ('M01' <= period <= 'M12') or ('Q01' <= period <= 'Q04'):
-                    all_series_data.append({
-                        'series_id': seriesId,
-                        'year': year,
-                        'period': period,
-                        'value': value,
-                        'footnotes': footnotes
-                    })
-        df = pd.DataFrame(all_series_data)
-        df['month'] = df['period'].apply(period_to_month)
-        df = df.dropna(subset=['month'])
-        df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
-        df = df.drop(columns=['month'])
-
-    # Data Cleaning and value conversion based on series type
+    """Load pre-collected BLS data from CSV, fall back to API if CSV doesn't exist."""
+    
+    csv_path = 'data/bls_data.csv'
+    
+    # Try to load from CSV first
+    if os.path.exists(csv_path):
+        try:
+            df = pd.read_csv(csv_path)
+            df['date'] = pd.to_datetime(df['date'])
+            print(f"Loaded data from {csv_path} with {len(df)} records")
+        except Exception as e:
+            print(f"Error loading CSV: {e}. Falling back to API...")
+            df = pd.DataFrame()
+    else:
+        df = pd.DataFrame()
+    
+    # If CSV doesn't exist or is empty, fetch from API
+    if df.empty:
+        print("Fetching fresh data from BLS API...")
+        headers = {'Content-type': 'application/json'}
+        current_year = datetime.now().year
+        data = json.dumps({
+            "seriesid": [
+                'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004',
+                'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',
+                'LNU02032526', 'LNU02032468', 'LNU02032539', 'LNU02032481', 'LNU02032545', 'LNU02032487', 'LNU02032490', 'LNU02032548', 'LNU02032554', 'LNU02032496'
+            ],
+            "startyear": str(current_year - 4),
+            "endyear": str(current_year),
+            "registrationkey": "9dd192e92c9c4989985db57deede9647"
+        })
+        p = requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/', data=data, headers=headers)
+        json_data = json.loads(p.text)
+        
+        all_series_data = []
+        
+        def period_to_month(period_str):
+            if period_str.startswith('M'):
+                return int(period_str[1:])
+            elif period_str == 'Q01':
+                return 1
+            elif period_str == 'Q02':
+                return 4
+            elif period_str == 'Q03':
+                return 7
+            elif period_str == 'Q04':
+                return 10
+            return None
+        
+        if 'Results' in json_data and 'series' in json_data['Results']:
+            for series in json_data['Results']['series']:
+                seriesId = series['seriesID']
+                for item in series['data']:
+                    year = item['year']
+                    period = item['period']
+                    value = item['value']
+                    footnotes_list = []
+                    for footnote in item['footnotes']:
+                        if footnote:
+                            footnotes_list.append(footnote['text'])
+                    footnotes = ','.join(footnotes_list)
+                    
+                    if ('M01' <= period <= 'M12') or ('Q01' <= period <= 'Q04'):
+                        all_series_data.append({
+                            'series_id': seriesId,
+                            'year': year,
+                            'period': period,
+                            'value': value,
+                            'footnotes': footnotes
+                        })
+            df = pd.DataFrame(all_series_data)
+            df['month'] = df['period'].apply(period_to_month)
+            df = df.dropna(subset=['month'])
+            df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
+            df = df.drop(columns=['month'])
+    
+    # Data cleaning and processing
     if not df.empty:
-        # Convert 'value' to numeric, coercing errors
         df['value'] = pd.to_numeric(df['value'].astype(str).replace(r'\s+\(\d+\)', '', regex=True), errors='coerce')
-
-        # Apply division by 100 only for Unemployment series (which are proportions)
+        
         unemployment_series_ids = [
             'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183',
             'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'
         ]
         df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] = df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] / 100
-
+        
         df_filtered = df.dropna(subset=['value']).copy()
-
+        
         sn_map = {
-            # Unemployment Series
             'LNS14000006': 'Unemployment - Black or African American',
             'LNS14000009': 'Unemployment - Hispanic or Latino',
             'LNS14000003': 'Unemployment - White',
@@ -181,7 +191,6 @@ def load_and_process_bls_data():
             'LNS14000001': 'Unemployment - Men',
             'LNS14000005': 'Unemployment - White Women',
             'LNS14000004': 'Unemployment - White Men',
-            # Civilian Labor Force Level Series (these values are in thousands, not proportions)
             'LNS11000004': 'Labor Force - White Men',
             'LNS11000005': 'Labor Force - White Women',
             'LNS11032183': 'Labor Force - Asian',
@@ -190,7 +199,6 @@ def load_and_process_bls_data():
             'LNS11000003': 'Labor Force - White',
             'LNS11000006': 'Labor Force - Black or African American',
             'LNS11000009': 'Labor Force - Hispanic or Latino',
-            # New Employment Level Series for Occupations
             'LNU02032526': 'Management, Professional, and Related Occupations - Women',
             'LNU02032468': 'Management, Professional, and Related Occupations - Men',
             'LNU02032539': 'Service Occupations - Women',
@@ -203,16 +211,15 @@ def load_and_process_bls_data():
             'LNU02032496': 'Transportation and Material Moving Occupations - Men'
         }
         series_name_mapping = sn_map
-
-        # Add series_name to df_filtered
+        
         df_filtered['series_name'] = df_filtered['series_id'].map(series_name_mapping)
-
-        # The following calculations will now be done where the data is used in the Streamlit app
+        
         latest_full_year = df_filtered['year'].astype(int).max()
         if latest_full_year == datetime.now().year:
-            latest_full_year -= 1 # Use the last full year if current year is not complete
-
+            latest_full_year -= 1
+        
         return df_filtered, latest_full_year, series_name_mapping
+    
     return pd.DataFrame(), None, {}
 
 # --- Visualization Functions ---
