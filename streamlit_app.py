@@ -315,7 +315,9 @@ def load_and_process_bls_data():
             elif df_name_to_sort is industry_transportation_avg_df:
                 industry_transportation_avg_df = df_name_to_sort.sort_values('series_name')
 
-        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, industry_natural_resources_avg_df, industry_transportation_avg_df
+        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, \
+               industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, \
+               industry_natural_resources_avg_df, industry_transportation_avg_df
     return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- Visualization Functions ---
@@ -551,6 +553,106 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         charts.append(fig)
     return charts
 
+# --- New: Logit Regression and Sigmoid Plotting Functions ---
+def perform_logit_regression(industry_data_df, industry_title, labor_force_df):
+    if industry_data_df.empty or labor_force_df.empty:
+        return None, None, None, None, "Insufficient data for Logit Regression. No data available for the selected industry or labor force."
+
+    # Filter for the relevant industry employment data (Men/Women)
+    men_employment_value = industry_data_df[industry_data_df['series_name'].str.contains(' - Men')]['value'].mean()
+    women_employment_value = industry_data_df[industry_data_df['series_name'].str.contains(' - Women')]['value'].mean()
+
+    if pd.isna(men_employment_value) or pd.isna(women_employment_value):
+        return None, None, None, None, "Insufficient employment data for men or women in this industry."
+
+    # Get total labor force for men and women from the labor_force_df
+    total_labor_force_men = labor_force_df[labor_force_df['series_name'] == 'Labor Force - Men']['value'].mean()
+    total_labor_force_women = labor_force_df[labor_force_df['series_name'] == 'Labor Force - Women']['value'].mean()
+
+    if pd.isna(total_labor_force_men) or pd.isna(total_labor_force_women):
+        return None, None, None, None, "Insufficient total labor force data for men or women."
+
+    simulated_data = []
+
+    # Add 'employed' individuals, scaled up for more observations
+    scale_factor = 100 # Increase this for more 'individuals' for better regression fitting
+    num_employed_men = int(men_employment_value * scale_factor)
+    num_employed_women = int(women_employment_value * scale_factor)
+
+    for _ in range(num_employed_men):
+        simulated_data.append({'is_female': 0, 'is_employed_in_industry': 1})
+    for _ in range(num_employed_women):
+        simulated_data.append({'is_female': 1, 'is_employed_in_industry': 1})
+
+    # Calculate 'not employed' individuals
+    num_not_employed_men = int(max(0, (total_labor_force_men - men_employment_value) * scale_factor))
+    num_not_employed_women = int(max(0, (total_labor_force_women - women_employment_value) * scale_factor))
+
+    for _ in range(num_not_employed_men):
+        simulated_data.append({'is_female': 0, 'is_employed_in_industry': 0})
+    for _ in range(num_not_employed_women):
+        simulated_data.append({'is_female': 1, 'is_employed_in_industry': 0})
+
+    simulated_df = pd.DataFrame(simulated_data)
+
+    if len(simulated_df) == 0 or simulated_df['is_employed_in_industry'].nunique() < 2 or simulated_df['is_female'].nunique() < 2:
+        return None, None, None, None, "Simulated data lacks variation for regression."
+
+    y = simulated_df['is_employed_in_industry']
+    X = simulated_df['is_female']
+    X = sm.add_constant(X)
+
+    try:
+        logit_model = sm.Logit(y, X)
+        result = logit_model.fit(disp=False) # disp=False to suppress verbose output in Streamlit
+
+        # Odds ratio for 'is_female'
+        odds_ratio_female = np.exp(result.params['is_female'])
+
+        # Predicted probabilities
+        prob_man = 1 / (1 + np.exp(-(result.params['const'] + result.params['is_female'] * 0)))
+        prob_woman = 1 / (1 + np.exp(-(result.params['const'] + result.params['is_female'] * 1)))
+
+        return result, prob_man, prob_woman, odds_ratio_female, None
+    except Exception as e:
+        return None, None, None, None, f"Logit Regression failed: {e}"
+
+def plot_sigmoid_curve(result, prob_man, prob_woman, industry_title):
+    if result is None:
+        return None
+
+    const = result.params['const']
+    is_female_coeff = result.params['is_female']
+
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-(const + is_female_coeff * x)))
+
+    x_vals = np.linspace(-0.5, 1.5, 500) # Extend slightly beyond 0 and 1
+    y_vals = sigmoid(x_vals)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(x_vals, y_vals, label='Sigmoid Curve (Predicted Probability)', color='blue')
+
+    # Mark the predicted probabilities
+    ax.scatter(0, prob_man, color='red', s=100, zorder=5, label=f'Men (Prob: {prob_man:.2%})')
+    ax.scatter(1, prob_woman, color='green', s=100, zorder=5, label=f'Women (Prob: {prob_woman:.2%})')
+
+    # Add vertical and horizontal lines
+    ax.vlines(0, 0, prob_man, linestyle='--', color='red', alpha=0.6)
+    ax.hlines(prob_man, -0.5, 0, linestyle='--', color='red', alpha=0.6)
+    ax.vlines(1, 0, prob_woman, linestyle='--', color='green', alpha=0.6)
+    ax.hlines(prob_woman, -0.5, 1, linestyle='--', color='green', alpha=0.6)
+
+    ax.set_title(f'Predicted Probabilities of Employment in {industry_title}')
+    ax.set_xlabel('Is Female (0=Male, 1=Female)')
+    ax.set_ylabel('Predicted Probability of Employment')
+    ax.grid(True)
+    ax.legend()
+    ax.set_ylim(-0.05, 1.05)
+    ax.set_xticks([0, 1], ['Male', 'Female'])
+    plt.tight_layout()
+    return fig
+
 
 # --- Streamlit App ---
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
@@ -592,7 +694,9 @@ with main_content:
         st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
         st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
-        df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, industry_natural_resources_avg_df, industry_transportation_avg_df = load_and_process_bls_data()
+        df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df, \
+        industry_management_avg_df, industry_service_avg_df, industry_sales_office_avg_df, \
+        industry_natural_resources_avg_df, industry_transportation_avg_df = load_and_process_bls_data()
 
         # Store data in session state for other pages
         st.session_state.df_cleaned_for_display = df_filtered.copy()
@@ -611,25 +715,161 @@ with main_content:
             st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
 
             st.markdown("--- ")
-            st.subheader("Management, professional and related occupations")
+            
+            # --- Management, Professional, and Related Occupations ---
+            industry_title_mp = 'Management, Professional, and Related Occupations'
+            st.subheader(industry_title_mp)
             st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
-            # Removed the call to plot_rates_by_race for Management, Professional occupations
+            
+            # Logit Regression and Sigmoid Plot for Management, Professional
+            result_mp, prob_man_mp, prob_woman_mp, odds_ratio_female_mp, error_mp = perform_logit_regression(industry_management_avg_df, industry_title_mp, labor_force_avg_df)
+            if result_mp is not None:
+                st.write(f"### Logit Regression: Predicted Probabilities of Employment in {industry_title_mp}")
+                st.text(result_mp.summary())
+                st.write("### Interpretation")
+                st.markdown("The coefficients from the logit model are in log-odds. To interpret them in terms of probability, we can calculate the odds ratios or predicted probabilities.")
+                st.write(f"- Odds Ratio for Female (vs. Male): {odds_ratio_female_mp:.2f}")
+                if odds_ratio_female_mp > 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_mp}' are approximately {odds_ratio_female_mp:.2f} times higher for women compared to men, holding other factors constant.")
+                elif odds_ratio_female_mp < 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_mp}' are approximately {1/odds_ratio_female_mp:.2f} times lower for women compared to men, holding other factors constant.")
+                else:
+                    st.write("  - The odds of employment are similar for men and women.")
+                st.write(f"- Predicted Probability of Employment for Men: {prob_man_mp:.2%}")
+                st.write(f"- Predicted Probability of Employment for Women: {prob_woman_mp:.2%}")
+                st.markdown("**Note:** This analysis uses a simulated dataset derived from aggregated BLS employment levels to fit the logit model. For a precise and robust analysis, individual-level survey data would be required.")
+
+                fig_sigmoid_mp = plot_sigmoid_curve(result_mp, prob_man_mp, prob_woman_mp, industry_title_mp)
+                if fig_sigmoid_mp is not None:
+                    st.pyplot(fig_sigmoid_mp)
+            else:
+                st.warning(error_mp)
+
 
             st.markdown("--- ")
-            st.subheader("Service Occupations")
+            
+            # --- Service Occupations ---
+            industry_title_service = 'Service Occupations'
+            st.subheader(industry_title_service)
             st.plotly_chart(plot_rates_by_sex(industry_service_avg_df, latest_full_year, 'Employment Level - Service Occupations'), use_container_width=True)
+            
+            # Logit Regression and Sigmoid Plot for Service Occupations
+            result_service, prob_man_service, prob_woman_service, odds_ratio_female_service, error_service = perform_logit_regression(industry_service_avg_df, industry_title_service, labor_force_avg_df)
+            if result_service is not None:
+                st.write(f"### Logit Regression: Predicted Probabilities of Employment in {industry_title_service}")
+                st.text(result_service.summary())
+                st.write("### Interpretation")
+                st.markdown("The coefficients from the logit model are in log-odds. To interpret them in terms of probability, we can calculate the odds ratios or predicted probabilities.")
+                st.write(f"- Odds Ratio for Female (vs. Male): {odds_ratio_female_service:.2f}")
+                if odds_ratio_female_service > 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_service}' are approximately {odds_ratio_female_service:.2f} times higher for women compared to men, holding other factors constant.")
+                elif odds_ratio_female_service < 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_service}' are approximately {1/odds_ratio_female_service:.2f} times lower for women compared to men, holding other factors constant.")
+                else:
+                    st.write("  - The odds of employment are similar for men and women.")
+                st.write(f"- Predicted Probability of Employment for Men: {prob_man_service:.2%}")
+                st.write(f"- Predicted Probability of Employment for Women: {prob_woman_service:.2%}")
+                st.markdown("**Note:** This analysis uses a simulated dataset derived from aggregated BLS employment levels to fit the logit model. For a precise and robust analysis, individual-level survey data would be required.")
+
+                fig_sigmoid_service = plot_sigmoid_curve(result_service, prob_man_service, prob_woman_service, industry_title_service)
+                if fig_sigmoid_service is not None:
+                    st.pyplot(fig_sigmoid_service)
+            else:
+                st.warning(error_service)
+
 
             st.markdown("--- ")
-            st.subheader("Sales and Office Occupations")
+            
+            # --- Sales and Office Occupations ---
+            industry_title_sales_office = 'Sales and Office Occupations'
+            st.subheader(industry_title_sales_office)
             st.plotly_chart(plot_rates_by_sex(industry_sales_office_avg_df, latest_full_year, 'Employment Level - Sales and Office Occupations'), use_container_width=True)
 
-            st.markdown("--- ")
-            st.subheader("Natural resources, construction, and maintenance occupations")
-            st.plotly_chart(plot_rates_by_sex(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), use_container_width=True)
+            # Logit Regression and Sigmoid Plot for Sales and Office Occupations
+            result_sales_office, prob_man_sales_office, prob_woman_sales_office, odds_ratio_female_sales_office, error_sales_office = perform_logit_regression(industry_sales_office_avg_df, industry_title_sales_office, labor_force_avg_df)
+            if result_sales_office is not None:
+                st.write(f"### Logit Regression: Predicted Probabilities of Employment in {industry_title_sales_office}")
+                st.text(result_sales_office.summary())
+                st.write("### Interpretation")
+                st.markdown("The coefficients from the logit model are in log-odds. To interpret them in terms of probability, we can calculate the odds ratios or predicted probabilities.")
+                st.write(f"- Odds Ratio for Female (vs. Male): {odds_ratio_female_sales_office:.2f}")
+                if odds_ratio_female_sales_office > 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_sales_office}' are approximately {odds_ratio_female_sales_office:.2f} times higher for women compared to men, holding other factors constant.")
+                elif odds_ratio_female_sales_office < 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_sales_office}' are approximately {1/odds_ratio_female_sales_office:.2f} times lower for women compared to men, holding other factors constant.")
+                else:
+                    st.write("  - The odds of employment are similar for men and women.")
+                st.write(f"- Predicted Probability of Employment for Men: {prob_man_sales_office:.2%}")
+                st.write(f"- Predicted Probability of Employment for Women: {prob_woman_sales_office:.2%}")
+                st.markdown("**Note:** This analysis uses a simulated dataset derived from aggregated BLS employment levels to fit the logit model. For a precise and robust analysis, individual-level survey data would be required.")
+
+                fig_sigmoid_sales_office = plot_sigmoid_curve(result_sales_office, prob_man_sales_office, prob_woman_sales_office, industry_title_sales_office)
+                if fig_sigmoid_sales_office is not None:
+                    st.pyplot(fig_sigmoid_sales_office)
+            else:
+                st.warning(error_sales_office)
 
             st.markdown("--- ")
-            st.subheader("Production, transportation, and material moving occupations")
+            
+            # --- Natural resources, construction, and maintenance occupations ---
+            industry_title_natural_resources = 'Natural resources, construction, and maintenance occupations'
+            st.subheader(industry_title_natural_resources)
+            st.plotly_chart(plot_rates_by_sex(industry_natural_resources_avg_df, latest_full_year, 'Employment Level - Natural Resources, Construction, and Maintenance'), use_container_width=True)
+            
+            # Logit Regression and Sigmoid Plot for Natural resources, construction, and maintenance occupations
+            result_natural_resources, prob_man_natural_resources, prob_woman_natural_resources, odds_ratio_female_natural_resources, error_natural_resources = perform_logit_regression(industry_natural_resources_avg_df, industry_title_natural_resources, labor_force_avg_df)
+            if result_natural_resources is not None:
+                st.write(f"### Logit Regression: Predicted Probabilities of Employment in {industry_title_natural_resources}")
+                st.text(result_natural_resources.summary())
+                st.write("### Interpretation")
+                st.markdown("The coefficients from the logit model are in log-odds. To interpret them in terms of probability, we can calculate the odds ratios or predicted probabilities.")
+                st.write(f"- Odds Ratio for Female (vs. Male): {odds_ratio_female_natural_resources:.2f}")
+                if odds_ratio_female_natural_resources > 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_natural_resources}' are approximately {odds_ratio_female_natural_resources:.2f} times higher for women compared to men, holding other factors constant.")
+                elif odds_ratio_female_natural_resources < 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_natural_resources}' are approximately {1/odds_ratio_female_natural_resources:.2f} times lower for women compared to men, holding other factors constant.")
+                else:
+                    st.write("  - The odds of employment are similar for men and women.")
+                st.write(f"- Predicted Probability of Employment for Men: {prob_man_natural_resources:.2%}")
+                st.write(f"- Predicted Probability of Employment for Women: {prob_woman_natural_resources:.2%}")
+                st.markdown("**Note:** This analysis uses a simulated dataset derived from aggregated BLS employment levels to fit the logit model. For a precise and robust analysis, individual-level survey data would be required.")
+
+                fig_sigmoid_natural_resources = plot_sigmoid_curve(result_natural_resources, prob_man_natural_resources, prob_woman_natural_resources, industry_title_natural_resources)
+                if fig_sigmoid_natural_resources is not None:
+                    st.pyplot(fig_sigmoid_natural_resources)
+            else:
+                st.warning(error_natural_resources)
+
+            st.markdown("--- ")
+            
+            # --- Production, transportation, and material moving occupations ---
+            industry_title_transportation = 'Production, transportation, and material moving occupations'
+            st.subheader(industry_title_transportation)
             st.plotly_chart(plot_rates_by_sex(industry_transportation_avg_df, latest_full_year, 'Employment Level - Transportation and Material Moving'), use_container_width=True)
+
+            # Logit Regression and Sigmoid Plot for Production, transportation, and material moving occupations
+            result_transportation, prob_man_transportation, prob_woman_transportation, odds_ratio_female_transportation, error_transportation = perform_logit_regression(industry_transportation_avg_df, industry_title_transportation, labor_force_avg_df)
+            if result_transportation is not None:
+                st.write(f"### Logit Regression: Predicted Probabilities of Employment in {industry_title_transportation}")
+                st.text(result_transportation.summary())
+                st.write("### Interpretation")
+                st.markdown("The coefficients from the logit model are in log-odds. To interpret them in terms of probability, we can calculate the odds ratios or predicted probabilities.")
+                st.write(f"- Odds Ratio for Female (vs. Male): {odds_ratio_female_transportation:.2f}")
+                if odds_ratio_female_transportation > 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_transportation}' are approximately {odds_ratio_female_transportation:.2f} times higher for women compared to men, holding other factors constant.")
+                elif odds_ratio_female_transportation < 1:
+                    st.write(f"  - This means that the odds of being employed in '{industry_title_transportation}' are approximately {1/odds_ratio_female_transportation:.2f} times lower for women compared to men, holding other factors constant.")
+                else:
+                    st.write("  - The odds of employment are similar for men and women.")
+                st.write(f"- Predicted Probability of Employment for Men: {prob_man_transportation:.2%}")
+                st.write(f"- Predicted Probability of Employment for Women: {prob_woman_transportation:.2%}")
+                st.markdown("**Note:** This analysis uses a simulated dataset derived from aggregated BLS employment levels to fit the logit model. For a precise and robust analysis, individual-level survey data would be required.")
+
+                fig_sigmoid_transportation = plot_sigmoid_curve(result_transportation, prob_man_transportation, prob_woman_transportation, industry_title_transportation)
+                if fig_sigmoid_transportation is not None:
+                    st.pyplot(fig_sigmoid_transportation)
+            else:
+                st.warning(error_transportation)
 
         else:
             st.warning("Cannot generate labor force visualizations, data not available.")
