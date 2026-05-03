@@ -99,7 +99,13 @@ def load_and_process_bls_data():
     data = json.dumps({
         "seriesid": [
             'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
-            'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'  # New Labor Force IDs
+            'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # Existing Labor Force IDs
+            # New Employment Level IDs for Occupations
+            'LNU02032526', 'LNU02032468', # Management, Professional, and Related Occupations, Women and Men
+            'LNU02032539', 'LNU02032481', # Service Occupations, Women and Men
+            'LNU02032545', 'LNU02032487', # Sales and Office Occupations, Women and Men
+            'RLNU02032490', 'LNU02032548', # Natural Resources, Construction, and Maintenance Occupations, Men and Women
+            'LNU02032554', 'LNU02032496'  # Transportation and Material Moving Occupations, Women and Men
         ],
         "startyear": str(current_year - 4),
         "endyear": str(current_year),
@@ -183,70 +189,31 @@ def load_and_process_bls_data():
             'LNS11000002': 'Labor Force - Women',
             'LNS11000003': 'Labor Force - White',
             'LNS11000006': 'Labor Force - Black or African American',
-            'LNS11000009': 'Labor Force - Hispanic or Latino'
+            'LNS11000009': 'Labor Force - Hispanic or Latino',
+            # New Employment Level Series for Occupations
+            'LNU02032526': 'Management, Professional, and Related Occupations - Women',
+            'LNU02032468': 'Management, Professional, and Related Occupations - Men',
+            'LNU02032539': 'Service Occupations - Women',
+            'LNU02032481': 'Service Occupations - Men',
+            'LNU02032545': 'Sales and Office Occupations - Women',
+            'LNU02032487': 'Sales and Office Occupations - Men',
+            'RLNU02032490': 'Natural Resources, Construction, and Maintenance Occupations - Men',
+            'LNU02032548': 'Natural Resources, Construction, and Maintenance Occupations - Women',
+            'LNU02032554': 'Transportation and Material Moving Occupations - Women',
+            'LNU02032496': 'Transportation and Material Moving Occupations - Men'
         }
         series_name_mapping = sn_map
 
-        # Add series_name to df_filtered before returning
+        # Add series_name to df_filtered
         df_filtered['series_name'] = df_filtered['series_id'].map(series_name_mapping)
 
+        # The following calculations will now be done where the data is used in the Streamlit app
         latest_full_year = df_filtered['year'].astype(int).max()
         if latest_full_year == datetime.now().year:
             latest_full_year -= 1 # Use the last full year if current year is not complete
 
-        df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
-        df_seasonal['series_name'] = df_seasonal['series_id'].map(series_name_mapping)
-
-        avg_rates_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
-        avg_rates_latest_year['series_name'] = avg_rates_latest_year['series_id'].map(series_name_mapping)
-
-        # Separate unemployment and labor force dataframes
-        unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
-        labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
-
-        # Calculate 'proportion' for labor_force_avg_df for display in About page
-        if not labor_force_avg_df.empty:
-            total_labor_force_sum = labor_force_avg_df['value'].sum()
-            if total_labor_force_sum > 0:
-                labor_force_avg_df['proportion'] = labor_force_avg_df['value'] / total_labor_force_sum
-            else:
-                labor_force_avg_df['proportion'] = 0.0 # Assign 0.0 if sum is zero
-
-        desired_order = [
-            'Unemployment - Men',
-            'Unemployment - Women',
-            'Unemployment - White Men',
-            'Unemployment - White Women',
-            'Unemployment - Black or African American',
-            'Unemployment - Hispanic or Latino',
-            'Unemployment - Asian',
-            'Unemployment - White',
-            'Labor Force - Men',
-            'Labor Force - Women',
-            'Labor Force - White Men',
-            'Labor Force - White Women',
-            'Labor Force - Black or African American',
-            'Labor Force - Hispanic or Latino',
-            'Labor Force - Asian',
-            'Labor Force - White'
-        ]
-        unemployment_avg_df['series_name'] = pd.Categorical(
-            unemployment_avg_df['series_name'],
-            categories=desired_order, # Only apply to unemployment df for consistency as labor_force_avg_df is separate
-            ordered=True
-        )
-        unemployment_avg_df = unemployment_avg_df.sort_values('series_name')
-
-        # Re-apply categorical order for labor_force_avg_df as well
-        labor_force_avg_df['series_name'] = pd.Categorical(
-            labor_force_avg_df['series_name'],
-            categories=desired_order, # Use the same overall desired order
-            ordered=True
-        )
-        labor_force_avg_df = labor_force_avg_df.sort_values('series_name')
-
-        return df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df
-    return pd.DataFrame(), None, pd.DataFrame(), pd.DataFrame()
+        return df_filtered, latest_full_year, series_name_mapping
+    return pd.DataFrame(), None, {}
 
 # --- Visualization Functions ---
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
@@ -455,6 +422,39 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             fig.update_yaxes(tickformat=tick_format)
         charts.append(fig)
     return charts
+
+def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, category_name, series_ids_women, series_ids_men, series_name_mapping):
+    # Filter data for the specific category and latest full year
+    category_df = df_filtered[
+        (df_filtered['series_id'].isin(series_ids_women + series_ids_men)) &
+        (df_filtered['year'].astype(int) == latest_full_year)
+    ].copy()
+
+    if category_df.empty:
+        st.warning(f"No data available for {category_name} in {latest_full_year}.")
+        return
+
+    # Calculate the average value for the latest full year for each series
+    avg_employment_df = category_df.groupby('series_id')['value'].mean().reset_index()
+    avg_employment_df['series_name'] = avg_employment_df['series_id'].map(series_name_mapping)
+
+    # Determine the gender based on series_name (assuming 'Women' or 'Men' in name)
+    avg_employment_df['gender'] = avg_employment_df['series_name'].apply(lambda x: 'Women' if 'Women' in x else 'Men')
+
+    # Create the bar chart
+    fig = px.bar(
+        avg_employment_df,
+        x='gender',
+        y='value',
+        color='gender',
+        title=f'Average Employment Level in {category_name} by Sex ({latest_full_year})',
+        labels={'gender': 'Sex', 'value': 'Average Employment Level (in thousands)'},
+        text='value',
+        category_orders={'gender': ['Men', 'Women']}
+    )
+    fig.update_traces(texttemplate='%{text:,.0f}', textposition='outside')
+    fig.update_layout(yaxis_title='Average Employment Level (in thousands)', showlegend=False)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 # --- Streamlit App ---
@@ -701,38 +701,61 @@ with main_content:
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
-            df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df = load_and_process_bls_data()
+            df_filtered, latest_full_year, series_name_mapping = load_and_process_bls_data()
 
-            # Store data in session state for other pages
-            st.session_state.df_cleaned_for_display = df_filtered.copy()
-            st.session_state.latest_full_year = latest_full_year
-            st.session_state.unemployment_avg_df = unemployment_avg_df
-            st.session_state.labor_force_avg_df = labor_force_avg_df
+            # Separate unemployment and labor force dataframes (using previous logic)
+            unemployment_series_ids = [
+                'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183',
+                'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'
+            ]
+            labor_force_series_ids = [
+                'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001',
+                'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'
+            ]
 
-            if not unemployment_avg_df.empty:
-                st.subheader("Average Unemployment Rates")
-                st.markdown("The current calculations for unemployment are generated by averaging the seasonal unemployment percentages for all of the listed categories for a period of one year starting from the most recent release by the US Bureau of Labor Statistics: Men, Women, White Men, White Women, Black or African American, Hispanic or Latino and Asian. The data used for Hispanic or Latino is from a subcategory for unemployment statistics independent of the White, Black and Asian datasets.")
-                st.plotly_chart(plot_rates_by_sex(unemployment_avg_df, latest_full_year, 'Unemployment'), use_container_width=True)
-                st.plotly_chart(plot_rates_by_race(unemployment_avg_df, latest_full_year, 'Unemployment'), use_container_width=True)
-                st.subheader("Mad Liberal Comparisons")
-                unemployment_comparison_charts = plot_rate_comparisons(unemployment_avg_df, latest_full_year, 'Unemployment')
-                for chart in unemployment_comparison_charts:
-                    st.plotly_chart(chart, use_container_width=True)
+            if not df_filtered.empty:
+                df_seasonal = df_filtered[df_filtered['year'].astype(int) == latest_full_year].copy()
+                avg_rates_latest_year = df_seasonal.groupby('series_id')['value'].mean().reset_index()
+                avg_rates_latest_year['series_name'] = avg_rates_latest_year['series_id'].map(series_name_mapping)
 
-                # Add download link for cleaned data
-                _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
-                with download_col:
-                    csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="Download Cleaned Data (CSV)",
-                        data=csv_data,
-                        file_name="bls_cleaned_data.csv",
-                        mime="text/csv",
-                        help="Download the pre-processed BLS data as a CSV file."
-                    )
+                unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(unemployment_series_ids)].copy()
+                labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(labor_force_series_ids)].copy()
+
+                # Store data in session state for other pages
+                st.session_state.df_cleaned_for_display = df_filtered.copy()
+                st.session_state.latest_full_year = latest_full_year
+                st.session_state.unemployment_avg_df = unemployment_avg_df
+                st.session_state.labor_force_avg_df = labor_force_avg_df
+
+                if not unemployment_avg_df.empty:
+                    st.subheader("Average Unemployment Rates")
+                    st.markdown("The current calculations for unemployment are generated by averaging the seasonal unemployment percentages for all of the listed categories for a period of one year starting from the most recent release by the US Bureau of Labor Statistics: Men, Women, White Men, White Women, Black or African American, Hispanic or Latino and Asian. The data used for Hispanic or Latino is from a subcategory for unemployment statistics independent of the White, Black and Asian datasets.")
+                    st.plotly_chart(plot_rates_by_sex(unemployment_avg_df, latest_full_year, 'Unemployment'), use_container_width=True)
+                    st.plotly_chart(plot_rates_by_race(unemployment_avg_df, latest_full_year, 'Unemployment'), use_container_width=True)
+                    st.subheader("Mad Liberal Comparisons")
+                    unemployment_comparison_charts = plot_rate_comparisons(unemployment_avg_df, latest_full_year, 'Unemployment')
+                    for chart in unemployment_comparison_charts:
+                        st.plotly_chart(chart, use_container_width=True)
+
+                    # Add download link for cleaned data
+                    _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
+                    with download_col:
+                        csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="Download Cleaned Data (CSV)",
+                            data=csv_data,
+                            file_name="bls_cleaned_data.csv",
+                            mime="text/csv",
+                            help="Download the pre-processed BLS data as a CSV file."
+                        )
+
+                else:
+                    st.warning("Cannot generate unemployment visualizations, data not available.")
 
             else:
-                st.warning("Cannot generate unemployment visualizations, data not available.")
+                st.warning("Cannot load BLS data. Please check the API key or data availability.")
+
+
 
     # --- Industry Visualizations Stage ---
     elif st.session_state.game_stage == 'industry_visualizations':
@@ -747,38 +770,50 @@ with main_content:
             st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
             # Load data if not already in session state (e.g., if user navigated directly)
-            if 'labor_force_avg_df' not in st.session_state or 'latest_full_year' not in st.session_state:
-                df_filtered, latest_full_year, unemployment_avg_df, labor_force_avg_df = load_and_process_bls_data()
+            if 'df_cleaned_for_display' not in st.session_state or 'latest_full_year' not in st.session_state or 'series_name_mapping' not in st.session_state:
+                df_filtered, latest_full_year, series_name_mapping = load_and_process_bls_data()
                 st.session_state.df_cleaned_for_display = df_filtered.copy()
                 st.session_state.latest_full_year = latest_full_year
-                st.session_state.unemployment_avg_df = unemployment_avg_df
-                st.session_state.labor_force_avg_df = labor_force_avg_df
+                st.session_state.series_name_mapping = series_name_mapping # Store mapping
             else:
+                df_filtered = st.session_state.df_cleaned_for_display
                 latest_full_year = st.session_state.latest_full_year
-                labor_force_avg_df = st.session_state.labor_force_avg_df
+                series_name_mapping = st.session_state.series_name_mapping
 
-            if not labor_force_avg_df.empty:
-                st.subheader("Average Labor Force by Sex and Race")
-                st.plotly_chart(plot_rates_by_sex(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
-                st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
-
+            if not df_filtered.empty:
+                # Generate bar charts for each requested occupation category
                 st.markdown("--- ")
-                st.subheader("Management, professional and related occupations")
+                st.subheader("Management, Professional, and Related Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                                                      "Management, Professional, and Related Occupations",
+                                                      ['LNU02032526'], ['LNU02032468'], series_name_mapping)
 
                 st.markdown("--- ")
                 st.subheader("Service Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                                                      "Service Occupations",
+                                                      ['LNU02032539'], ['LNU02032481'], series_name_mapping)
 
                 st.markdown("--- ")
                 st.subheader("Sales and Office Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                                                      "Sales and Office Occupations",
+                                                      ['LNU02032545'], ['LNU02032487'], series_name_mapping)
 
                 st.markdown("--- ")
-                st.subheader("Natural resources, construction, and maintenance occupations")
+                st.subheader("Natural Resources, Construction, and Maintenance Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                                                      "Natural Resources, Construction, and Maintenance Occupations",
+                                                      ['LNU02032548'], ['RLNU02032490'], series_name_mapping)
 
                 st.markdown("--- ")
-                st.subheader("Production, transportation, and material moving occupations")
+                st.subheader("Transportation and Material Moving Occupations")
+                plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, 
+                                                      "Transportation and Material Moving Occupations",
+                                                      ['LNU02032554'], ['LNU02032496'], series_name_mapping)
 
             else:
-                st.warning("Cannot generate labor force visualizations, data not available.")
+                st.warning("Cannot generate industry visualizations, data not available.")
 
     elif st.session_state.game_stage == 'about_project':
         # Force scroll to the top of the main content area when entering this stage
