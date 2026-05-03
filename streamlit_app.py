@@ -91,6 +91,72 @@ def display_text_collage():
     st.markdown(collage_html, unsafe_allow_html=True)
     st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Spacing after
 
+def perform_logit_regression_for_sex(industry_df, industry_name_prefix, labor_force_avg_df):
+    # Get employment values for men and women in this industry
+    men_employment_value = industry_df[industry_df['series_name'].str.contains('- Men')]['value'].mean()
+    women_employment_value = industry_df[industry_df['series_name'].str.contains('- Women')]['value'].mean()
+
+    # Get total labor force for men and women from labor_force_avg_df
+    total_labor_force_men = labor_force_avg_df[labor_force_avg_df['series_name'] == 'Labor Force - Men']['value'].mean()
+    total_labor_force_women = labor_force_avg_df[labor_force_avg_df['series_name'] == 'Labor Force - Women']['value'].mean()
+
+    # Handle NaN values for labor force if they occur
+    total_labor_force_men = total_labor_force_men if not pd.isna(total_labor_force_men) else 0
+    total_labor_force_women = total_labor_force_women if not pd.isna(total_labor_force_women) else 0
+
+    simulated_data = []
+
+    # Add 'employed' individuals
+    if not pd.isna(men_employment_value):
+        for _ in range(int(men_employment_value * 10)): # Scale up for more 'individuals'
+            simulated_data.append({'is_female': 0, 'is_employed_in_industry': 1})
+    if not pd.isna(women_employment_value):
+        for _ in range(int(women_employment_value * 10)): # Scale up for more 'individuals'
+            simulated_data.append({'is_female': 1, 'is_employed_in_industry': 1})
+
+    # Add 'not employed' individuals
+    not_employed_men = (total_labor_force_men - (men_employment_value if not pd.isna(men_employment_value) else 0)) * 10
+    not_employed_women = (total_labor_force_women - (women_employment_value if not pd.isna(women_employment_value) else 0)) * 10
+
+    for _ in range(int(max(0, not_employed_men))):
+        simulated_data.append({'is_female': 0, 'is_employed_in_industry': 0})
+    for _ in range(int(max(0, not_employed_women))):
+        simulated_data.append({'is_female': 1, 'is_employed_in_industry': 0})
+
+    simulated_df = pd.DataFrame(simulated_data)
+
+    if len(simulated_df) > 0 and simulated_df['is_employed_in_industry'].nunique() > 1 and simulated_df['is_female'].nunique() > 1:
+        y = simulated_df['is_employed_in_industry']
+        X = simulated_df['is_female']
+        X = sm.add_constant(X)
+
+        try:
+            logit_model = sm.Logit(y, X)
+            result = logit_model.fit(disp=0)
+
+            odds_ratio_female = np.exp(result.params['is_female'])
+            p_value_female = result.pvalues['is_female']
+
+            prob_man = 1 / (1 + np.exp(-(result.params['const'] + result.params['is_female'] * 0)))
+            prob_woman = 1 / (1 + np.exp(-(result.params['const'] + result.params['is_female'] * 1)))
+
+            results = {
+                'Industry': industry_name_prefix.replace('Employment Level - ', ''),
+                'Comparison': 'Female vs. Male',
+                'Odds Ratio (Female vs. Male)': odds_ratio_female,
+                'P-value (is_female)': p_value_female,
+                'Predicted Probability (Male)': prob_man,
+                'Predicted Probability (Female)': prob_woman
+            }
+        except Exception as e:
+            st.warning(f"Logit Regression failed for '{industry_name_prefix}' due to: {e}")
+            return None
+    else:
+        st.warning(f"Insufficient data for Logit Regression for sex in '{industry_name_prefix}'.")
+        return None
+    return results
+
+
 # --- Data Loading and Processing Function ---
 @st.cache_data
 def load_and_process_bls_data():
@@ -698,6 +764,32 @@ with main_content:
             industry_title_mp = 'Management, Professional, and Related Occupations'
             st.subheader(industry_title_mp)
             st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+
+            # NEW: Logit Regression Analysis for Sex in Management, Professional, and Related Occupations
+            st.subheader(f"Logit Regression Analysis: Sex in {industry_title_mp}")
+            st.markdown("This section presents the results of a binary logit regression model predicting the probability of employment in this industry based on an individual's sex (Female vs. Male).")
+
+            sex_logit_results_mp = perform_logit_regression_for_sex(industry_management_avg_df, 'Employment Level - Management, Professional', labor_force_avg_df)
+            if sex_logit_results_mp:
+                st.markdown("**Results:**")
+                st.write(f"- **Odds Ratio (Female vs. Male):** {sex_logit_results_mp['Odds Ratio (Female vs. Male)']:.2f}")
+                st.write(f"- **P-value (is_female):** {sex_logit_results_mp['P-value (is_female)']:.3f}")
+                st.write(f"- **Predicted Probability (Male):** {sex_logit_results_mp['Predicted Probability (Male)']:.2%}")
+                st.write(f"- **Predicted Probability (Female):** {sex_logit_results_mp['Predicted Probability (Female)']:.2%}")
+
+                st.markdown("**Interpretation:**")
+                if sex_logit_results_mp['Odds Ratio (Female vs. Male)'] > 1:
+                    st.markdown(f"The odds of being employed in '{industry_title_mp}' are approximately {sex_logit_results_mp['Odds Ratio (Female vs. Male)']:.2f} times higher for women compared to men, all else being equal.")
+                else:
+                    st.markdown(f"The odds of being employed in '{industry_title_mp}' are approximately {1/sex_logit_results_mp['Odds Ratio (Female vs. Male)']:.2f} times lower for women compared to men, all else being equal.")
+                if sex_logit_results_mp['P-value (is_female)'] < 0.05:
+                    st.markdown("The difference in employment probability between female and male individuals is statistically significant (p < 0.05).")
+                else:
+                    st.markdown("The difference in employment probability between female and male individuals is not statistically significant (p >= 0.05).")
+                st.markdown("**Disclaimer:** This analysis uses a simulated dataset derived from aggregated BLS employment levels. For a precise and robust analysis, individual-level survey data would be required.")
+            else:
+                st.warning(f"Could not generate Logit Regression results for sex in {industry_title_mp}.")
+
             st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
 
             st.markdown("--- ")
@@ -748,5 +840,6 @@ with main_content:
 
         else:
             st.warning("Cannot generate labor force visualizations, data not available.")
+
 
 st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
