@@ -179,7 +179,7 @@ def load_and_process_bls_data():
             'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183',
             'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'
         ]
-        df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] = df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] / 100
+        df.loc[df['series_id'].isin(unemployment_series_ids), 'value'] = df.loc[df['series_id'].isin(unemployment_series_ids), 'value']
         
         df_filtered = df.dropna(subset=['value']).copy()
         
