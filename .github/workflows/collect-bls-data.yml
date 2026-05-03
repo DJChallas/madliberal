@@ -2,8 +2,8 @@ name: Collect BLS Data Monthly
 
 on:
   schedule:
-    # Run at 2 AM UTC on the first day of each month (data typically released around this time)
-    - cron: '0 2 1 * *'
+    # Run at 2 AM UTC on the 3rd day of each month
+    - cron: '0 13 3 * *'
   # Allow manual triggering for testing
   workflow_dispatch:
 
