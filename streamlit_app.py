@@ -269,6 +269,9 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
     race_groups = [f'{chart_type_prefix} - Black or African American', f'{chart_type_prefix} - Hispanic or Latino', f'{chart_type_prefix} - Asian', f'{chart_type_prefix} - White']
     df_race = avg_df[avg_df['series_name'].isin(race_groups)].copy()
 
+    # Create a new column for simplified display names
+    df_race['display_name'] = df_race['series_name'].apply(lambda x: x.replace(f'{chart_type_prefix} - ', ''))
+
     y_column = 'value'
     y_axis_label = ''
     tick_format = None
@@ -297,11 +300,11 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
 
     fig = px.bar(
         df_race,
-        x='series_name',
+        x='display_name', # Use the new display_name column for x-axis
         y=y_column,
         title=f'Average {chart_type_prefix} by Race in {year}',
-        labels={'series_name': 'Demographic Group', y_column: y_axis_label},
-        color='series_name',
+        labels={'display_name': 'Demographic Group', y_column: y_axis_label}, # Update label key
+        color='display_name',
         text_auto=text_auto_format if text_auto_format else False
     )
     fig.update_layout(
