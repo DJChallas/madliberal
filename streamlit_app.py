@@ -261,7 +261,7 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
         title=f'Average {chart_type_prefix} by Sex in {year}',
         labels={'series_name': 'Demographic Group', y_column: y_axis_label},
         color='series_name',
-        text_auto=text_auto_format if text_auto_format else False
+        text=y_column # Updated: use text directly
     )
     fig.update_layout(
         xaxis_title='Demographic Group',
@@ -270,6 +270,9 @@ def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     )
     if tick_format:
         fig.update_yaxes(tickformat=tick_format)
+
+    if text_auto_format: # New: explicitly update traces for text formatting
+        fig.update_traces(texttemplate=text_auto_format, textposition='outside')
 
     return fig
 
@@ -322,6 +325,9 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
     )
     if tick_format:
         fig.update_yaxes(tickformat=tick_format)
+
+    if text_auto_format: # New: explicitly update traces for text formatting
+        fig.update_traces(texttemplate=text_auto_format, textposition='outside')
 
     return fig
 
@@ -421,7 +427,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
             title=chart_title,
             labels={'series_name': 'Demographic Group', y_column: y_axis_label},
             color='series_name',
-            text_auto=text_auto_format if text_auto_format else False
+            ttext=y_column # Updated: use text directly
         )
 
         fig.update_layout(
@@ -431,6 +437,9 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         )
         if tick_format:
             fig.update_yaxes(tickformat=tick_format)
+
+        if text_auto_format: # New: explicitly update traces for text formatting
+            fig.update_traces(texttemplate=text_auto_format, textposition='outside')
         charts.append(fig)
     return charts
 
