@@ -734,7 +734,63 @@ with main_content:
 
             st.markdown("--- ")
 
+            # --- NEW: Logit Regression Analysis for Sex by Industry ---
+            st.subheader("Logit Regression Analysis for Sex by Industry")
+            st.markdown("This section presents the results of binary logit regression models predicting the probability of employment in each industry based on an individual's sex (Female vs. Male).")
 
+            industry_dfs = {
+                'Management, Professional, and Related Occupations': {
+                    'df': industry_management_avg_df,
+                    'prefix': 'Employment Level - Management, Professional'
+                },
+                'Service Occupations': {
+                    'df': industry_service_avg_df,
+                    'prefix': 'Employment Level - Service Occupations'
+                },
+                'Sales and Office Occupations': {
+                    'df': industry_sales_office_avg_df,
+                    'prefix': 'Employment Level - Sales and Office Occupations'
+                },
+                'Natural Resources, Construction, and Maintenance Occupations': {
+                    'df': industry_natural_resources_avg_df,
+                    'prefix': 'Employment Level - Natural Resources, Construction, and Maintenance'
+                },
+                'Production, Transportation, and Material Moving Occupations': {
+                    'df': industry_transportation_avg_df,
+                    'prefix': 'Employment Level - Transportation and Material Moving'
+                }
+            }
+
+            all_sex_regression_results = []
+
+            for industry_title, data in industry_dfs.items():
+                results = perform_logit_regression_for_sex(data['df'], data['prefix'], labor_force_avg_df)
+                if results:
+                    all_sex_regression_results.append(results)
+
+            if all_sex_regression_results:
+                sex_results_df = pd.DataFrame(all_sex_regression_results)
+                st.dataframe(sex_results_df.set_index('Industry'))
+
+                st.markdown("**Interpretation Notes:**")
+                st.markdown("- **Odds Ratio (Female vs. Male):** An odds ratio greater than 1 indicates that female individuals have higher odds of employment in that industry compared to male individuals, all else being equal. An odds ratio less than 1 indicates lower odds.")
+                st.markdown("- **P-value (is_female):** A p-value less than a chosen significance level (e.g., 0.05) suggests a statistically significant difference in employment probability between female and male individuals.")
+                st.markdown("- **Predicted Probability:** The estimated probability of employment for male and female individuals in that industry, based on the model.")
+                st.markdown("**Disclaimer:** This analysis uses a simulated dataset derived from aggregated BLS employment levels. For a precise and robust analysis, individual-level survey data would be required.")
+            else:
+                st.warning("No logit regression results could be generated for the industries based on sex data.")
+
+            # Add download link for cleaned data
+            _, download_col = st.columns([0.7, 0.3]) # Adjust ratio as needed
+            with download_col:
+                csv_data = st.session_state.df_cleaned_for_display.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download Cleaned Data (CSV)",
+                    data=csv_data,
+                    file_name="bls_cleaned_data.csv",
+                    mime="text/csv",
+                    help="Download the pre-processed BLS data as a CSV file."
+                )
 
         else:
             st.warning("Cannot generate labor force visualizations, data not available.")
