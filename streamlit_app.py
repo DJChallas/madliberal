@@ -785,7 +785,7 @@ with main_content:
                     results_ww = model_ww.fit()
                     st.text(results_ww.summary())
                     # --- End OLS Regression Integration ---
-                        )
+                        
 
                 else:
                     st.warning("Cannot generate unemployment visualizations, data not available.")
