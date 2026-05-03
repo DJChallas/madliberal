@@ -1,3 +1,4 @@
+!pip install streamlit
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -766,7 +767,7 @@ with main_content:
 
         with viz_col[0]:
             st.subheader("Industry Visualizations about Sex (You Wish)")
-            st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. For the visulizations in this section I'm looking at the distribution of Biological Sex across the 5 main industries of the US Economy provided by the BLS. on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
+            st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. For the visulizations in this section I'm looking at the distribution of Biological Sex across the 5 main industries of the US Economy provided by the BLS.")
 
             # Load data if not already in session state (e.g., if user navigated directly)
             if 'df_cleaned_for_display' not in st.session_state or 'latest_full_year' not in st.session_state or 'series_name_mapping' not in st.session_state:
