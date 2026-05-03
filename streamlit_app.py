@@ -765,7 +765,7 @@ with main_content:
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
         with viz_col[0]:
-            st.subheader("Industry Visualizations about Sex (You Wish)")
+            st.subheader("Industry Visualizations for Race and Sex")
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. For the visulizations in this section I'm looking at the distribution of Biological Sex across the 5 main industries of the US Economy provided by the BLS.")
 
             # Load data if not already in session state (e.g., if user navigated directly)
