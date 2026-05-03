@@ -100,7 +100,7 @@ def load_and_process_bls_data():
         "seriesid": [
             'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183', 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004', # Existing Unemployment IDs
             'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001', 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009',  # New Labor Force IDs
-            'LNU02032526', 'LNU02032468', 'LNU02035886', 'LNU02035918', 'LNU02035957', 'LNU02035874' # New Industry Series IDs
+            'LNU02032526', 'LNU02032468' # Management, Professional, and Related Occupations - Only Sex
         ],
         "startyear": str(current_year - 4),
         "endyear": str(current_year),
@@ -185,13 +185,9 @@ def load_and_process_bls_data():
             'LNS11000003': 'Labor Force - White',
             'LNS11000006': 'Labor Force - Black or African American',
             'LNS11000009': 'Labor Force - Hispanic or Latino',
-            # Industry Series - Management, Professional, and Related Occupations
+            # Industry Series - Management, Professional, and Related Occupations - Only Sex
             'LNU02032526': 'Employment Level - Management, Professional, Women',
-            'LNU02032468': 'Employment Level - Management, Professional, Men',
-            'LNU02035886': 'Employment Level - Management, Professional, Asian',
-            'LNU02035918': 'Employment Level - Management, Professional, White',
-            'LNU02035957': 'Employment Level - Management, Professional, Hispanic or Latino',
-            'LNU02035874': 'Employment Level - Management, Professional, Black or African American'
+            'LNU02032468': 'Employment Level - Management, Professional, Men'
         }
         series_name_mapping = sn_map
 
@@ -211,7 +207,11 @@ def load_and_process_bls_data():
         # Separate unemployment and labor force dataframes
         unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Unemployment')].copy()
         labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Labor Force')].copy()
-        industry_management_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional')].copy()
+        # Filter industry_management_avg_df to only include sex-related series
+        industry_management_avg_df = avg_rates_latest_year[
+            avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional, Men') |
+            avg_rates_latest_year['series_name'].str.contains('Employment Level - Management, Professional, Women')
+        ].copy()
 
         # Calculate 'proportion' for labor_force_avg_df for display in About page
         if not labor_force_avg_df.empty:
@@ -239,22 +239,19 @@ def load_and_process_bls_data():
             'Labor Force - Asian',
             'Labor Force - White',
             'Employment Level - Management, Professional, Women',
-            'Employment Level - Management, Professional, Men',
-            'Employment Level - Management, Professional, Asian',
-            'Employment Level - Management, Professional, White',
-            'Employment Level - Management, Professional, Hispanic or Latino',
-            'Employment Level - Management, Professional, Black or African American'
+            'Employment Level - Management, Professional, Men'
         ]
         unemployment_avg_df['series_name'] = pd.Categorical(
             unemployment_avg_df['series_name'],
-            categories=desired_order,
+            categories=desired_order, # Only apply to unemployment df for consistency as labor_force_avg_df is separate
             ordered=True
         )
         unemployment_avg_df = unemployment_avg_df.sort_values('series_name')
 
+        # Re-apply categorical order for labor_force_avg_df as well
         labor_force_avg_df['series_name'] = pd.Categorical(
             labor_force_avg_df['series_name'],
-            categories=desired_order,
+            categories=desired_order, # Use the same overall desired order
             ordered=True
         )
         labor_force_avg_df = labor_force_avg_df.sort_values('series_name')
@@ -357,24 +354,7 @@ def plot_rates_by_race(avg_df, year, chart_type_prefix):
         y_axis_label = 'Proportion of Selected Racial/Ethnic Labor Force'
         tick_format = '.1%'
         text_auto_format = '.1%'
-    elif chart_type_prefix == 'Employment Level - Management, Professional':
-        base_race_groups = [
-            'Employment Level - Management, Professional, White',
-            'Employment Level - Management, Professional, Black or African American',
-            'Employment Level - Management, Professional, Asian',
-            'Employment Level - Management, Professional, Hispanic or Latino'
-        ]
-        total_race_mp = avg_df[avg_df['series_name'].isin(base_race_groups)]['value'].sum()
-
-        if total_race_mp > 0:
-            df_race['proportion'] = df_race['value'] / total_race_mp
-        else:
-            df_race['proportion'] = 0
-
-        y_column = 'proportion'
-        y_axis_label = 'Proportion of Management, Professional Employment'
-        tick_format = '.1%'
-        text_auto_format = '.1%'
+    # The 'Employment Level - Management, Professional' race plotting block is removed
 
     df_race = df_race.sort_values(by=y_column, ascending=False)
 
@@ -420,11 +400,9 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Labor Force - Hispanic or Latino',
         'Labor Force - Black or African American'
     ]
+    # Removed race-related entries for industry management comparison
     comparison_order_industry_management = [
-        'Employment Level - Management, Professional, Asian',
-        'Employment Level - Management, Professional, Men',
-        'Employment Level - Management, Professional, Hispanic or Latino',
-        'Employment Level - Management, Professional, Black or African American'
+        'Employment Level - Management, Professional, Men'
     ]
 
     if chart_type_prefix == 'Unemployment':
@@ -449,10 +427,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
         'Labor Force - Women': 'Women, All Races',
         'Labor Force - Hispanic or Latino': 'Hispanic or Latino, Men/Women',
         'Labor Force - Black or African American': 'Black or African American, Men/Women',
-        'Employment Level - Management, Professional, Asian': 'Management, Professional, Asian',
-        'Employment Level - Management, Professional, Men': 'Management, Professional, Men',
-        'Employment Level - Management, Professional, Hispanic or Latino': 'Management, Professional, Hispanic or Latino',
-        'Employment Level - Management, Professional, Black or African American': 'Management, Professional, Black or African American'
+        'Employment Level - Management, Professional, Men': 'Management, Professional, Men'
     }
 
     other_demographics_ordered = avg_df[
@@ -556,7 +531,7 @@ with main_content:
     viz_col = st.columns([1]) # Use a single column for visualizations in main_content
 
     with viz_col[0]:
-        st.subheader("Industry Visualizations about Sex and Race")
+        st.subheader("Industry Visualizations about Sex")
         st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. To calculate our totals we applied data based on seasonal employment rates averaged and totaled - White, Asian, Black or African American and Hispanic or Latino based on the Civilian Labor Force Level. That is to create an active comparison to employment levels by industry against a measurable estimate provided by the BLS.")
         st.markdown("The Department of Labor presents a measure of data called Employed people by detailed occupation, sex, race, and Hispanic or Latino ethnicity (https://www.bls.gov/cps/cpsaat11.htm) that presents percentages of demographics employed in each of those occupations, grouped by industry. I’ve collected data for the primary Industries for gender and race to compare the distribution of demographics across the entire US job market, including the most popular occupations in all 4 categories.")
 
@@ -570,7 +545,7 @@ with main_content:
             st.markdown("--- ")
             st.subheader("Management, professional and related occupations")
             st.plotly_chart(plot_rates_by_sex(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
-            st.plotly_chart(plot_rates_by_race(industry_management_avg_df, latest_full_year, 'Employment Level - Management, Professional'), use_container_width=True)
+            # Removed the call to plot_rates_by_race for Management, Professional occupations
 
             st.markdown("--- ")
             st.subheader("Service Occupations")
