@@ -875,4 +875,4 @@ The first half of my adult life I dedicated to creating art. Primarily music and
         st.markdown("-" * 3)
 
 #Footer
-st.markdown("<div style='text-align: center;'>\n\--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center;'>\n--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
