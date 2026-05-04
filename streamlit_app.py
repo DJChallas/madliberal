@@ -9,10 +9,10 @@ import json
 import os
 from datetime import datetime
 
-# --- Global Streamlit Configuration ---
+#Global Streamlit Configuration
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
-# --- Define Real Story Variables Globally (for use in both reveal and visualizations stages) ---
+#Define Real Story Variables Globally (for use in both reveal and visualizations stages)
 real_noun_1 = "humanity"
 real_noun_2 = "present"
 real_noun_3 = "past"
@@ -64,7 +64,7 @@ real_noun_28 = "elites"
 real_noun_29 = "compliance"
 real_noun_30 = "poor"
 
-# --- Global list for text collage ---
+#Global list for text collage
 all_real_words = [
     real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
     real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
@@ -77,7 +77,7 @@ all_real_words = [
     real_noun_29, real_noun_30
 ]
 
-# --- Function to display the text collage ---
+#Function to display the text collage
 def display_text_collage():
     random.seed(42) # for reproducibility
     random.shuffle(all_real_words)
@@ -92,7 +92,7 @@ def display_text_collage():
     st.markdown(collage_html, unsafe_allow_html=True)
     st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True) # Spacing after
 
-# --- Data Loading and Processing Function ---
+#Data Loading and Processing Function
 @st.cache_data
 def load_and_process_bls_data():
     """Load pre-collected BLS data from CSV, fall back to API if CSV doesn't exist."""
@@ -171,7 +171,7 @@ def load_and_process_bls_data():
             df['date'] = pd.to_datetime(df['year'].astype(str) + '-' + df['month'].astype(int).astype(str) + '-01')
             df = df.drop(columns=['month'])
     
-    # Data cleaning and processing
+    #Data cleaning and processing
     if not df.empty:
         df['value'] = pd.to_numeric(df['value'].astype(str).replace(r'\s+\(\d+\)', '', regex=True), errors='coerce')
         
@@ -223,7 +223,7 @@ def load_and_process_bls_data():
     
     return pd.DataFrame(), None, {}
 
-# --- Visualization Functions ---
+#Visualization Functions
 def plot_rates_by_sex(avg_df, year, chart_type_prefix):
     sex_groups = [f'{chart_type_prefix} - Men', f'{chart_type_prefix} - Women', f'{chart_type_prefix} - White Men', f'{chart_type_prefix} - White Women']
     df_sex = avg_df[avg_df['series_name'].isin(sex_groups)].copy()
@@ -435,7 +435,7 @@ def plot_rate_comparisons(avg_df, year, chart_type_prefix):
     return charts
 
 def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, category_name, series_ids_women, series_ids_men, series_name_mapping):
-    # Filter data for the specific category and latest full year
+    #Filter data for the specific category and latest full year
     category_df = df_filtered[
         (df_filtered['series_id'].isin(series_ids_women + series_ids_men)) &
         (df_filtered['year'].astype(int) == latest_full_year)
@@ -445,14 +445,14 @@ def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, categor
         st.warning(f"No data available for {category_name} in {latest_full_year}.")
         return
 
-    # Calculate the average value for the latest full year for each series
+    #Calculate the average value for the latest full year for each series
     avg_employment_df = category_df.groupby('series_id')['value'].mean().reset_index()
     avg_employment_df['series_name'] = avg_employment_df['series_id'].map(series_name_mapping)
 
-    # Determine the gender based on series_name (assuming 'Women' or 'Men' in name)
+    #Determine the gender based on series_name (assuming 'Women' or 'Men' in name)
     avg_employment_df['gender'] = avg_employment_df['series_name'].apply(lambda x: 'Women' if 'Women' in x else 'Men')
 
-    # Create the bar chart
+    #Create the bar chart
     fig = px.bar(
         avg_employment_df,
         x='gender',
@@ -468,7 +468,7 @@ def plot_employment_by_occupation_and_sex(df_filtered, latest_full_year, categor
     st.plotly_chart(fig, use_container_width=True)
 
 
-# --- Streamlit App ---
+#Streamlit App
 col_title_global, col_subtitle_global = st.columns([0.3, 0.7])
 with col_title_global:
     st.markdown("<div style='background-color:red; padding: 2px; border-radius: 10px;'><h1 style='color:white; text-align:center; margin: 0; padding: 0;'>Mad Liberal</h1></div>", unsafe_allow_html=True)
@@ -481,21 +481,21 @@ with col_subtitle_global:
     """, unsafe_allow_html=True)
 
 
-# Initialize session state to control app flow
+#Initialize session state to control app flow
 if 'game_stage' not in st.session_state:
     st.session_state.game_stage = 'madlib_input'
 
-# Global layout: left sidebar (20%), main content (60%), right sidebar (20%)
+#Global layout: left sidebar (20%), main content (60%), right sidebar (20%)
 left_sidebar, main_content, right_sidebar = st.columns([0.2, 0.6, 0.2])
 
 with left_sidebar:
-    # "Proceed to Visualizations" button, only for 'madlib_reveal' stage, at the very top of the left sidebar
+    #"Proceed to Visualizations" button, only for 'madlib_reveal' stage, at the very top of the left sidebar
     if st.session_state.game_stage == 'madlib_reveal':
         if st.button("Proceed to Visualizations", key="proceed_from_left_sidebar", use_container_width=True):
             st.session_state.game_stage = 'visualizations'
             st.rerun()
 
-    # Regular navigation buttons, only displayed when NOT in madlib input/reveal stages
+    #Regular navigation buttons, only displayed when NOT in madlib input/reveal stages
     if st.session_state.game_stage not in ['madlib_input', 'madlib_reveal']:
         st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify: space-around; height: 100%;'>", unsafe_allow_html=True)
         if st.button("Unemployment Visualizations", key="unemployment_viz_btn_sidebar", use_container_width=True):
@@ -509,14 +509,14 @@ with left_sidebar:
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Content that appears during madlib_input or madlib_reveal (stripes and collage)
+    #Content that appears during madlib_input or madlib_reveal (stripes and collage)
     if st.session_state.game_stage == 'madlib_input' or st.session_state.game_stage == 'madlib_reveal': # Show stripes and collage in input/reveal stages
-        # Add alternating red and white stripes
+        #Add alternating red and white stripes
         for i in range(45):
             color = "red" if i % 2 == 0 else "#FFFFFF"
             st.markdown(f'<div style="height: 20px; background-color: {color}; width: 100%; margin: 0; padding: 0;"></div>', unsafe_allow_html=True)
 
-        # Only display collage in madlib_input stage, not madlib_reveal
+        #Only display collage in madlib_input stage, not madlib_reveal
         if st.session_state.game_stage == 'madlib_input':
             display_text_collage()
 
@@ -534,7 +534,7 @@ with left_sidebar:
         st.markdown("-" * 3) # Separator
 
 with main_content:
-    # --- Mad Lib Input Stage ---
+    #Mad Lib Input Stage
     if st.session_state.game_stage == 'madlib_input':
         with st.form("madlib_form"):
             input_fields_all = [
@@ -591,7 +591,7 @@ with main_content:
                 ("Noun 31", "noun_31"),
             ]
 
-            # Define default values for the Mad Lib form
+            #Define default values for the Mad Lib form
             default_madlib_values = {
                 "noun_1": "lipstick",
                 "noun_2": "mallspace",
@@ -645,39 +645,39 @@ with main_content:
 
             input_values = {}
 
-            # Paragraph 1 - at the start
+            #Paragraph 1 - at the start
             st.markdown("While the history of <span style='color:red;'>NOUN 1</span> stretches back for millennia, we find certain themes that reverberate throughout time. The earliest history is only available to us in whispers, evidence gleaned from bones and potshards. As we move towards the <span style='color:red;'>NOUN 2</span>, the themes of our <span style='color:red;'>NOUN 3</span> grow louder, a cacophony of evidence from writings, recordings, and oral traditions, <span style='color:red;'>NOUN 4</span>. Perhaps the predominant theme throughout is the competition for and allocation of <span style='color:red;'>PLURAL NOUN 1</span> within <span style='color:red;'>PLURAL NOUN 2</span> across the globe.", unsafe_allow_html=True)
 
-            # Input fields 0-5 (Noun 1 through Plural Noun 2)
+            #Input fields 0-5 (Noun 1 through Plural Noun 2)
             cols = st.columns(3)
             for i in range(6):
                 label, key = input_fields_all[i]
                 with cols[(i - 0) % 3]:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
-            # Paragraph 2 - after Plural Noun 2
+            #Paragraph 2 - after Plural Noun 2
             st.markdown("From Mesopotamia to ancient Mexico and Rome to ancient <span style='color:red;'>PROPER NOUN 2</span>, we find <span style='color:red;'>PLURAL NOUN 3</span> that create a <span style='color:red;'>ADJECTIVE 1</span><span style='color:black;'> | </span><span style='color:red;'>NOUN 5</span> that assigns greater value to their own <span style='color:red;'>NOUN 6</span>, and greater resources to themselves and their <span style='color:red;'>PLURAL NOUN 4</span>. This comes, of course, at the expense of the <span style='color:red;'>PLURAL NOUN 5</span>, the <span style='color:red;'>NOUN 7</span> who have toiled in the service of others of <span style='color:red;'>ADJECTIVE 2</span> standing. From prehistory through the modern era, <span style='color:red;'>NOUN 8</span> has existed in various forms and under various names. This includes the <span style='color:red;'>NOUN 9</span> of medieval <span style='color:red;'>PROPER NOUN 3</span> to the chattel <span style='color:red;'>NOUN 8</span> of the early United States, and it persists to this day as wage <span style='color:red;'>NOUN 10</span> where huge swaths of <span style='color:red;'>NOUN 11</span> are unable to reap the full benefit of their own <span style='color:red;'>NOUN 12</span>.", unsafe_allow_html=True)
 
-            # Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
+            #Input fields 6-21 (Proper Noun 2 through Noun 12, 'verb_1' is skipped, so 15 fields)
             cols = st.columns(3)
             for i in range(6, 21):
                 label, key = input_fields_all[i]
                 with cols[(i - 6) % 3]:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
-            # Paragraph 3 - after Noun 12
+            #Paragraph 3 - after Noun 12
             st.markdown("While this <span style='color:red;'>ADJECTIVE 3</span> stratification of <span style='color:red;'>NOUN 13</span> and <span style='color:red;'>NOUN 14</span> has persisted across <span style='color:red;'>NOUN 15</span> and, <span style='color:red;'>ADVERB 1</span>, across the globe, it is not naturally self sustaining. Indeed, <span style='color:red;'>NOUN 16</span> have risen and <span style='color:red;'>NOUN 17</span> have <span style='color:red;'>VERB 1</span> as <span style='color:red;'>ADJECTIVE 4</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 18</span> have reached across the globe seeking to <span style='color:red;'>VERB 2</span> the <span style='color:red;'>NOUN 19</span> of the <span style='color:red;'>NOUN 20</span> and <span style='color:red;'>NOUN 21</span>. At the local level, <span style='color:red;'>NOUN 22</span> has always been necessary to maintain <span style='color:red;'>NOUN 23</span> of <span style='color:red;'>NOUN 24</span>, from the <span style='color:red;'>NOUN 25</span> patrols of <span style='color:red;'>ADJECTIVE 5</span> America to the targeting of <span style='color:red;'>NOUN 26</span> by <span style='color:red;'>PROPER NOUN 4</span> today. Even on the individual level, <span style='color:red;'>NOUN 27</span> has been a <span style='color:red;'>NOUN 28</span> of the <span style='color:red;'>VERB 3</span> <span style='color:black;'> | </span><span style='color:red;'>NOUN 29</span> to compel the <span style='color:red;'>NOUN 30</span> of the <span style='color:red;'>NOUN 31</span>.", unsafe_allow_html=True)
 
-            # Input fields 21+ (Adjective 3 through Noun 31) - Adjusted start index
+            #Input fields 21+ (Adjective 3 through Noun 31) - Adjusted start index
             cols = st.columns(3)
             for i in range(21, len(input_fields_all)):
                 label, key = input_fields_all[i]
                 with cols[(i - 21) % 3]:
                     input_values[key] = st.text_input(label, key=key, value=default_madlib_values.get(key, ''))
 
-            # Add some spacing after the input fields
+            #Add some spacing after the input fields
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-            # Center the button
+            #Center the button
             _, center_col, _ = st.columns(3)
             with center_col:
                 submitted = st.form_submit_button("Submit Your Mad Lib!", use_container_width=True)
@@ -690,7 +690,7 @@ with main_content:
             else:
                 st.warning("Please fill in all the blanks!")
 
-    # --- Mad Lib Reveal Stage ---
+    #Mad Lib Reveal Stage
     elif st.session_state.game_stage == 'madlib_reveal':
         st.subheader("Her Story:")
         answers = st.session_state.madlib_answers
@@ -704,9 +704,9 @@ with main_content:
         st.markdown(f"<div style='margin-right: 15px; margin-bottom: 1em;'>From <b>{real_proper_noun_1}</b> to ancient Mexico and Rome to ancient <b>{real_proper_noun_2}</b>, we find <b>{real_plural_noun_3}</b> that create a <b>{real_adjective_1}</b> <b>{real_noun_5}</b> that assigns greater value to their own <b>{real_noun_6}</b>, and greater resources to themselves and their <b>{real_plural_noun_4}</b>. This comes, of course, at the expense of the <b>{real_plural_noun_5}</b>, the <b>{real_noun_7}</b> who have <b>{real_verb_1}</b> in the service of others of <b>{real_adjective_2}</b> standing. From prehistory through the modern era, <b>{real_noun_8}</b> has existed in various forms and under various names. This includes the <b>{real_noun_9}</b> of medieval <b>{real_proper_noun_3}</b> to the chattel <b>{real_noun_8}</b> of the early United States, and it persists to this day as wage <b>{real_noun_9}</b> where huge swaths of <b>{real_noun_10}</b> are unable to reap the full benefit of their own <b>{real_noun_11}</b>.</div>", unsafe_allow_html=True)
         st.markdown(f"<div style='margin-right: 15px;'>While this <b>{real_adjective_3}</b> stratification of <b>{real_noun_12}</b> and <b>{real_noun_13}</b> has persisted across <b>{real_noun_14}</b> and, <b>{real_adverb_1}</b>, across the globe, it is not naturally self sustaining. Indeed, <b>{real_noun_15}</b> have risen and <b>{real_noun_16}</b> have <b>{real_verb_2}</b> as <b>{real_adjective_4}</b> <b>{real_noun_17}</b> have reached across the globe seeking to <b>{real_verb_3}</b> the <b>{real_noun_18}</b> of the <b>{real_noun_19}</b> and <b>{real_noun_20}</b>. At the local level, <b>{real_noun_21}</b> has always been necessary to maintain <b>{real_noun_22}</b> of <b>{real_noun_23}</b>, from the <b>{real_noun_24}</b> patrols of <b>{real_adjective_5}</b> America to the targeting of <b>{real_noun_25}</b> by <b>{real_proper_noun_4}</b> today. Even on the individual level, <b>{real_noun_26}</b> has been a <b>{real_noun_27}</b> of the <b>{real_verb_4}</b> <b>{real_noun_28}</b> to compel the <b>{real_noun_29}</b> of the <b>{real_noun_30}</b>.</div>", unsafe_allow_html=True)
 
-    # --- Visualizations Stage ---
+    #Visualizations Stage
     elif st.session_state.game_stage == 'visualizations':
-        # Force scroll to the top of the main content area when entering this stage
+        #Force scroll to the top of the main content area when entering this stage
         st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
 
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
@@ -714,7 +714,7 @@ with main_content:
         with viz_col[0]:
             df_filtered, latest_full_year, series_name_mapping = load_and_process_bls_data()
 
-            # Separate unemployment and labor force dataframes (using previous logic)
+            #Separate unemployment and labor force dataframes (using previous logic)
             unemployment_series_ids = [
                 'LNS14000006', 'LNS14000009', 'LNS14000003', 'LNS14032183',
                 'LNS14000002', 'LNS14000001', 'LNS14000005', 'LNS14000004'
@@ -732,7 +732,7 @@ with main_content:
                 unemployment_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(unemployment_series_ids)].copy()
                 labor_force_avg_df = avg_rates_latest_year[avg_rates_latest_year['series_id'].isin(labor_force_series_ids)].copy()
 
-                # Store data in session state for other pages
+                #Store data in session state for other pages
                 st.session_state.df_cleaned_for_display = df_filtered.copy()
                 st.session_state.latest_full_year = latest_full_year
                 st.session_state.unemployment_avg_df = unemployment_avg_df
@@ -748,10 +748,10 @@ with main_content:
                     for chart in unemployment_comparison_charts:
                         st.plotly_chart(chart, use_container_width=True)
 
-                    # --- Start OLS Regression Integration ---
+                    #Start OLS Regression Integration
                     st.subheader("OLS Regression Analysis: Unemployment Rates")
 
-                    # OLS for 'Black or African American'
+                    #OLS for 'Black or African American'
                     st.markdown("#### Impact of Being Black or African American on Unemployment Rate")
                     st.markdown("This regression models the average unemployment rate across all demographic groups. A binary indicator `is_black_or_african_american` is used as a predictor. The coefficient for `is_black_or_african_american` represents the estimated difference in unemployment rate for 'Black or African American' individuals compared to the average unemployment rate of all other demographic groups included in the model.")
 
@@ -768,8 +768,8 @@ with main_content:
                     results = model.fit()
                     st.text(results.summary())
 
-                    # OLS for 'White Women'
-                    st.markdown("#### Impact of Being White Woman on Unemployment Rate")
+                    #OLS for 'White Women'
+                    st.markdown("#### Impact of Being a White Woman on Unemployment Rate")
                     st.markdown("This regression models the average unemployment rate across all demographic groups. A binary indicator `is_white_woman` is used as a predictor. The coefficient for `is_white_woman` represents the estimated difference in unemployment rate for 'White Woman' individuals compared to the average unemployment rate of all other demographic groups included in the model.")
 
                     df_unemployment_ols_ww = df_filtered[
@@ -784,7 +784,7 @@ with main_content:
                     model_ww = sm.OLS(y_ww, X_ww)
                     results_ww = model_ww.fit()
                     st.text(results_ww.summary())
-                    # --- End OLS Regression Integration ---
+                    #End OLS Regression Integration
                         
 
                 else:
@@ -795,9 +795,9 @@ with main_content:
 
 
 
-    # --- Industry Visualizations Stage ---
+    #Industry Visualizations Stage
     elif st.session_state.game_stage == 'industry_visualizations':
-        # Force scroll to the top of the main content area when entering this stage
+        #Force scroll to the top of the main content area when entering this stage
         st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
 
         viz_col = st.columns([1]) # Use a single column for visualizations in main_content
@@ -806,7 +806,7 @@ with main_content:
             st.subheader("Industry Visualizations for Race and Sex")
             st.markdown("The US Census Bureau website provides statistics for race in the United States at the current levels: White Alone 74.8&, Black Alone 13.7%, Asian Alone 6.7%, Hispanic or Latino Alone 20%. For the visulizations in this section I'm looking at the distribution of Biological Sex across the 5 main industries of the US Economy provided by the BLS.")
 
-            # Load data if not already in session state (e.g., if user navigated directly)
+            #Load data if not already in session state (e.g., if user navigated directly)
             if 'df_cleaned_for_display' not in st.session_state or 'latest_full_year' not in st.session_state or 'series_name_mapping' not in st.session_state:
                 df_filtered, latest_full_year, series_name_mapping = load_and_process_bls_data()
                 st.session_state.df_cleaned_for_display = df_filtered.copy()
@@ -817,7 +817,7 @@ with main_content:
                 latest_full_year = st.session_state.latest_full_year
                 series_name_mapping = st.session_state.series_name_mapping
 
-            # Ensure labor_force_avg_df is available for plot_rates_by_race
+            #Ensure labor_force_avg_df is available for plot_rates_by_race
             labor_force_series_ids = [
                 'LNS11000004', 'LNS11000005', 'LNS11032183', 'LNS11000001',
                 'LNS11000002', 'LNS11000003', 'LNS11000006', 'LNS11000009'
@@ -832,7 +832,7 @@ with main_content:
                 st.plotly_chart(plot_rates_by_race(labor_force_avg_df, latest_full_year, 'Labor Force'), use_container_width=True)
                 st.markdown("--- ")
 
-                # Generate bar charts for each requested occupation category
+                #Generate bar charts for each requested occupation category
                 st.subheader("Management, Professional, and Related Occupations")
                 plot_employment_by_occupation_and_sex(df_filtered, latest_full_year,
                                                       "Management, Professional, and Related Occupations",
@@ -865,7 +865,7 @@ with main_content:
                 st.warning("Cannot generate industry visualizations, data not available.")
 
     elif st.session_state.game_stage == 'about_project':
-        # Force scroll to the top of the main content area when entering this stage
+        #Force scroll to the top of the main content area when entering this stage
         st.components.v1.html("<script>window.top.scroll(0, 0);</script>", height=0, width=0)
         st.subheader("About This Project")
         st.markdown("""
@@ -874,5 +874,5 @@ The first half of my adult life I dedicated to creating art. Primarily music and
 
         st.markdown("-" * 3)
 
-# --- Footer ---
-st.markdown("<div style='text-align: center;'>--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
+#Footer
+st.markdown("<div style='text-align: center;'>\n\--- Casey Hallas 2026 ---</div>", unsafe_allow_html=True)
