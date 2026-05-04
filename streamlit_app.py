@@ -64,7 +64,7 @@ real_noun_28 = "elites"
 real_noun_29 = "compliance"
 real_noun_30 = "poor"
 
-# --- Global list for text collage (shortened version as per previous instructions) ---
+# --- Global list for text collage ---
 all_real_words = [
     real_noun_1, real_noun_2, real_noun_3, real_noun_4, real_noun_resource, real_noun_society_plural,
     real_proper_noun_1, real_proper_noun_2, real_plural_noun_3, real_adjective_1, real_noun_5,
