@@ -4,7 +4,7 @@ on:
   schedule:
     # Run at 2 AM UTC on the 3rd day of each month
     - cron: '0 13 3 * *'
-  # Allow manual triggering for testing
+  #Allow manual triggering for testing
   workflow_dispatch:
 
 jobs:
