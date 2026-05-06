@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Configuration
 BLS_API_URL = 'https://api.bls.gov/publicAPI/v2/timeseries/data/'
-API_KEY = '9dd192e92c9c4989985db57deede9647'  # Your BLS registration key
+API_KEY = '9dd192e92c9c4989985db57deede9647'  #BLS registration key
 DATA_DIR = 'data'
 CSV_FILE = os.path.join(DATA_DIR, 'bls_data.csv')
 
