@@ -49,6 +49,7 @@ LNS11000001,2025,M12,90780.0,,2025-12-01,Labor Force - Men
 LNS11000001,2026,M01,89200.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - Men
 LNS11000001,2026,M02,89101.0,,2026-02-01,Labor Force - Men
 LNS11000001,2026,M03,88846.0,,2026-03-01,Labor Force - Men
+LNS11000001,2026,M04,88936.0,,2026-04-01,Labor Force - Men
 LNS11000002,2022,M01,76665.0,,2022-01-01,Labor Force - Women
 LNS11000002,2022,M02,76489.0,,2022-02-01,Labor Force - Women
 LNS11000002,2022,M03,76860.0,,2022-03-01,Labor Force - Women
@@ -99,6 +100,7 @@ LNS11000002,2025,M12,80715.0,,2025-12-01,Labor Force - Women
 LNS11000002,2026,M01,81265.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - Women
 LNS11000002,2026,M02,81382.0,,2026-02-01,Labor Force - Women
 LNS11000002,2026,M03,81241.0,,2026-03-01,Labor Force - Women
+LNS11000002,2026,M04,81059.0,,2026-04-01,Labor Force - Women
 LNS11000003,2022,M01,125796.0,,2022-01-01,Labor Force - White
 LNS11000003,2022,M02,126101.0,,2022-02-01,Labor Force - White
 LNS11000003,2022,M03,126219.0,,2022-03-01,Labor Force - White
@@ -149,6 +151,7 @@ LNS11000003,2025,M12,128617.0,,2025-12-01,Labor Force - White
 LNS11000003,2026,M01,123997.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - White
 LNS11000003,2026,M02,123986.0,,2026-02-01,Labor Force - White
 LNS11000003,2026,M03,123841.0,,2026-03-01,Labor Force - White
+LNS11000003,2026,M04,123673.0,,2026-04-01,Labor Force - White
 LNS11000004,2022,M01,68144.0,,2022-01-01,Labor Force - White Men
 LNS11000004,2022,M02,68405.0,,2022-02-01,Labor Force - White Men
 LNS11000004,2022,M03,68442.0,,2022-03-01,Labor Force - White Men
@@ -199,6 +202,7 @@ LNS11000004,2025,M12,69083.0,,2025-12-01,Labor Force - White Men
 LNS11000004,2026,M01,66132.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - White Men
 LNS11000004,2026,M02,66002.0,,2026-02-01,Labor Force - White Men
 LNS11000004,2026,M03,65928.0,,2026-03-01,Labor Force - White Men
+LNS11000004,2026,M04,65726.0,,2026-04-01,Labor Force - White Men
 LNS11000005,2022,M01,57653.0,,2022-01-01,Labor Force - White Women
 LNS11000005,2022,M02,57696.0,,2022-02-01,Labor Force - White Women
 LNS11000005,2022,M03,57777.0,,2022-03-01,Labor Force - White Women
@@ -249,6 +253,7 @@ LNS11000005,2025,M12,59534.0,,2025-12-01,Labor Force - White Women
 LNS11000005,2026,M01,57864.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - White Women
 LNS11000005,2026,M02,57984.0,,2026-02-01,Labor Force - White Women
 LNS11000005,2026,M03,57913.0,,2026-03-01,Labor Force - White Women
+LNS11000005,2026,M04,57947.0,,2026-04-01,Labor Force - White Women
 LNS11000006,2022,M01,21021.0,,2022-01-01,Labor Force - Black or African American
 LNS11000006,2022,M02,21068.0,,2022-02-01,Labor Force - Black or African American
 LNS11000006,2022,M03,21073.0,,2022-03-01,Labor Force - Black or African American
@@ -299,6 +304,7 @@ LNS11000006,2025,M12,22728.0,,2025-12-01,Labor Force - Black or African American
 LNS11000006,2026,M01,22160.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - Black or African American
 LNS11000006,2026,M02,22286.0,,2026-02-01,Labor Force - Black or African American
 LNS11000006,2026,M03,22195.0,,2026-03-01,Labor Force - Black or African American
+LNS11000006,2026,M04,22044.0,,2026-04-01,Labor Force - Black or African American
 LNS11000009,2022,M01,30318.0,,2022-01-01,Labor Force - Hispanic or Latino
 LNS11000009,2022,M02,30485.0,,2022-02-01,Labor Force - Hispanic or Latino
 LNS11000009,2022,M03,30429.0,,2022-03-01,Labor Force - Hispanic or Latino
@@ -349,6 +355,7 @@ LNS11000009,2025,M12,35014.0,,2025-12-01,Labor Force - Hispanic or Latino
 LNS11000009,2026,M01,35403.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - Hispanic or Latino
 LNS11000009,2026,M02,35396.0,,2026-02-01,Labor Force - Hispanic or Latino
 LNS11000009,2026,M03,35515.0,,2026-03-01,Labor Force - Hispanic or Latino
+LNS11000009,2026,M04,35407.0,,2026-04-01,Labor Force - Hispanic or Latino
 LNS11032183,2022,M01,10868.0,,2022-01-01,Labor Force - Asian
 LNS11032183,2022,M02,10593.0,,2022-02-01,Labor Force - Asian
 LNS11032183,2022,M03,10752.0,,2022-03-01,Labor Force - Asian
@@ -399,6 +406,7 @@ LNS11032183,2025,M12,13036.0,,2025-12-01,Labor Force - Asian
 LNS11032183,2026,M01,13828.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Labor Force - Asian
 LNS11032183,2026,M02,13892.0,,2026-02-01,Labor Force - Asian
 LNS11032183,2026,M03,13860.0,,2026-03-01,Labor Force - Asian
+LNS11032183,2026,M04,13806.0,,2026-04-01,Labor Force - Asian
 LNS14000001,2022,M01,0.04,,2022-01-01,Unemployment - Men
 LNS14000001,2022,M02,0.038,,2022-02-01,Unemployment - Men
 LNS14000001,2022,M03,0.037000000000000005,,2022-03-01,Unemployment - Men
@@ -449,6 +457,7 @@ LNS14000001,2025,M12,0.044000000000000004,,2025-12-01,Unemployment - Men
 LNS14000001,2026,M01,0.043,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - Men
 LNS14000001,2026,M02,0.044000000000000004,,2026-02-01,Unemployment - Men
 LNS14000001,2026,M03,0.042,,2026-03-01,Unemployment - Men
+LNS14000001,2026,M04,0.044000000000000004,,2026-04-01,Unemployment - Men
 LNS14000002,2022,M01,0.04,,2022-01-01,Unemployment - Women
 LNS14000002,2022,M02,0.039,,2022-02-01,Unemployment - Women
 LNS14000002,2022,M03,0.036000000000000004,,2022-03-01,Unemployment - Women
@@ -499,6 +508,7 @@ LNS14000002,2025,M12,0.044000000000000004,,2025-12-01,Unemployment - Women
 LNS14000002,2026,M01,0.043,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - Women
 LNS14000002,2026,M02,0.045,,2026-02-01,Unemployment - Women
 LNS14000002,2026,M03,0.043,,2026-03-01,Unemployment - Women
+LNS14000002,2026,M04,0.042,,2026-04-01,Unemployment - Women
 LNS14000003,2022,M01,0.034,,2022-01-01,Unemployment - White
 LNS14000003,2022,M02,0.033,,2022-02-01,Unemployment - White
 LNS14000003,2022,M03,0.032,,2022-03-01,Unemployment - White
@@ -549,6 +559,7 @@ LNS14000003,2025,M12,0.038,,2025-12-01,Unemployment - White
 LNS14000003,2026,M01,0.037000000000000005,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - White
 LNS14000003,2026,M02,0.037000000000000005,,2026-02-01,Unemployment - White
 LNS14000003,2026,M03,0.036000000000000004,,2026-03-01,Unemployment - White
+LNS14000003,2026,M04,0.037000000000000005,,2026-04-01,Unemployment - White
 LNS14000004,2022,M01,0.035,,2022-01-01,Unemployment - White Men
 LNS14000004,2022,M02,0.033,,2022-02-01,Unemployment - White Men
 LNS14000004,2022,M03,0.033,,2022-03-01,Unemployment - White Men
@@ -599,6 +610,7 @@ LNS14000004,2025,M12,0.039,,2025-12-01,Unemployment - White Men
 LNS14000004,2026,M01,0.037000000000000005,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - White Men
 LNS14000004,2026,M02,0.038,,2026-02-01,Unemployment - White Men
 LNS14000004,2026,M03,0.036000000000000004,,2026-03-01,Unemployment - White Men
+LNS14000004,2026,M04,0.038,,2026-04-01,Unemployment - White Men
 LNS14000005,2022,M01,0.034,,2022-01-01,Unemployment - White Women
 LNS14000005,2022,M02,0.034,,2022-02-01,Unemployment - White Women
 LNS14000005,2022,M03,0.03,,2022-03-01,Unemployment - White Women
@@ -649,6 +661,7 @@ LNS14000005,2025,M12,0.036000000000000004,,2025-12-01,Unemployment - White Women
 LNS14000005,2026,M01,0.037000000000000005,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - White Women
 LNS14000005,2026,M02,0.036000000000000004,,2026-02-01,Unemployment - White Women
 LNS14000005,2026,M03,0.037000000000000005,,2026-03-01,Unemployment - White Women
+LNS14000005,2026,M04,0.036000000000000004,,2026-04-01,Unemployment - White Women
 LNS14000006,2022,M01,0.07,,2022-01-01,Unemployment - Black or African American
 LNS14000006,2022,M02,0.067,,2022-02-01,Unemployment - Black or African American
 LNS14000006,2022,M03,0.063,,2022-03-01,Unemployment - Black or African American
@@ -699,6 +712,7 @@ LNS14000006,2025,M12,0.075,,2025-12-01,Unemployment - Black or African American
 LNS14000006,2026,M01,0.073,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - Black or African American
 LNS14000006,2026,M02,0.077,,2026-02-01,Unemployment - Black or African American
 LNS14000006,2026,M03,0.071,,2026-03-01,Unemployment - Black or African American
+LNS14000006,2026,M04,0.073,,2026-04-01,Unemployment - Black or African American
 LNS14000009,2022,M01,0.047,,2022-01-01,Unemployment - Hispanic or Latino
 LNS14000009,2022,M02,0.044000000000000004,,2022-02-01,Unemployment - Hispanic or Latino
 LNS14000009,2022,M03,0.042,,2022-03-01,Unemployment - Hispanic or Latino
@@ -749,6 +763,7 @@ LNS14000009,2025,M12,0.049,,2025-12-01,Unemployment - Hispanic or Latino
 LNS14000009,2026,M01,0.049,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - Hispanic or Latino
 LNS14000009,2026,M02,0.052000000000000005,,2026-02-01,Unemployment - Hispanic or Latino
 LNS14000009,2026,M03,0.048,,2026-03-01,Unemployment - Hispanic or Latino
+LNS14000009,2026,M04,0.05,,2026-04-01,Unemployment - Hispanic or Latino
 LNS14032183,2022,M01,0.036000000000000004,,2022-01-01,Unemployment - Asian
 LNS14032183,2022,M02,0.03,,2022-02-01,Unemployment - Asian
 LNS14032183,2022,M03,0.027999999999999997,,2022-03-01,Unemployment - Asian
@@ -799,6 +814,7 @@ LNS14032183,2025,M12,0.036000000000000004,,2025-12-01,Unemployment - Asian
 LNS14032183,2026,M01,0.042,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Unemployment - Asian
 LNS14032183,2026,M02,0.048,,2026-02-01,Unemployment - Asian
 LNS14032183,2026,M03,0.037000000000000005,,2026-03-01,Unemployment - Asian
+LNS14032183,2026,M04,0.033,,2026-04-01,Unemployment - Asian
 LNU02032468,2022,M01,32122.0,,2022-01-01,"Management, Professional, and Related Occupations - Men"
 LNU02032468,2022,M02,32731.0,,2022-02-01,"Management, Professional, and Related Occupations - Men"
 LNU02032468,2022,M03,32742.0,,2022-03-01,"Management, Professional, and Related Occupations - Men"
@@ -849,6 +865,7 @@ LNU02032468,2025,M12,34725.0,,2025-12-01,"Management, Professional, and Related 
 LNU02032468,2026,M01,34185.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,"Management, Professional, and Related Occupations - Men"
 LNU02032468,2026,M02,34389.0,,2026-02-01,"Management, Professional, and Related Occupations - Men"
 LNU02032468,2026,M03,34285.0,,2026-03-01,"Management, Professional, and Related Occupations - Men"
+LNU02032468,2026,M04,33853.0,,2026-04-01,"Management, Professional, and Related Occupations - Men"
 LNU02032481,2022,M01,10394.0,,2022-01-01,Service Occupations - Men
 LNU02032481,2022,M02,10588.0,,2022-02-01,Service Occupations - Men
 LNU02032481,2022,M03,11101.0,,2022-03-01,Service Occupations - Men
@@ -899,6 +916,7 @@ LNU02032481,2025,M12,10945.0,,2025-12-01,Service Occupations - Men
 LNU02032481,2026,M01,10557.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Service Occupations - Men
 LNU02032481,2026,M02,10870.0,,2026-02-01,Service Occupations - Men
 LNU02032481,2026,M03,10836.0,,2026-03-01,Service Occupations - Men
+LNU02032481,2026,M04,11370.0,,2026-04-01,Service Occupations - Men
 LNU02032487,2022,M01,12061.0,,2022-01-01,Sales and Office Occupations - Men
 LNU02032487,2022,M02,12227.0,,2022-02-01,Sales and Office Occupations - Men
 LNU02032487,2022,M03,11869.0,,2022-03-01,Sales and Office Occupations - Men
@@ -949,6 +967,7 @@ LNU02032487,2025,M12,12137.0,,2025-12-01,Sales and Office Occupations - Men
 LNU02032487,2026,M01,11631.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Sales and Office Occupations - Men
 LNU02032487,2026,M02,12001.0,,2026-02-01,Sales and Office Occupations - Men
 LNU02032487,2026,M03,11940.0,,2026-03-01,Sales and Office Occupations - Men
+LNU02032487,2026,M04,12046.0,,2026-04-01,Sales and Office Occupations - Men
 LNU02032490,2022,M01,13126.0,,2022-01-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
 LNU02032490,2022,M02,13346.0,,2022-02-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
 LNU02032490,2022,M03,13300.0,,2022-03-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
@@ -999,6 +1018,7 @@ LNU02032490,2025,M12,13515.0,,2025-12-01,"Natural Resources, Construction, and M
 LNU02032490,2026,M01,13037.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
 LNU02032490,2026,M02,12826.0,,2026-02-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
 LNU02032490,2026,M03,12884.0,,2026-03-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
+LNU02032490,2026,M04,12725.0,,2026-04-01,"Natural Resources, Construction, and Maintenance Occupations - Men"
 LNU02032496,2022,M01,9039.0,,2022-01-01,Transportation and Material Moving Occupations - Men
 LNU02032496,2022,M02,8936.0,,2022-02-01,Transportation and Material Moving Occupations - Men
 LNU02032496,2022,M03,9157.0,,2022-03-01,Transportation and Material Moving Occupations - Men
@@ -1049,6 +1069,7 @@ LNU02032496,2025,M12,9485.0,,2025-12-01,Transportation and Material Moving Occup
 LNU02032496,2026,M01,9329.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Transportation and Material Moving Occupations - Men
 LNU02032496,2026,M02,8940.0,,2026-02-01,Transportation and Material Moving Occupations - Men
 LNU02032496,2026,M03,9513.0,,2026-03-01,Transportation and Material Moving Occupations - Men
+LNU02032496,2026,M04,9457.0,,2026-04-01,Transportation and Material Moving Occupations - Men
 LNU02032526,2022,M01,34618.0,,2022-01-01,"Management, Professional, and Related Occupations - Women"
 LNU02032526,2022,M02,35023.0,,2022-02-01,"Management, Professional, and Related Occupations - Women"
 LNU02032526,2022,M03,35081.0,,2022-03-01,"Management, Professional, and Related Occupations - Women"
@@ -1099,6 +1120,7 @@ LNU02032526,2025,M12,37193.0,,2025-12-01,"Management, Professional, and Related 
 LNU02032526,2026,M01,37222.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,"Management, Professional, and Related Occupations - Women"
 LNU02032526,2026,M02,37495.0,,2026-02-01,"Management, Professional, and Related Occupations - Women"
 LNU02032526,2026,M03,37710.0,,2026-03-01,"Management, Professional, and Related Occupations - Women"
+LNU02032526,2026,M04,37485.0,,2026-04-01,"Management, Professional, and Related Occupations - Women"
 LNU02032539,2022,M01,13838.0,,2022-01-01,Service Occupations - Women
 LNU02032539,2022,M02,13641.0,,2022-02-01,Service Occupations - Women
 LNU02032539,2022,M03,14274.0,,2022-03-01,Service Occupations - Women
@@ -1149,6 +1171,7 @@ LNU02032539,2025,M12,15564.0,,2025-12-01,Service Occupations - Women
 LNU02032539,2026,M01,15753.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Service Occupations - Women
 LNU02032539,2026,M02,15566.0,,2026-02-01,Service Occupations - Women
 LNU02032539,2026,M03,15792.0,,2026-03-01,Service Occupations - Women
+LNU02032539,2026,M04,15823.0,,2026-04-01,Service Occupations - Women
 LNU02032545,2022,M01,19103.0,,2022-01-01,Sales and Office Occupations - Women
 LNU02032545,2022,M02,19157.0,,2022-02-01,Sales and Office Occupations - Women
 LNU02032545,2022,M03,19051.0,,2022-03-01,Sales and Office Occupations - Women
@@ -1199,6 +1222,7 @@ LNU02032545,2025,M12,18579.0,,2025-12-01,Sales and Office Occupations - Women
 LNU02032545,2026,M01,18601.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Sales and Office Occupations - Women
 LNU02032545,2026,M02,18642.0,,2026-02-01,Sales and Office Occupations - Women
 LNU02032545,2026,M03,18590.0,,2026-03-01,Sales and Office Occupations - Women
+LNU02032545,2026,M04,18609.0,,2026-04-01,Sales and Office Occupations - Women
 LNU02032548,2022,M01,732.0,,2022-01-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
 LNU02032548,2022,M02,746.0,,2022-02-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
 LNU02032548,2022,M03,863.0,,2022-03-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
@@ -1249,6 +1273,7 @@ LNU02032548,2025,M12,921.0,,2025-12-01,"Natural Resources, Construction, and Mai
 LNU02032548,2026,M01,847.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
 LNU02032548,2026,M02,885.0,,2026-02-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
 LNU02032548,2026,M03,829.0,,2026-03-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
+LNU02032548,2026,M04,859.0,,2026-04-01,"Natural Resources, Construction, and Maintenance Occupations - Women"
 LNU02032554,2022,M01,2612.0,,2022-01-01,Transportation and Material Moving Occupations - Women
 LNU02032554,2022,M02,2557.0,,2022-02-01,Transportation and Material Moving Occupations - Women
 LNU02032554,2022,M03,2556.0,,2022-03-01,Transportation and Material Moving Occupations - Women
@@ -1299,3 +1324,4 @@ LNU02032554,2025,M12,2696.0,,2025-12-01,Transportation and Material Moving Occup
 LNU02032554,2026,M01,2722.0,"January 2026 estimates were revised to incorporate updated population controls. For more information, see www.bls.gov/cps/documentation.htm#pop.",2026-01-01,Transportation and Material Moving Occupations - Women
 LNU02032554,2026,M02,2798.0,,2026-02-01,Transportation and Material Moving Occupations - Women
 LNU02032554,2026,M03,2701.0,,2026-03-01,Transportation and Material Moving Occupations - Women
+LNU02032554,2026,M04,2669.0,,2026-04-01,Transportation and Material Moving Occupations - Women
